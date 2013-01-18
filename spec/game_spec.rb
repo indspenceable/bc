@@ -19,7 +19,7 @@ describe Game do
     end
   end
   context "playing a game with characters selected" do
-    before :all do
+    before :each do
       # these should probably be test characters?
       subject.input!(0, "hikaru")
       subject.input!(1, "hikaru")
@@ -40,8 +40,8 @@ describe Game do
     end
     context "from the start of beat 0" do
       before :each do
-        subject.input!(0, "discard:trance_dash;focused_grasp")
-        subject.input!(1, "discard:focused_grasp;trance_dash")
+        subject.input!(0, "trance_dash;focused_grasp")
+        subject.input!(1, "focused_grasp;trance_dash")
       end
       it "asks both players to choose attack pairs, and reveals them" do
         subject.required_input.should == {

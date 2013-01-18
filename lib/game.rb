@@ -36,7 +36,7 @@ class Game
     def answer_inputs!
       @required_input.keys.each do |player_id|
         if @input_buffer[player_id].any?
-          answer!(player_id, @input_buffer[player_id].pop)
+          answer!(player_id, @input_buffer[player_id].shift)
         end
       end
       throw :input_required if input_required?
@@ -45,9 +45,8 @@ class Game
     def answer!(player_id, string)
       raise "We weren't asking that player for anything." unless @required_input.key?(player_id)
       _, validator = @required_input[player_id]
-      raise "Invalid answer" unless validator.call(string)
+      raise "Invalid answer to #{@required_input[player_id].first}" unless validator.call(string)
       @required_input.delete(player_id)
-      puts "just deleted #{player_id}"
       @answers[player_id] = string
     end
     def input_required?
@@ -70,8 +69,8 @@ class Game
       )
       # select_discards
       @input_manager.require_multi_input!("select_discards",
-        ->(text) { text.downcase =~ /[a-z]*(_[a-z]*){3}/},
-        ->(text) { text.downcase =~ /[a-z]*(_[a-z]*){3}/}
+        ->(text) { text.downcase =~ /[a-z]*_[a-z]*;[a-z]*_[a-z]*/},
+        ->(text) { text.downcase =~ /[a-z]*_[a-z]*;[a-z]*_[a-z]*/}
       )
     end
   end
