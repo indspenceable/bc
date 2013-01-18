@@ -19,7 +19,7 @@ describe Game do
     end
   end
   context "playing a game with characters selected" do
-    before :each do
+    before :all do
       # these should probably be test characters?
       subject.input!(0, "hikaru")
       subject.input!(1, "hikaru")
@@ -29,15 +29,26 @@ describe Game do
         subject.required_input.should == {
         0 => "select_discards",
         1 => "select_discards",
-      }
+        }
       end
-      it "blah blah blah more tests?"
+      it "puts the players in their starting locations" do
+        subject.player_locations?.should == {
+          0 => 1,
+          1 => 5,
+        }
+      end
     end
     context "from the start of beat 0" do
       before :each do
-        # choose discards here
+        subject.input!(0, "discard:trance_dash;focused_grasp")
+        subject.input!(1, "discard:focused_grasp;trance_dash")
       end
-      it "asks both players to choose attack pairs, and reveals them"
+      it "asks both players to choose attack pairs, and reveals them" do
+        subject.required_input.should == {
+          0 => "select_attack",
+          1 => "select_attack",
+        }
+      end
       it "allows characters who ante to ante between planning and reveal"
 
       it "reveal happens right after cards are revealed"
