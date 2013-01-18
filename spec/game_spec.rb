@@ -19,7 +19,7 @@ describe Game do
     end
   end
   context "playing a game with characters selected" do
-    before :each do
+    before :all do
       # these should probably be test characters?
       subject.input!(0, "hikaru")
       subject.input!(1, "hikaru")
@@ -43,17 +43,36 @@ describe Game do
         subject.input!(0, "trance_dash;focused_grasp")
         subject.input!(1, "focused_grasp;trance_dash")
       end
-      it "asks both players to choose attack pairs, and reveals them" do
+      it "asks both players to choose attack pairs" do
         subject.required_input.should == {
           0 => "select_attack_pairs",
           1 => "select_attack_pairs",
         }
       end
-
-      it "allows characters who ante to ante between planning and reveal"
-
-      it "reveal happens right after cards are revealed"
-
+      it "does not allow characters to select attacks and styles that are on cooldown" do
+          #focused was in the initial discard
+          subject.input!(0, "attack:focused_drive")
+          subject.required_input[0].should == "select_attack"
+      end
+      it "allows characters who ante to ante between planning and reveal" do
+          #do we need to set the 'nil' or will ruby be OK without it?
+          #should 'nil' be something like 'wait' instead?
+        (subject.game_state[0][:can_ante] == 'true')? @p0ante = "ante"; @p0ante = nil
+        (subject.game_state[1][:can_ante] == 'true')? @p1ante = "ante"; @p1ante = nil
+        subject.required_input.should == {
+          0 => @p0ante,
+          1 => @p1ante,
+        }
+      end
+      it "reveal happens right after cards are revealed" do
+        subject.input!(0, "attack:advancing_drive")
+        subject.input!(1, "attack:geomantic_shot")
+        subject.gamestate[:events][-1].should == "planning" #this needs to be more specific probably
+        subject.input!(0, "ante:done")
+        subject.input!(1, "ante:done")
+        subject.gamestate[:events].[-2].should == "ante:nil;nil"
+        subject.gamestate[:events].[-1].should == "reveal:advancing_drive;geomantic_shot"
+      end
       it "start/end of beat effects happen at start/end of beat"
       it "start of beat happens after clashes are resolved"
       it "end of beat effects happen even if you are stunned"
