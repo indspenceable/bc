@@ -15,7 +15,7 @@ describe Game do
       subject.required_input.should == {
         1 => "select_character"
       }
-      subject.game_state.events.should be_empty
+      subject.game_state[:events].should be_empty
     end
   end
   context "playing a game with characters selected" do
