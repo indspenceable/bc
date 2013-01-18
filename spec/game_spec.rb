@@ -20,7 +20,6 @@ describe Game do
   end
   context "playing a game with characters selected" do
     before :each do
-      # these should probably be test characters?
       subject.input!(0, "hikaru")
       subject.input!(1, "hikaru")
     end
