@@ -30,6 +30,9 @@ class Game
         [k, v.first]
       end]
     end
+    def answer(player_id)
+      @answers[player_id]
+    end
 
     private
 
@@ -47,7 +50,7 @@ class Game
       _, validator = @required_input[player_id]
       raise "Invalid answer to #{@required_input[player_id].first}" unless validator.call(string)
       @required_input.delete(player_id)
-      @answers[player_id] = string
+      @answers[player_id] = string.downcase
     end
     def input_required?
       @required_input.keys.any?{|k| !@answers.key?(k) }
@@ -64,13 +67,23 @@ class Game
     catch :input_required do
       #character selection
       @input_manager.require_multi_input!("select_character",
-        ->(text) { text.downcase == "hikaru" },
-        ->(text) { text.downcase == "hikaru" }
+        ->(text) { character_list.include?(text) },
+        ->(text) { character_list.include?(text) }
       )
+      # for now, just consume input.
+      @player0 = @input_manager.answer(0)# player_class_by_name(@input_manager.answer(0)).new
+      @player1 = @input_manager.answer(1)# player_class_by_name(@input_manager.answer(1)).new
+
+
       # select_discards
       @input_manager.require_multi_input!("select_discards",
-        ->(text) { text.downcase =~ /[a-z]*_[a-z]*;[a-z]*_[a-z]*/},
-        ->(text) { text.downcase =~ /[a-z]*_[a-z]*;[a-z]*_[a-z]*/}
+        ->(text) { text =~ /[a-z]*_[a-z]*;[a-z]*_[a-z]*/},
+        ->(text) { text =~ /[a-z]*_[a-z]*;[a-z]*_[a-z]*/}
+      )
+
+      @input_manager.require_multi_input("select_attack_pairs",
+        ->(text) { text =~ /[a-z]*_[a-z]*/ },
+        ->(text) { text =~ /[a-z]*_[a-z]*/ }
       )
     end
   end
@@ -102,6 +115,10 @@ class Game
   end
 
   private
+
+  def character_list
+    ["hikaru"]
+  end
 
   # returns a hash of player info, for that player id.
   # this adds more information if player_id and as_seen_by_id match

@@ -45,10 +45,11 @@ describe Game do
       end
       it "asks both players to choose attack pairs, and reveals them" do
         subject.required_input.should == {
-          0 => "select_attack",
-          1 => "select_attack",
+          0 => "select_attack_pairs",
+          1 => "select_attack_pairs",
         }
       end
+
       it "allows characters who ante to ante between planning and reveal"
 
       it "reveal happens right after cards are revealed"
