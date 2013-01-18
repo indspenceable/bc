@@ -17,8 +17,8 @@ class Game
   def game_state(player_id)
     {
       :events => [],
-      0 => player_info_for(0, :seen_by => player_id),
-      1 => player_info_for(0, :seen_by => player_id),
+      0 => player_info_for(0, player_id),
+      1 => player_info_for(0, player_id),
     }
   end
 
