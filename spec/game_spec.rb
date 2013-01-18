@@ -30,7 +30,6 @@ describe Game do
         1 => "select_discards",
       }
       end
-      it "blah blah blah more tests?"
     end
     context "from the start of beat 0" do
       before :each do
