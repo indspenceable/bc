@@ -1,3 +1,12 @@
+class Character; end
+class Hikaru < Character
+  def self.name
+    "hikaru"
+  end
+  def initialize
+  end
+end
+
 class Game
   # Input manager manages input.
   class InputManager
@@ -64,27 +73,21 @@ class Game
 
   def setup_game!(inputs)
     @input_manager = InputManager.new(inputs)
+    @player_locations = {
+      0 => 1,
+      1 => 5,
+    }
     catch :input_required do
-      #character selection
-      @input_manager.require_multi_input!("select_character",
-        ->(text) { character_list.include?(text) },
-        ->(text) { character_list.include?(text) }
-      )
-      # for now, just consume input.
-      @player0 = @input_manager.answer(0)# player_class_by_name(@input_manager.answer(0)).new
-      @player1 = @input_manager.answer(1)# player_class_by_name(@input_manager.answer(1)).new
-
-
-      # select_discards
-      @input_manager.require_multi_input!("select_discards",
-        ->(text) { text =~ /[a-z]*_[a-z]*;[a-z]*_[a-z]*/},
-        ->(text) { text =~ /[a-z]*_[a-z]*;[a-z]*_[a-z]*/}
-      )
-
-      @input_manager.require_multi_input("select_attack_pairs",
-        ->(text) { text =~ /[a-z]*_[a-z]*/ },
-        ->(text) { text =~ /[a-z]*_[a-z]*/ }
-      )
+      select_characters!
+      select_discards!
+      15.times do |round_number|
+        @round_number = round_number + 1 # 1 based
+        @input_manager.require_multi_input!("select_attack_pairs",
+          # these should shell out to character's individual callbacks.
+          ->(text) { text =~ /[a-z]*_[a-z]*/ },
+          ->(text) { text =~ /[a-z]*_[a-z]*/ }
+        )
+      end
     end
   end
 
@@ -108,21 +111,49 @@ class Game
   def game_state(player_id=nil)
     {
       :events => [],
-      0 => player_info_for(0, player_id),
-      1 => player_info_for(1, player_id),
+      :players => [
+        player_info_for(0, player_id),
+        player_info_for(1, player_id)
+      ],
       :current_phase => "select_character"
     }
   end
 
   private
 
+  # phases of the game
+  def select_characters!
+    #character selection
+    @input_manager.require_multi_input!("select_character",
+      ->(text) { character_names.include?(text) },
+      ->(text) { character_names.include?(text) }
+    )
+    # for now, just consume input.
+    @player0 = character_list[character_names.index @input_manager.answer(0)].new
+    @player1 = character_list[character_names.index @input_manager.answer(1)].new
+  end
+  def select_discards!
+    # select_discards
+    @input_manager.require_multi_input!("select_discards",
+      # these should shell out to characters individual methods, for roberts
+      # sake.
+      ->(text) { text =~ /[a-z]*_[a-z]*;[a-z]*_[a-z]*/},
+      ->(text) { text =~ /[a-z]*_[a-z]*;[a-z]*_[a-z]*/}
+    )
+  end
+
   def character_list
-    ["hikaru"]
+    [Hikaru]
+  end
+  def character_names
+    character_list.map(&:name)
   end
 
   # returns a hash of player info, for that player id.
   # this adds more information if player_id and as_seen_by_id match
   def player_info_for(player_id, as_seen_by_id)
-    nil
+    {
+      :location => @player_locations[player_id]
+    }
   end
 end

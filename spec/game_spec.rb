@@ -19,7 +19,7 @@ describe Game do
     end
   end
   context "playing a game with characters selected" do
-    before :all do
+    before :each do
       # these should probably be test characters?
       subject.input!(0, "hikaru")
       subject.input!(1, "hikaru")
@@ -32,10 +32,8 @@ describe Game do
         }
       end
       it "puts the players in their starting locations" do
-        subject.player_locations?.should == {
-          0 => 1,
-          1 => 5,
-        }
+        subject.game_state[:players][0][:location].should == 1
+        subject.game_state[:players][1][:location].should == 5
       end
     end
     context "from the start of beat 0" do
@@ -51,14 +49,14 @@ describe Game do
       end
       it "does not allow characters to select attacks and styles that are on cooldown" do
           #focused was in the initial discard
-          subject.input!(0, "attack:focused_drive")
+          expect{ subject.input!(0, "attack:focused_drive") }.to raise_error
           subject.required_input[0].should == "select_attack"
       end
       it "allows characters who ante to ante between planning and reveal" do
           #do we need to set the 'nil' or will ruby be OK without it?
           #should 'nil' be something like 'wait' instead?
-        (subject.game_state[0][:can_ante] == 'true')? @p0ante = "ante"; @p0ante = nil
-        (subject.game_state[1][:can_ante] == 'true')? @p1ante = "ante"; @p1ante = nil
+        (subject.game_state[0][:can_ante] == 'true')? @p0ante = "ante" :  @p0ante = nil
+        (subject.game_state[1][:can_ante] == 'true')? @p1ante = "ante" :  @p1ante = nil
         subject.required_input.should == {
           0 => @p0ante,
           1 => @p1ante,
@@ -67,11 +65,11 @@ describe Game do
       it "reveal happens right after cards are revealed" do
         subject.input!(0, "attack:advancing_drive")
         subject.input!(1, "attack:geomantic_shot")
-        subject.gamestate[:events][-1].should == "planning" #this needs to be more specific probably
+        subject.game_state[:events][-1].should == "planning" #this needs to be more specific probably
         subject.input!(0, "ante:done")
         subject.input!(1, "ante:done")
-        subject.gamestate[:events].[-2].should == "ante:nil;nil"
-        subject.gamestate[:events].[-1].should == "reveal:advancing_drive;geomantic_shot"
+        subject.game_state[:events][-2].should == "ante:nil;nil"
+        subject.game_state[:events][-1].should == "reveal:advancing_drive;geomantic_shot"
       end
       it "start/end of beat effects happen at start/end of beat"
       it "start of beat happens after clashes are resolved"
