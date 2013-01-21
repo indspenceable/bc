@@ -95,8 +95,8 @@ class Game
         next if handle_clashes! == :no_cards
         determine_active_player!
         start_of_beat!
-        active_player_activation!
-        reactive_player_activation!
+        activate!(@active_player, @reactive_player)
+        activate!(@reactive_player, @active_player)
         end_of_beat!
         recycle!
       end
@@ -220,6 +220,34 @@ class Game
     #some characters care if they are active...
     @active_player.is_active!
     @reactive_player.is_reactive!
+  end
+
+  def start_of_beat!
+    @active_player.start_of_beat!
+    @reactive_player.start_of_beat!
+  end
+  def end_of_beat!
+    @active_player.end_of_beat!
+    @reactive_player.end_of_beat!
+  end
+  def recycle!
+    @active_player.recycle!
+    @reactive_player.recycle!
+  end
+
+  def activate!(current, opponent)
+    unless current.stunned?
+      current.before_activating!
+      # are they in range?
+      if current.in_range?(opponent)
+        current.on_hit!
+        damage_dealt = opponent.take_hit!(current.power)
+        if damage_dealt > 0
+          current.on_damage!
+        end
+      end
+      current.after_activating!
+    end
   end
 
   def character_list
