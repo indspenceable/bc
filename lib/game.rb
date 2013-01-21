@@ -88,11 +88,17 @@ class Game
       select_discards!
       15.times do |round_number|
         @round_number = round_number + 1 # 1 based
-        @input_manager.require_multi_input!("select_attack_pairs",
-          # these should shell out to character's individual callbacks.
-          ->(text) { text =~ /[a-z]*_[a-z]*/ },
-          ->(text) { text =~ /[a-z]*_[a-z]*/ }
-        )
+        select_attack_pairs!
+        ante!
+        reveal!
+        # if either player runs out of cards, go to the next turn
+        next if handle_clashes! == :no_cards
+        determine_active_player!
+        start_of_beat!
+        active_player_activation!
+        reactive_player_activation!
+        end_of_beat!
+        recycle!
       end
     end
   end
@@ -183,6 +189,24 @@ class Game
       end
       #toggle the player id between 0 and 1
       current_player_id = current_player_id + 1 % 2
+    end
+  end
+
+  def reveal!
+    @player0.reveal_attack_pair!
+    @player1.reveal_attack_pair!
+  end
+
+  def handle_clashes!
+    while @player0.priority == @player1.priority
+      return :no_cards if @player0.no_cards? || @player1.no_cards?
+      # Mark an event as a clash!
+      @input_manager.require_multi_input!("select_new_base",
+        @player0.base_options_callback,
+        @player1.base_options_callback
+      )
+      @player0.new_base!(@input_manager.answers(0))
+      @player1.new_base!(@input_manager.answers(1))
     end
   end
 
