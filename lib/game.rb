@@ -1,3 +1,13 @@
+class Card
+  attr_reader :name, :power, :priority, :range
+  def initialize name, range, power, priority
+    @name = name
+    @power = power
+    @priority = priority
+    @range = range
+  end
+end
+
 class Character; end
 class Hikaru < Character
   def self.name
@@ -9,8 +19,24 @@ class Hikaru < Character
     @events = events
 
     # set up my hand
-    @bases = %w(grasp drive strike shot burst dash palmstrike)
-    @styles = %(trance focused geomantic sweeping advancing)
+    # %w(grasp drive strike shot burst dash palmstrike)
+    @bases = [
+      Card.new("grasp",      1, 2, 5),
+      Card.new("drive",      1, 3, 4),
+      Card.new("strike",     1, 4, 3),
+      Card.new("shot",    1..4  3, 2),
+      Card.new("burst",   2..3, 3, 1),
+      #Card.new("dash", 9, :na, :na)
+      Card.new("palmstrike", 1, 2, 5),
+    ]
+    # %(trance focused geomantic sweeping advancing)
+    @styles = [
+      Card.new("trance", 0..1, 0, 0),
+      Card.new("focused",   0, 0, 1),
+      Card.new("geomantic", 0, 1, 0),
+      Card.new("sweeping",  0,-1, 3),
+      Card.new("advancing", 0, 1, 1),
+    ]
     @token_pool = %w(earth wind fire water)
     @token_discard = []
     @current_tokens = []
@@ -33,6 +59,9 @@ class Hikaru < Character
 
   def ante!(choice)
     @current_tokens << @token_pool.delete(choice)
+  end
+
+  def start_of_beat
   end
 
   # input callbacks. These check the validity of input that the player does.
