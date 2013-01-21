@@ -11,8 +11,33 @@ class Hikaru < Character
     # set up my hand
     @bases = %w(grasp drive strike shot burst dash palmstrike)
     @styles = %(trance focused geomantic sweeping advancing)
-    @tokens = %w(earth wind fire water)
+    @token_pool = %w(earth wind fire water)
+    @token_discard = []
+    @current_tokens = []
   end
+
+  def set_initial_discards!(choice)
+    choice =~ /([a-z]*)_([a-z]*);([a-z]*)_([a-z]*)/
+    s1,b1,s2,b2 = $1, $2, $3, $4
+    @discard1 = [s1, b1]
+    @discard2 = [s2, b2]
+    @bases.delete(b1)
+    @bases.delete(b2)
+    @styles.discard(s1)
+    @styles.discard(s2)
+  end
+
+  def can_ante?
+    @token_pool.any?
+  end
+
+  def ante!(choice)
+    @current_tokens << @token_pool.delete(choice)
+  end
+
+  # input callbacks. These check the validity of input that the player does.
+  # is this the best design? I dunno. It does make it easy for us to identify
+  # when theres an error due to invalid input, though.
 
   # this should probably live in character.
   def valid_discard_callback
@@ -27,6 +52,11 @@ class Hikaru < Character
     ->(text) do
       text =~ /([a-z]*)_([a-z]*)/
       bases.include?($2) && styles.include?($1)
+    end
+  end
+  def ante_callback
+    ->(text) do
+      (@token_pool + ["pass"]).include?($1)
     end
   end
 end
@@ -202,7 +232,7 @@ class Game
 
       # if they can ante, make them. If they don't pass, note that,
       # and enact the ante
-      if current_player_can_ante?
+      if current_player.can_ante?
         @input_manager.require_single_input!(current_player_id,
           "ante", current_player_ante_callback)
         answer = @input_manager.answer(current_player_id)
