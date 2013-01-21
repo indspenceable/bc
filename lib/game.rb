@@ -5,6 +5,12 @@ class Hikaru < Character
   end
   def initialize
   end
+  def valid_discard_callback
+    ->(text) { text =~ /[a-z]*_[a-z]*;[a-z]*_[a-z]*/}
+  end
+  def valid_attack_pair_callback
+    ->(text) { text =~ /[a-z]*_[a-z]*/ }
+  end
 end
 
 class Game
@@ -137,9 +143,47 @@ class Game
     @input_manager.require_multi_input!("select_discards",
       # these should shell out to characters individual methods, for roberts
       # sake.
-      ->(text) { text =~ /[a-z]*_[a-z]*;[a-z]*_[a-z]*/},
-      ->(text) { text =~ /[a-z]*_[a-z]*;[a-z]*_[a-z]*/}
+      @player0.valid_discard_callback,
+      @player1.valid_discard_callback
     )
+    @player0.set_initial_discards!(@input_manager.answer(0))
+    @player1.set_initial_discards!(@input_manager.answer(1))
+  end
+
+  def select_attack_pairs!
+    @input_manager.require_multi_input!("select_attack_pairs",
+      @player0.valid_attack_pair_callback,
+      @player1.valid_attack_pair_callback
+    )
+    @player0.set_attack_pair!(@input_manager.answer(0))
+    @player1.set_attack_pair!(@input_manager.answer(1))
+  end
+
+  def ante!
+    current_player_id = 0
+    number_of_passes = 0
+    while number_of_passes < 2
+      passed_this_round = true
+      # ugly...
+      current_player = current_player_id == 0 ? @player0 : @player1
+
+      # if they can ante, make them. If they don't pass, note that,
+      # and enact the ante
+      if current_player_can_ante?
+        @input_manager.require_single_input!(current_player_id,
+          "ante", current_player_ante_callback)
+        answer = @input_manager.answer(current_player_id)
+        passed_this_round = (answer == "pass")
+        current_player.ante!(answer)
+      end
+      if passed_this_round
+        number_of_passes += 1
+      else
+        number_of_passes = 0
+      end
+      #toggle the player id between 0 and 1
+      current_player_id = current_player_id + 1 % 2
+    end
   end
 
   def character_list
