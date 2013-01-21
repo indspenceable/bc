@@ -1,3 +1,18 @@
+class Character; end
+class Hikaru < Character
+  def self.name
+    "hikaru"
+  end
+  def initialize
+  end
+  def valid_discard_callback
+    ->(text) { text =~ /[a-z]*_[a-z]*;[a-z]*_[a-z]*/}
+  end
+  def valid_attack_pair_callback
+    ->(text) { text =~ /[a-z]*_[a-z]*/ }
+  end
+end
+
 class Game
   # Input manager manages input.
   class InputManager
@@ -64,27 +79,27 @@ class Game
 
   def setup_game!(inputs)
     @input_manager = InputManager.new(inputs)
+    @player_locations = {
+      0 => 1,
+      1 => 5,
+    }
     catch :input_required do
-      #character selection
-      @input_manager.require_multi_input!("select_character",
-        ->(text) { character_list.include?(text) },
-        ->(text) { character_list.include?(text) }
-      )
-      # for now, just consume input.
-      @player0 = @input_manager.answer(0)# player_class_by_name(@input_manager.answer(0)).new
-      @player1 = @input_manager.answer(1)# player_class_by_name(@input_manager.answer(1)).new
-
-
-      # select_discards
-      @input_manager.require_multi_input!("select_discards",
-        ->(text) { text =~ /[a-z]*_[a-z]*;[a-z]*_[a-z]*/},
-        ->(text) { text =~ /[a-z]*_[a-z]*;[a-z]*_[a-z]*/}
-      )
-
-      @input_manager.require_multi_input("select_attack_pairs",
-        ->(text) { text =~ /[a-z]*_[a-z]*/ },
-        ->(text) { text =~ /[a-z]*_[a-z]*/ }
-      )
+      select_characters!
+      select_discards!
+      15.times do |round_number|
+        @round_number = round_number + 1 # 1 based
+        select_attack_pairs!
+        ante!
+        reveal!
+        # if either player runs out of cards, go to the next turn
+        next if handle_clashes! == :no_cards
+        determine_active_player!
+        start_of_beat!
+        active_player_activation!
+        reactive_player_activation!
+        end_of_beat!
+        recycle!
+      end
     end
   end
 
@@ -108,21 +123,117 @@ class Game
   def game_state(player_id=nil)
     {
       :events => [],
-      0 => player_info_for(0, player_id),
-      1 => player_info_for(1, player_id),
+      :players => [
+        player_info_for(0, player_id),
+        player_info_for(1, player_id)
+      ],
       :current_phase => "select_character"
     }
   end
 
   private
 
+  # phases of the game
+  def select_characters!
+    #character selection
+    @input_manager.require_multi_input!("select_character",
+      ->(text) { character_names.include?(text) },
+      ->(text) { character_names.include?(text) }
+    )
+    # for now, just consume input.
+    @player0 = character_list[character_names.index @input_manager.answer(0)].new
+    @player1 = character_list[character_names.index @input_manager.answer(1)].new
+  end
+  def select_discards!
+    # select_discards
+    @input_manager.require_multi_input!("select_discards",
+      # these should shell out to characters individual methods, for roberts
+      # sake.
+      @player0.valid_discard_callback,
+      @player1.valid_discard_callback
+    )
+    @player0.set_initial_discards!(@input_manager.answer(0))
+    @player1.set_initial_discards!(@input_manager.answer(1))
+  end
+
+  def select_attack_pairs!
+    @input_manager.require_multi_input!("select_attack_pairs",
+      @player0.valid_attack_pair_callback,
+      @player1.valid_attack_pair_callback
+    )
+    @player0.set_attack_pair!(@input_manager.answer(0))
+    @player1.set_attack_pair!(@input_manager.answer(1))
+  end
+
+  def ante!
+    current_player_id = 0
+    number_of_passes = 0
+    while number_of_passes < 2
+      passed_this_round = true
+      # ugly...
+      current_player = current_player_id == 0 ? @player0 : @player1
+
+      # if they can ante, make them. If they don't pass, note that,
+      # and enact the ante
+      if current_player_can_ante?
+        @input_manager.require_single_input!(current_player_id,
+          "ante", current_player_ante_callback)
+        answer = @input_manager.answer(current_player_id)
+        passed_this_round = (answer == "pass")
+        current_player.ante!(answer)
+      end
+      if passed_this_round
+        number_of_passes += 1
+      else
+        number_of_passes = 0
+      end
+      #toggle the player id between 0 and 1
+      current_player_id = current_player_id + 1 % 2
+    end
+  end
+
+  def reveal!
+    @player0.reveal_attack_pair!
+    @player1.reveal_attack_pair!
+  end
+
+  def handle_clashes!
+    while @player0.priority == @player1.priority
+      return :no_cards if @player0.no_cards? || @player1.no_cards?
+      # Mark an event as a clash!
+      @input_manager.require_multi_input!("select_new_base",
+        @player0.base_options_callback,
+        @player1.base_options_callback
+      )
+      @player0.new_base!(@input_manager.answers(0))
+      @player1.new_base!(@input_manager.answers(1))
+    end
+  end
+
+  def determine_active_player!
+    # at this point, we know someone won priority
+    if @player0.priority > @player1.priority
+      @active_player, @reactive_player = @player0, @player1
+    else
+      @active_player, @reactive_player = @player1, @player0
+    end
+    #some characters care if they are active...
+    @active_player.is_active!
+    @reactive_player.is_reactive!
+  end
+
   def character_list
-    ["hikaru"]
+    [Hikaru]
+  end
+  def character_names
+    character_list.map(&:name)
   end
 
   # returns a hash of player info, for that player id.
   # this adds more information if player_id and as_seen_by_id match
   def player_info_for(player_id, as_seen_by_id)
-    nil
+    {
+      :location => @player_locations[player_id]
+    }
   end
 end

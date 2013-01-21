@@ -109,7 +109,6 @@ describe Game do
         end
         it "start of beat happens after clashes are resolved"
         it "end of beat effects happen even if you are stunned"
-        
       it "correctly selects active/reactive characters"
       it "before/after activating effects happen at right time for active/reactive characters"
       it "doesn't do before/after activating if you are stunned"
