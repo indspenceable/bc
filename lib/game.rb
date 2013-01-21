@@ -210,6 +210,18 @@ class Game
     end
   end
 
+  def determine_active_player!
+    # at this point, we know someone won priority
+    if @player0.priority > @player1.priority
+      @active_player, @reactive_player = @player0, @player1
+    else
+      @active_player, @reactive_player = @player1, @player0
+    end
+    #some characters care if they are active...
+    @active_player.is_active!
+    @reactive_player.is_reactive!
+  end
+
   def character_list
     [Hikaru]
   end
