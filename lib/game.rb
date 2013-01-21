@@ -3,13 +3,31 @@ class Hikaru < Character
   def self.name
     "hikaru"
   end
-  def initialize
+  def initialize my_id, inputs, events
+    @my_id = my_id
+    @inputs = inputs
+    @events = events
+
+    # set up my hand
+    @bases = %w(grasp drive strike shot burst dash palmstrike)
+    @styles = %(trance focused geomantic sweeping advancing)
+    @tokens = %w(earth wind fire water)
   end
+
+  # this should probably live in character.
   def valid_discard_callback
-    ->(text) { text =~ /[a-z]*_[a-z]*;[a-z]*_[a-z]*/}
+    ->(text) do
+      text =~ /([a-z]*)_([a-z]*);([a-z]*)_([a-z]*)/
+      s1,b1,s2,b2 = $1, $2, $3, $4
+      bases.include?(b1) && bases.include?(b2) && b1 != b2 &&
+      styles.include?(s1) && styles.include?(s2) && s1 != s2
+    end
   end
   def valid_attack_pair_callback
-    ->(text) { text =~ /[a-z]*_[a-z]*/ }
+    ->(text) do
+      text =~ /([a-z]*)_([a-z]*)/
+      bases.include?($2) && styles.include?($1)
+    end
   end
 end
 
@@ -79,6 +97,7 @@ class Game
 
   def setup_game!(inputs)
     @input_manager = InputManager.new(inputs)
+    @events = []
     @player_locations = {
       0 => 1,
       1 => 5,
@@ -141,8 +160,16 @@ class Game
       ->(text) { character_names.include?(text) }
     )
     # for now, just consume input.
-    @player0 = character_list[character_names.index @input_manager.answer(0)].new
-    @player1 = character_list[character_names.index @input_manager.answer(1)].new
+    @player0 =
+      character_list[character_names.index @input_manager.answer(0)].new(
+        0,
+        @input_manager,
+        @events)
+    @player1 =
+      character_list[character_names.index @input_manager.answer(1)].new(
+        1,
+        @input_manager,
+        @events)
   end
   def select_discards!
     # select_discards
