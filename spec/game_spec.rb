@@ -32,14 +32,16 @@ describe Game do
         }
       end
       it "puts the players in their starting locations" do
-        subject.game_state[:players][0][:location].should == 1
-        subject.game_state[:players][1][:location].should == 5
+        subject.player_locations?.should == {
+          0 => 1,
+          1 => 5,
+        }
       end
     end
     context "from the start of beat 0" do
       before :each do
-        subject.input!(0, "trance_dash;focused_grasp")
-        subject.input!(1, "focused_grasp;trance_dash")
+        subject.input!(0, "sweeping_dash;focused_grasp")
+        subject.input!(1, "focused_grasp;sweeping_dash")
       end
       it "asks both players to choose attack pairs" do
         subject.required_input.should == {
@@ -49,32 +51,64 @@ describe Game do
       end
       it "does not allow characters to select attacks and styles that are on cooldown" do
           #focused was in the initial discard
-          expect{ subject.input!(0, "attack:focused_drive") }.to raise_error
+          subject.input!(0, "attack:focused_drive")
           subject.required_input[0].should == "select_attack"
       end
       it "allows characters who ante to ante between planning and reveal" do
           #do we need to set the 'nil' or will ruby be OK without it?
           #should 'nil' be something like 'wait' instead?
-        (subject.game_state[0][:can_ante] == 'true')? @p0ante = "ante" :  @p0ante = nil
-        (subject.game_state[1][:can_ante] == 'true')? @p1ante = "ante" :  @p1ante = nil
+          #AK: I'm not convinced we even need a :can_ante. The default ante value can just be pass/nil and this can be taken care of with normal 2-pass ante logic
+        (subject.game_state[0][:can_ante] == 'true')? @p0ante = "ante"; p0ante = nil
+        (subject.game_state[1][:can_ante] == 'true')? @p1ante = "ante"; p1ante = nil
         subject.required_input.should == {
-          0 => @p0ante,
-          1 => @p1ante,
+          0 => p0ante,
+          1 => p1ante,
         }
       end
       it "reveal happens right after cards are revealed" do
         subject.input!(0, "attack:advancing_drive")
         subject.input!(1, "attack:geomantic_shot")
-        subject.game_state[:events][-1].should == "planning" #this needs to be more specific probably
-        subject.input!(0, "ante:done")
-        subject.input!(1, "ante:done")
-        subject.game_state[:events][-2].should == "ante:nil;nil"
-        subject.game_state[:events][-1].should == "reveal:advancing_drive;geomantic_shot"
+        subject.gamestate[:events][-1].should == "planning" #this needs to be more specific probably
+        subject.input!(0, "ante:pass")
+        subject.input!(1, "ante:pass")
+        subject.gamestate[:events][-3].should == "ante:nil;nil"
+        subject.gamestate[:events][-2].should == "reveal:advancing_drive;geomantic_shot"
       end
-      it "start/end of beat effects happen at start/end of beat"
-      it "start of beat happens after clashes are resolved"
-      it "end of beat effects happen even if you are stunned"
 
+      context "after ante/plan" do
+        it "clashes if the priority is the same" do
+          subject.input!(0, "attack:advancing_drive")
+          subject.input!(1, "attack:advancing_drive")
+          subject.input!(0, "ante:pass")
+          subject.input!(1, "ante:pass")
+          subject.gamestate[-1].include?("clash").should == 'true'
+        end
+        it "start/end of beat effects happen at start/end of beat" do
+          #this spec seems too long...it requires a lot of inputs
+          subject.input!(0, "attack:trance_burst")
+          subject.input!(1, "attack:advancing_drive")
+          subject.input!(0, "ante:pass")
+          subject.input!(1, "ante:pass")
+          subject.game_state(0).beatstart.should == "burst"
+          subject.game_state(1).beatstart.should == "advancing"
+          subject.game_state(0).beatend.should == "trance"
+          subject.game_state(0).beatend.should == nil
+          subject.required_input.should == {
+            0 => "beatstart:burst"
+            1 => nil
+          }
+          subject.input!(0, "burst:2") # to move back 2 spaces
+          subject.game_state[:events][-1].should == "beatstart:1,advancing;0,burst"
+          subject.input!(1, "pre_act:drive,2") #advance 2
+          subject.required_input.should == {
+            0 => "beatend:trance"
+            1 => nil
+          }
+          subject.input!(0, "beatend:trance_earth")
+          subject.game_state[:events][-1].should == "beatend:0,trance_earth"
+        end
+        it "start of beat happens after clashes are resolved"
+        it "end of beat effects happen even if you are stunned"
       it "correctly selects active/reactive characters"
       it "before/after activating effects happen at right time for active/reactive characters"
       it "doesn't do before/after activating if you are stunned"
@@ -84,11 +118,13 @@ describe Game do
 
       it "soak reduces the ammount of damage you take"
 
-      it "clashes if the priority is the same"
-      it "continues to clash until priorities are different, or either player is out of cards"
-      it "recycles correctly in the case of a clash"
 
+      it "continues to clash until priorities are different, or either player is out of cards"
+      end
+      it "recycles correctly in the case of a clash"
+      
       it "if a player is reduce to < 1 life, they lose"
+
       it "each match lasts 15 turns, at which point the winner is decided even if both players are > 0 life"
     end
   end
