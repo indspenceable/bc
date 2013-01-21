@@ -32,10 +32,8 @@ describe Game do
         }
       end
       it "puts the players in their starting locations" do
-        subject.player_locations?.should == {
-          0 => 1,
-          1 => 5,
-        }
+        subject.game_state[:players][0][:location].should == 1
+        subject.game_state[:players][1][:location].should == 5
       end
     end
     context "from the start of beat 0" do
@@ -58,8 +56,8 @@ describe Game do
           #do we need to set the 'nil' or will ruby be OK without it?
           #should 'nil' be something like 'wait' instead?
           #AK: I'm not convinced we even need a :can_ante. The default ante value can just be pass/nil and this can be taken care of with normal 2-pass ante logic
-        (subject.game_state[0][:can_ante] == 'true')? @p0ante = "ante"; p0ante = nil
-        (subject.game_state[1][:can_ante] == 'true')? @p1ante = "ante"; p1ante = nil
+        (subject.game_state[0][:can_ante] == 'true')? @p0ante = "ante" : p0ante = nil
+        (subject.game_state[1][:can_ante] == 'true')? @p1ante = "ante" : p1ante = nil
         subject.required_input.should == {
           0 => p0ante,
           1 => p1ante,
@@ -94,14 +92,14 @@ describe Game do
           subject.game_state(0).beatend.should == "trance"
           subject.game_state(0).beatend.should == nil
           subject.required_input.should == {
-            0 => "beatstart:burst"
+            0 => "beatstart:burst",
             1 => nil
           }
           subject.input!(0, "burst:2") # to move back 2 spaces
           subject.game_state[:events][-1].should == "beatstart:1,advancing;0,burst"
           subject.input!(1, "pre_act:drive,2") #advance 2
           subject.required_input.should == {
-            0 => "beatend:trance"
+            0 => "beatend:trance",
             1 => nil
           }
           subject.input!(0, "beatend:trance_earth")
