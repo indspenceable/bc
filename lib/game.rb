@@ -24,9 +24,9 @@ class Hikaru < Character
       Card.new("grasp",      1, 2, 5),
       Card.new("drive",      1, 3, 4),
       Card.new("strike",     1, 4, 3),
-      Card.new("shot",    1..4  3, 2),
+      Card.new("shot",    1..4, 3, 2),
       Card.new("burst",   2..3, 3, 1),
-      #Card.new("dash", 9, :na, :na)
+      Card.new("dash",     :na,:na,9),
       Card.new("palmstrike", 1, 2, 5),
     ]
     # %(trance focused geomantic sweeping advancing)
@@ -49,8 +49,8 @@ class Hikaru < Character
     @discard2 = [s2, b2]
     @bases.delete(b1)
     @bases.delete(b2)
-    @styles.discard(s1)
-    @styles.discard(s2)
+    @styles.delete(s1)
+    @styles.delete(s2)
   end
 
   def can_ante?
@@ -73,14 +73,14 @@ class Hikaru < Character
     ->(text) do
       text =~ /([a-z]*)_([a-z]*);([a-z]*)_([a-z]*)/
       s1,b1,s2,b2 = $1, $2, $3, $4
-      bases.include?(b1) && bases.include?(b2) && b1 != b2 &&
-      styles.include?(s1) && styles.include?(s2) && s1 != s2
+      @bases.map(&:name).include?(b1) && @bases.map(&:name).include?(b2) && b1 != b2 &&
+      @styles.map(&:name).include?(s1) && @styles.map(&:name).include?(s2) && s1 != s2
     end
   end
   def valid_attack_pair_callback
     ->(text) do
       text =~ /([a-z]*)_([a-z]*)/
-      bases.include?($2) && styles.include?($1)
+      @bases.map(&:name).include?($2) && @styles.map(&:name).include?($1)
     end
   end
   def ante_callback
