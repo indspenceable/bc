@@ -12,11 +12,69 @@ class Geomantic < Style
     }
   end
 end
+class Focused < Style
+  def initialize
+    super("focused", 0, 1, 0)
+  end
+  def stun_guard
+    2
+  end
+  def on_hit!
+    {
+      "focused_recover_token" => ->(me, inputs) {me.recover_token!}
+    }
+  end
+end
 
-class Sweeping < Style;end
-class Trance < Style;end
-class Focused < Style;end
-class Advancing < Style;end
+class Trance < Style
+  def initialize
+    super('trance', 0..1, 0, 0)
+  end
+  def reveal!(me)
+    me.return_tokens_to_pool!
+  end
+  def end_of_beat!
+    {
+      "trance_recover_token" => ->(me, inputs) {me.recover_token!}
+    }
+  end
+end
+
+class Sweeping < Style
+  def initialize
+    super('sweeping', 0, -1, 3)
+  end
+  # TODO - sweeping extra hit
+end
+
+class Advancing < Style
+  def initialize
+    super('advancing', 0, 1, 1)
+  end
+  def start_of_beat!
+    #TODO - this doesn't check that you passed your opponent...
+    {
+      'advancing_advance' => select_from_methods('advance', advance: [1])
+    }
+  end
+end
+class PalmStrike
+  def initialize
+    super('palmstrike', 1, 2, 5)
+  end
+  def start_of_beat!
+    #TODO - this doesn't check that you passed your opponent...
+    {
+      'palmstrike_advance' => select_from_methods('advance', advance: [1])
+    }
+  end
+  def on_damage!
+    {
+      "palmstrike_recover_token" => ->(me, inputs) {me.recover_token!}
+    }
+  end
+  end
+end
 
 class Hikaru < Character
   def self.name
@@ -26,12 +84,12 @@ class Hikaru < Character
     super
 
     # set up my hand
-    @hand << Card.new("palmstrike", 1, 2, 5)
+    @hand << PalmStrike.new
     @hand += [
-      Focused.new("focused",   0, 0, 1),
-      Trance.new("trance", 0..1, 0, 0),
-      Sweeping.new("sweeping",  0,-1, 3),
-      Advancing.new("advancing", 0, 1, 1),
+      Focused.new,
+      Trance.new,
+      Sweeping.new,
+      Advancing.new,
       Geomantic.new,
     ]
     @token_pool = %w(earth wind fire water)
