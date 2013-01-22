@@ -20,7 +20,6 @@ describe Game do
   end
   context "playing a game with characters selected" do
     before :each do
-      # these should probably be test characters?
       subject.input!(0, "hikaru")
       subject.input!(1, "hikaru")
     end
@@ -181,7 +180,7 @@ describe Game do
         subject.input!(0, "sweeping_dash;focused_grasp")
         subject.input!(1, "focused_grasp;sweeping_dash")
         subject.player_locations = {
-          0 => 1
+          0 => 1,
           1 => 4 
         }
         #attacks
@@ -201,7 +200,7 @@ describe Game do
       it "end of beat effects happen even if you are stunned" do
         #Should prompt user for token selection from Trance style
         subject.required_input.should == {
-          0 => nil
+          0 => nil,
           1 => "trance"
         }
       end

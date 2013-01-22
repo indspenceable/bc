@@ -58,7 +58,7 @@ class Advancing < Style
     }
   end
 end
-class PalmStrike
+class PalmStrike < Base
   def initialize
     super('palmstrike', 1, 2, 5)
   end
@@ -72,7 +72,6 @@ class PalmStrike
     {
       "palmstrike_recover_token" => ->(me, inputs) {me.recover_token!}
     }
-  end
   end
 end
 
