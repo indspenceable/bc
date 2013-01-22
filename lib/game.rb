@@ -1,92 +1,37 @@
-class Card
-  attr_reader :name, :power, :priority, :range
-  def initialize name, range, power, priority
-    @name = name
-    @power = power
-    @priority = priority
-    @range = range
-  end
-end
 
-class Character; end
-class Hikaru < Character
-  def self.name
-    "hikaru"
-  end
-  def initialize my_id, inputs, events
-    @my_id = my_id
-    @inputs = inputs
-    @events = events
+require_relative "hikaru"
 
-    # set up my hand
-    # %w(grasp drive strike shot burst dash palmstrike)
-    @bases = [
-      Card.new("grasp",      1, 2, 5),
-      Card.new("drive",      1, 3, 4),
-      Card.new("strike",     1, 4, 3),
-      Card.new("shot",    1..4, 3, 2),
-      Card.new("burst",   2..3, 3, 1),
-      Card.new("dash",     :na,:na,9),
-      Card.new("palmstrike", 1, 2, 5),
-    ]
-    # %(trance focused geomantic sweeping advancing)
-    @styles = [
-      Card.new("trance", 0..1, 0, 0),
-      Card.new("focused",   0, 0, 1),
-      Card.new("geomantic", 0, 1, 0),
-      Card.new("sweeping",  0,-1, 3),
-      Card.new("advancing", 0, 1, 1),
-    ]
-    @token_pool = %w(earth wind fire water)
-    @token_discard = []
-    @current_tokens = []
-  end
-
-  def set_initial_discards!(choice)
-    choice =~ /([a-z]*)_([a-z]*);([a-z]*)_([a-z]*)/
-    s1,b1,s2,b2 = $1, $2, $3, $4
-    @discard1 = [s1, b1]
-    @discard2 = [s2, b2]
-    @bases.delete(b1)
-    @bases.delete(b2)
-    @styles.delete(s1)
-    @styles.delete(s2)
-  end
-
-  def can_ante?
-    @token_pool.any?
-  end
-
-  def ante!(choice)
-    @current_tokens << @token_pool.delete(choice)
-  end
-
-  def start_of_beat
-  end
-
-  # input callbacks. These check the validity of input that the player does.
-  # is this the best design? I dunno. It does make it easy for us to identify
-  # when theres an error due to invalid input, though.
-
-  # this should probably live in character.
-  def valid_discard_callback
-    ->(text) do
-      text =~ /([a-z]*)_([a-z]*);([a-z]*)_([a-z]*)/
-      s1,b1,s2,b2 = $1, $2, $3, $4
-      @bases.map(&:name).include?(b1) && @bases.map(&:name).include?(b2) && b1 != b2 &&
-      @styles.map(&:name).include?(s1) && @styles.map(&:name).include?(s2) && s1 != s2
+#MAGIC METHOD
+def select_from_methods(selection_name, options)
+  option_list = []
+  options.each do |k, v|
+    v.each do |cv|
+      option_list << [k, cv]
     end
   end
-  def valid_attack_pair_callback
-    ->(text) do
-      text =~ /([a-z]*)_([a-z]*)/
-      @bases.map(&:name).include?($2) && @styles.map(&:name).include?($1)
+  ->(me, input) do
+    valid_options = []
+    option_list.each do |method, arg|
+      confirmation_method = "#{method}?"
+      valid_options << [method.to_s, arg.to_s] if me.send(confirmation_method, arg)
     end
-  end
-  def ante_callback
-    ->(text) do
-      (@token_pool + ["pass"]).include?($1)
+
+    puts "VALID OPTIONS ARE #{valid_options}"
+    return if valid_options.empty?
+
+    # ask them for input only if theres more than one valid option.
+    if valid_options.count > 1
+      option_names = valid_options.map{|k,v| "#{k}_#{v}"}.join(';')
+      # ask them for the option number they want to do
+      input.require_single_input!(me.character_id, selection_name || option_names, ->(text) {
+        valid_options.include?(text.split('_'))
+      })
+      method, argument = input.answer(me.character_id).split('_')
+    else
+      method_argument = valid_options.first
     end
+    # do that option number
+    me.send("#{method}!", argument)
   end
 end
 
@@ -184,6 +129,7 @@ class Game
   def input!(player_id, str)
     setup_game!(@valid_inputs_thus_far + [[player_id, str]])
     @valid_inputs_thus_far << [player_id, str]
+    required_input
   end
 
   # returns a hash from player_id to the input they need
@@ -274,7 +220,7 @@ class Game
         number_of_passes = 0
       end
       #toggle the player id between 0 and 1
-      current_player_id = current_player_id + 1 % 2
+      current_player_id = (current_player_id + 1) % 2
     end
   end
 
