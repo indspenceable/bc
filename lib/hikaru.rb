@@ -136,6 +136,16 @@ class Hikaru < Character
     (@token_pool + ["pass"]).include?(choice)
   end
 
+  def recover_token!
+    select_from('recover_token', recover: %w(earth fire water wind)).call(me,@input_manager)
+  end
+  def recover?(token)
+    @token_discard.include?(token)
+  end
+  def recover!(token)
+    @token_pool << @token_discard.delete(token)
+  end
+
   def ante_callback
     ->(text) do
       (@token_pool + ["pass"]).include?(text)
