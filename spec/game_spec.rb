@@ -52,37 +52,85 @@ describe Game do
         expect{ subject.input!(0, "attack:focused_drive") }.to raise_error
       end
       it "allows characters who ante to ante between planning and reveal" do
-        subject.input!(0, "attack:trance_drive")
-        subject.input!(1, "attack:trance_drive")
+        #attack
+        subject.input!(0, "trance_drive")
+        subject.input!(1, "trance_drive")
         subject.required_input.should == {
+          #for now, player 0 will always ante first
           0 => "ante",
           # 1 => "ante",
         }
       end
+      it "skips the ante phase if no players can ante" do
+        subject
+      end
       it "reveal happens right after cards are revealed" do
-        subject.input!(0, "attack:advancing_drive")
-        subject.input!(1, "attack:geomantic_shot")
-        subject.gamestate[:events][-1].should == "planning" #this needs to be more specific probably
-        subject.input!(0, "ante:pass")
-        subject.input!(1, "ante:pass")
+        #attack
+        subject.input!(0, "advancing_drive")
+        subject.input!(1, "geomantic_shot")
+        #ante
+        subject.input!(0, "pass")
+        subject.input!(1, "pass")
         subject.gamestate[:events][-3].should == "ante:nil;nil"
         subject.gamestate[:events][-2].should == "reveal:advancing_drive;geomantic_shot"
       end
 
       context "after ante/plan" do
-        it "clashes if the priority is the same" do
-          subject.input!(0, "attack:advancing_drive")
-          subject.input!(1, "attack:advancing_drive")
-          subject.input!(0, "ante:pass")
-          subject.input!(1, "ante:pass")
-          subject.gamestate[-1].include?("clash").should == 'true'
+        context "regarding clashes" do
+          before :each do
+            #attack
+            subject.input!(0, "advancing_strike")
+            subject.input!(1, "trance_drive")
+            #ante
+            subject.input!(0, "pass")
+            subject.input!(1, "pass")
+          end
+          it "clashes if the priority is the same" do
+            subject.gamestate[:events][-1].include?("clash").should == 'true'
+            subject.required_input.should == {
+              0 => "select_new_base",
+              1 => "select_new_base"
+            }
+          end
+          it "start of beat happens after clashes are resolved" do
+            subject.input!(0, "shot")
+            subject.input!(1, "burst")
+            subject.gamestate[:events][-1].include?("beatstart").should == 'true'
+            end
+          it "continues to clash until priorities are different" do
+            subject.input!(0, "burst")
+            subject.input!(1, "shot")
+            subject.gamestate[:events][-1].include?("clash").should == 'true'
+            subject.required_input.should == {
+              0 => "select_new_base",
+              1 => "select_new_base"
+            }
+            subject.input!(0, "drive")
+            subject.input!(1, "strike")
+            subject.gamestate[:events][-1].include?("beatstart").should == 'true'
+          end
+          it "recycles correctly in the case of a clash" do
+            subject.input!(0, "drive")
+            subject.input!(1, "strike")
+            #Drive before activate
+            subject.input!(0, "2")
+            #Trance End of Beat
+            subject.input!(1, "")
+            #do these need to be strike/drive objects or are we just doing strings?
+            subject.gamestate[:players][0][:available_bases].include?("drive").should == 'false'
+            subject.gamestate[:players][0][:available_bases].include?("strike").should == 'true'
+            subject.gamestate[:players][1][:available_bases].include?("strike").should == 'false'
+            subject.gamestate[:players][1][:available_bases].include?("drive").should == 'true'
+          end
+          it "continues to clash until either player is out of cards"            
         end
         it "start/end of beat effects happen at start/end of beat" do
-          #this spec seems too long...it requires a lot of inputs
-          subject.input!(0, "attack:trance_burst")
-          subject.input!(1, "attack:advancing_drive")
-          subject.input!(0, "ante:pass")
-          subject.input!(1, "ante:pass")
+          #attack pairs
+          subject.input!(0, "trance_burst")
+          subject.input!(1, "advancing_drive")
+          #ante
+          subject.input!(0, "pass")
+          subject.input!(1, "pass")
           subject.game_state(0).beatstart.should == "burst"
           subject.game_state(1).beatstart.should == "advancing"
           subject.game_state(0).beatend.should == "trance"
@@ -91,35 +139,72 @@ describe Game do
             0 => "beatstart:burst",
             1 => nil
           }
-          subject.input!(0, "burst:2") # to move back 2 spaces
+          subject.input!(0, "2") # to move back 2 spaces during Start of Beat
           subject.game_state[:events][-1].should == "beatstart:1,advancing;0,burst"
-          subject.input!(1, "pre_act:drive,2") #advance 2
+          subject.input!(1, "2") #Drive: advance 2 during Before Activation
           subject.required_input.should == {
             0 => "beatend:trance",
             1 => nil
           }
-          subject.input!(0, "beatend:trance_earth")
+          subject.input!(0, "earth")
           subject.game_state[:events][-1].should == "beatend:0,trance_earth"
         end
-        it "start of beat happens after clashes are resolved"
-        it "end of beat effects happen even if you are stunned"
-      it "correctly selects active/reactive characters"
-      it "before/after activating effects happen at right time for active/reactive characters"
-      it "doesn't do before/after activating if you are stunned"
+
+        context "regarding priority" do
+          before :each do
+          #attack pairs
+          subject.input!(0, "trance_burst")
+          subject.input!(1, "advancing_drive")
+          #ante
+          subject.input!(0, "pass")
+          subject.input!(1, "pass")
+          end
+          it "correctly selects active/reactive characters" do
+            subject.active_player.should == 1
+          end
+          it "before/after activating effects happen at right time for active/reactive characters"
+        end
       it "attacks only trigger on hit if in range"
       it "attacks that hit only trigger on damage if they do damage"
-      it "attacks that damage stun if they do more damage than opponents stun guard and soak."
 
       it "soak reduces the ammount of damage you take"
-
-
-      it "continues to clash until priorities are different, or either player is out of cards"
-      end
-      it "recycles correctly in the case of a clash"
+        # TODO Hikaru does not have any soak
       
       it "if a player is reduce to < 1 life, they lose"
 
-      it "each match lasts 15 turns, at which point the winner is decided even if both players are > 0 life"
+        it "each match lasts 15 turns, at which point the winner is decided even if both players are > 0 life"
+      end
+    end
+    context "regarding damaging and stun effects" do
+      before :each do
+        #discard
+        subject.input!(0, "sweeping_dash;focused_grasp")
+        subject.input!(1, "focused_grasp;sweeping_dash")
+        subject.player_locations = {
+          0 => 1
+          1 => 4 
+        }
+        #attacks
+        subject.input!(0, "advancing_palmstrike")
+        subject.input!(1, "trance_drive")
+        #ante
+        subject.input!(0, "pass")
+        subject.input!(1, "pass")
+      end
+      it "attacks that damage stun if they do more damage than opponents stun guard and soak." do
+        subject.game_state[:players][1][:stunned].should == 'true'
+      end
+      it "doesn't do before/after activating if you are stunned" do
+        #no actions for player one should happen
+        subject.game_state[:events][-1,-3].include?("1").should == 'false'
+      end
+      it "end of beat effects happen even if you are stunned" do
+        #Should prompt user for token selection from Trance style
+        subject.required_input.should == {
+          0 => nil
+          1 => "trance"
+        }
+      end
     end
   end
 end
