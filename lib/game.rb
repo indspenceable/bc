@@ -16,7 +16,6 @@ def select_from_methods(selection_name, options)
       valid_options << [method.to_s, arg.to_s] if me.send(confirmation_method, arg)
     end
 
-    puts "VALID OPTIONS ARE #{valid_options}"
     return if valid_options.empty?
 
     # ask them for input only if theres more than one valid option.
@@ -28,7 +27,7 @@ def select_from_methods(selection_name, options)
       })
       method, argument = input.answer(me.character_id).split('_')
     else
-      method_argument = valid_options.first
+      method, argument = valid_options.first
     end
     # do that option number
     me.send("#{method}!", argument)
@@ -175,6 +174,9 @@ class Game
         1,
         @input_manager,
         @events)
+
+    @player0.opponent = @player1
+    @player1.opponent = @player0
   end
   def select_discards!
     # select_discards
