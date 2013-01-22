@@ -273,10 +273,12 @@ class Game
     unless current.stunned?
       current.before_activating!
       # are they in range?
-      if current.in_range?(opponent)
+      if current.in_range?
+
         current.on_hit!
         damage_dealt = opponent.take_hit!(current.power)
         if damage_dealt > 0
+
           current.on_damage!
         end
       end

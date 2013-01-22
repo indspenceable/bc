@@ -14,4 +14,14 @@ class Card
       # blank methods, by default
     end
   end
+
+  def stun_guard
+    0
+  end
+  def soak
+    0
+  end
 end
+
+class Style < Card;end
+class Base < Card;end
