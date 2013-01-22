@@ -116,56 +116,6 @@ class Hikaru < Character
     super + @current_tokens
   end
 
-  def set_attack_pair!(choice)
-    choice =~ /([a-z]*)_([a-z]*)/
-    @style = styles.select{|s| s.name == $1}.first
-    @base = bases.select{|b| b.name == $2}.first
-  end
-
-  def retreat?(n_s)
-    n = Integer(n_s)
-    if position < @opponent.position
-      n <= position
-    else
-      n <= 6-position
-    end
-  end
-  def advance?(n_s)
-    n = Integer(n_s)
-    #like retreat but one space is occupied by opponent.
-    if position > @opponent.position
-      n <= position-1
-    else
-      n <= 6-position-1
-    end
-  end
-
-  def retreat!(n_s)
-    n = Integer(n_s)
-    if position < @opponent.position
-      @position -= n
-    else
-      @position += n
-    end
-  end
-
-  def advance!(n_s)
-    n = Integer(n_s)
-    if position > @opponent.position
-      if n >= @position - @opponent.position
-        @position -= n+1
-      else
-        @position -= n
-      end
-    else
-      if n >= @opponent.position - @position
-        @position += n+1
-      else
-        @position += n
-      end
-    end
-  end
-
 
   def recycle!
     super
