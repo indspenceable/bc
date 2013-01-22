@@ -48,19 +48,15 @@ describe Game do
         }
       end
       it "does not allow characters to select attacks and styles that are on cooldown" do
-          #focused was in the initial discard
-          subject.input!(0, "attack:focused_drive")
-          subject.required_input[0].should == "select_attack"
+        #focused was in the initial discard
+        expect{ subject.input!(0, "attack:focused_drive") }.to raise_error
       end
       it "allows characters who ante to ante between planning and reveal" do
-          #do we need to set the 'nil' or will ruby be OK without it?
-          #should 'nil' be something like 'wait' instead?
-          #AK: I'm not convinced we even need a :can_ante. The default ante value can just be pass/nil and this can be taken care of with normal 2-pass ante logic
-        (subject.game_state[0][:can_ante] == 'true')? @p0ante = "ante" : p0ante = nil
-        (subject.game_state[1][:can_ante] == 'true')? @p1ante = "ante" : p1ante = nil
+        subject.input!(0, "attack:trance_drive")
+        subject.input!(1, "attack:trance_drive")
         subject.required_input.should == {
-          0 => p0ante,
-          1 => p1ante,
+          0 => "ante",
+          # 1 => "ante",
         }
       end
       it "reveal happens right after cards are revealed" do

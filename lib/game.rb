@@ -263,7 +263,7 @@ class Game
       # and enact the ante
       if current_player.can_ante?
         @input_manager.require_single_input!(current_player_id,
-          "ante", current_player_ante_callback)
+          "ante", current_player.ante_callback)
         answer = @input_manager.answer(current_player_id)
         passed_this_round = (answer == "pass")
         current_player.ante!(answer)
