@@ -1,17 +1,19 @@
 require 'sinatra'
-require 'json'
-require_relative File.join("..", "lib", "game")
+require 'multi_json'
+require 'haml'
+require_relative File.join("lib", "game")
 
-game_list[] = Hash.new
+# Make games if needed.
+GAMES = Hash.new{ |h,k| h[k] = Game.new }
 
-get '/game/:game_id/:player' do
-  unless game_list.has_key?(game_:id)
-    game_list[:game_id] = game.new
-  end
-  haml :game_layout
+get '/games/:game_id/:player_id' do
+  @game = GAMES[params[:game_id]]
+  @player_id = params[:player_id]
+  haml :game
 end
 
-put '/game/:game_id/:player_id/:input' do
+post '/games/:game_id/:player_id' do
+  body = ::MultiJson.decode(request.body)
   #Return any answer for the given input
-  :game_id.input!(:player_id, :input)[:player_id]
+  GAMES[params[:game_id]].input!(body['player_id'], body['action'])
 end
