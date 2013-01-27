@@ -14,7 +14,11 @@ get '/games/:game_id/:player_id' do
 end
 
 post '/games/:game_id/' do
+  game = GAMES[params[:game_id]]
   #Return any answer for the given input
-  GAMES[params[:game_id]].input!(params['player_id'], params['action'])
-  ::MultiJson.dump(GAMES[params[:game_id]].game_state)
+  game.input!(params['player_id'], params['action'])
+  ::MultiJson.dump({
+    'game_state' => game.game_state,
+    'required_input' => game.required_input[params['player_id'].to_i]
+  })
 end
