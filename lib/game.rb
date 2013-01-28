@@ -79,8 +79,8 @@ class Game
         end
       end
       if input_required?
-        if @input_buffer.any?{|h,k| k.any?}
-          raise "Sent input when it was unneeded."
+        @input_buffer.each do |k,v|
+          raise "#{k} sent input (#{v}) when it wasn't needed." if v.any?
         end
         throw :input_required
       end
@@ -131,8 +131,8 @@ class Game
   end
 
   def input!(player_id, str)
-    setup_game!(@valid_inputs_thus_far + [[player_id, str]])
-    @valid_inputs_thus_far << [player_id, str]
+    setup_game!(@valid_inputs_thus_far + [[Integer(player_id), str]])
+    @valid_inputs_thus_far = @valid_inputs_thus_far + [[Integer(player_id), str]]
     required_input
   end
 

@@ -76,7 +76,7 @@ class PalmStrike < Base
 end
 
 class Hikaru < Character
-  def self.name
+  def self.character_name
     "hikaru"
   end
   def initialize *args
