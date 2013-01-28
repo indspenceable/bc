@@ -295,7 +295,7 @@ class Game
     [Hikaru]
   end
   def character_names
-    character_list.map(&:name)
+    character_list.map(&:character_name)
   end
 
   # returns a hash of player info, for that player id.

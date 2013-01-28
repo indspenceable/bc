@@ -6,11 +6,42 @@
     %script{:src => "//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"}
   %body
     %h1
-      What up
-    %game
+      Battlecon
+    .game
+      .board
+        .space.space-0
+        .space.space-1
+        .space.space-2
+        .space.space-3
+        .space.space-4
+        .space.space-5
+        .space.space-6
+      .myCards
+      .theirCards
+      .eventLog
+      %div
+        You need to answer:
+        %span.currentQuestion
       %form
         %input{:type => "text"}
   :javascript
+    var setUI = function(data) {
+      $('.board .space').empty()
+      var gameState = data['gameState']
+      var requiredInput = data['requiredInput']
+      $('.currentQuestion').html(requiredInput)
+      console.log(gameState['events'])
+      $('.eventLog').html(gameState['events'].join("\n"))
+    }
+    var ping = function() {
+      console.log("ping!")
+      $.get('/ping/#{@game_id}/', {
+        'player_id': "#{@player_id}"
+      }, function(data) {
+        setUI(data)
+        setTimeout(ping, 1000)
+      }, 'json')
+    }
     $(function() {
       $('input').closest('form').on('submit', function() {
         var $input = $(this).find('input')
@@ -18,8 +49,10 @@
           'player_id': "#{@player_id}",
           'action': $input.val()
         }, function(data) {
-          console.log("Got response", data)
+          setUI(data)
         }, 'json')
         return false;
       })
+
+      ping()
     })
