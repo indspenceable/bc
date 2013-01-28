@@ -124,8 +124,8 @@ class Character
 
   def set_attack_pair!(choice)
     choice =~ /([a-z]*)_([a-z]*)/
-    @style = styles.select{|s| s.name == $1}.first
-    @base = bases.select{|b| b.name == $2}.first
+    @style = styles.find{|s| s.name == $1}
+    @base = bases.find{|b| b.name == $2}
   end
 
   def retreat?(n_s)

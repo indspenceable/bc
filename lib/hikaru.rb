@@ -98,10 +98,10 @@ class Hikaru < Character
 
   def set_initial_discards!(choice)
     choice =~ /([a-z]*)_([a-z]*);([a-z]*)_([a-z]*)/
-    s1 = styles.select{|s| s.name == $1}
-    b1 = bases.select{|b| b.name == $2}
-    s2 = styles.select{|s| s.name == $3}
-    b2 = bases.select{|b| b.name == $4}
+    s1 = styles.find{|s| s.name == $1}
+    b1 = bases.find{|b| b.name == $2}
+    s2 = styles.find{|s| s.name == $3}
+    b2 = bases.find{|b| b.name == $4}
 
     @discard1 = [s1, b1]
     @discard2 = [s2, b2]
