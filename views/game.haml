@@ -19,22 +19,47 @@
       .myCards
       .theirCards
       .eventLog
-      %div
-        You need to answer:
-        %span.currentQuestion
-      %form
-        %input{:type => "text"}
+      .userInput
+        .prompt
+          You need to answer:
+          %span.currentQuestion
+        .answerLinks
+        %form.freeForm
+          %input{:type => "text"}
   :javascript
+    var pretty = function(str) {
+      return ({
+      }[str] || str)
+    }
+    var options_for_question = function(question) {
+      if (question == "select_character") {
+        return #{Game.character_names}
+      } else return false;
+    }
+    var oldData
     var setUI = function(data) {
+      // We should short circuit unless there have been updates.
       $('.board .space').empty()
-      var gameState = data['gameState']
       var requiredInput = data['requiredInput']
       $('.currentQuestion').html(requiredInput)
-      console.log(gameState['events'])
+      var opts = options_for_question(requiredInput)
+      if (opts) {
+        $('.freeForm').hide()
+        var $answerLinks = $('.answerLinks')
+        $answerLinks.empty()
+        for (var i = 0; i < opts.length; i += 1) {
+          var str = '<a href="#" onclick="return(false);" choice="' + opts[i] + '"> ' + pretty(opts[i]) + " </a>"
+          $answerLinks.append(str)
+        }
+        $answerLinks.show()
+      } else {
+        $('.freeForm').show()
+        $('.answerLinks').hide()
+      }
+      var gameState = data['gameState']
       $('.eventLog').html(gameState['events'].join("\n"))
     }
     var ping = function() {
-      console.log("ping!")
       $.get('/ping/#{@game_id}/', {
         'player_id': "#{@player_id}"
       }, function(data) {
@@ -53,6 +78,9 @@
         }, 'json')
         return false;
       })
-
+      $('.answerLinks').on('click', 'a', function() {
+        $('.freeForm input').val($(this).attr('choice'))
+        $('.freeForm').submit()
+      })
       ping()
     })
