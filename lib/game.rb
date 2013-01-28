@@ -78,7 +78,12 @@ class Game
           answer!(player_id, @input_buffer[player_id].shift)
         end
       end
-      throw :input_required if input_required?
+      if input_required?
+        if @input_buffer.any?{|h,k| k.any?}
+          raise "Sent input when it was unneeded."
+        end
+        throw :input_required
+      end
       @answers
     end
     def answer!(player_id, string)
