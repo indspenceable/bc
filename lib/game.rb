@@ -145,7 +145,7 @@ class Game
   # if you hand it a player_id, it will provide you more information
   def game_state(player_id=nil)
     {
-      :events => [],
+      :events => @events,
       :players => [
         player_info_for(0, player_id),
         player_info_for(1, player_id)
@@ -155,6 +155,15 @@ class Game
   end
 
   private
+
+  # log events to the game's event log
+  #    phase - string
+  #    *events - list of event strings to be separated by ';'
+  def log_event!(phase, *events)
+    @events << (phase + ': ' + events.join('; '))
+    puts @events
+  end
+
 
   # phases of the game
   def select_characters!
@@ -213,6 +222,8 @@ class Game
         @input_manager.require_single_input!(current_player_id,
           "ante", current_player.ante_callback)
         answer = @input_manager.answer(current_player_id)
+        #TODO fix so "Player 1 passes" instead of "Player 1 antes pass"
+        log_event!("Ante", "Player #{current_player_id} antes #{answer}")
         passed_this_round = (answer == "pass")
         current_player.ante!(answer)
       end
@@ -224,15 +235,16 @@ class Game
       #toggle the player id between 0 and 1
       current_player_id = (current_player_id + 1) % 2
     end
+    log_event!("Ante", "done")
   end
 
   def reveal!
-    @player0.reveal_attack_pair!
-    @player1.reveal_attack_pair!
+    log_event!("Reveal", "Player 1 plays #{@player0.reveal_attack_pair!}", "Player 2 plays #{@player1.reveal_attack_pair!}")
   end
 
   def handle_clashes!
     while @player0.priority == @player1.priority
+      log_event("Clash!!")
       return :no_cards if @player0.no_cards? || @player1.no_cards?
       # Mark an event as a clash!
       @input_manager.require_multi_input!("select_new_base",

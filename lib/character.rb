@@ -20,6 +20,7 @@ class Character
   end
 
   def reveal_attack_pair!
+    "#{@style.name}_#{@base.name}"
   end
   def is_active!
   end
