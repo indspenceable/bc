@@ -20,6 +20,10 @@ class Character
     @life = 20
   end
 
+  def name
+    self.class.character_name
+  end
+
   def reveal_attack_pair!
     "#{@style.name.capitalize} #{@base.name.capitalize}"
   end

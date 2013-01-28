@@ -80,7 +80,12 @@ class Game
           answer!(player_id, @input_buffer[player_id].shift)
         end
       end
-      throw :input_required if input_required?
+      if input_required?
+        @input_buffer.each do |k,v|
+          raise "#{k} sent input (#{v}) when it wasn't needed." if v.any?
+        end
+        throw :input_required
+      end
       @answers
     end
     def answer!(player_id, string)
@@ -128,8 +133,8 @@ class Game
   end
 
   def input!(player_id, str)
-    setup_game!(@valid_inputs_thus_far + [[player_id, str]])
-    @valid_inputs_thus_far << [player_id, str]
+    setup_game!(@valid_inputs_thus_far + [[Integer(player_id), str]])
+    @valid_inputs_thus_far = @valid_inputs_thus_far + [[Integer(player_id), str]]
     required_input
   end
 
@@ -171,17 +176,17 @@ class Game
   def select_characters!
     #character selection
     @input_manager.require_multi_input!("select_character",
-      ->(text) { character_names.include?(text) },
-      ->(text) { character_names.include?(text) }
+      ->(text) { Game.character_names.include?(text) },
+      ->(text) { Game.character_names.include?(text) }
     )
     # for now, just consume input.
-    @player0 =
-      character_list[character_names.index @input_manager.answer(0)].new(
+    @player0 = Game.character_list[
+      Game.character_names.index @input_manager.answer(0)].new(
         0,
         @input_manager,
         @events)
-    @player1 =
-      character_list[character_names.index @input_manager.answer(1)].new(
+    @player1 = Game.character_list[
+      Game.character_names.index @input_manager.answer(1)].new(
         1,
         @input_manager,
         @events)
@@ -300,11 +305,11 @@ class Game
     end
   end
 
-  def character_list
+  def self.character_list
     [Hikaru]
   end
-  def character_names
-    character_list.map(&:name)
+  def self.character_names
+    character_list.map(&:character_name)
   end
 
   # returns a hash of player info, for that player id.

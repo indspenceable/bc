@@ -6,11 +6,67 @@
     %script{:src => "//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"}
   %body
     %h1
-      What up
-    %game
-      %form
-        %input{:type => "text"}
+      Battlecon
+    .game
+      .board
+        .space.space-0
+        .space.space-1
+        .space.space-2
+        .space.space-3
+        .space.space-4
+        .space.space-5
+        .space.space-6
+      .myCards
+      .theirCards
+      .eventLog
+      .userInput
+        .prompt
+          You need to answer:
+          %span.currentQuestion
+        .answerLinks
+        %form.freeForm
+          %input{:type => "text"}
   :javascript
+    var pretty = function(str) {
+      return ({
+      }[str] || str)
+    }
+    var options_for_question = function(question) {
+      if (question == "select_character") {
+        return #{Game.character_names}
+      } else return false;
+    }
+    var oldData
+    var setUI = function(data) {
+      // We should short circuit unless there have been updates.
+      $('.board .space').empty()
+      var requiredInput = data['requiredInput']
+      $('.currentQuestion').html(requiredInput)
+      var opts = options_for_question(requiredInput)
+      if (opts) {
+        $('.freeForm').hide()
+        var $answerLinks = $('.answerLinks')
+        $answerLinks.empty()
+        for (var i = 0; i < opts.length; i += 1) {
+          var str = '<a href="#" onclick="return(false);" choice="' + opts[i] + '"> ' + pretty(opts[i]) + " </a>"
+          $answerLinks.append(str)
+        }
+        $answerLinks.show()
+      } else {
+        $('.freeForm').show()
+        $('.answerLinks').hide()
+      }
+      var gameState = data['gameState']
+      $('.eventLog').html(gameState['events'].join("\n"))
+    }
+    var ping = function() {
+      $.get('/ping/#{@game_id}/', {
+        'player_id': "#{@player_id}"
+      }, function(data) {
+        setUI(data)
+        setTimeout(ping, 1000)
+      }, 'json')
+    }
     $(function() {
       $('input').closest('form').on('submit', function() {
         var $input = $(this).find('input')
@@ -18,8 +74,13 @@
           'player_id': "#{@player_id}",
           'action': $input.val()
         }, function(data) {
-          console.log("Got response", data)
+          setUI(data)
         }, 'json')
         return false;
       })
+      $('.answerLinks').on('click', 'a', function() {
+        $('.freeForm input').val($(this).attr('choice'))
+        $('.freeForm').submit()
+      })
+      ping()
     })
