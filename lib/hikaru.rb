@@ -91,8 +91,11 @@ class Hikaru < Character
       Advancing.new,
       Geomantic.new,
     ]
+    # tokens available
     @token_pool = %w(earth wind fire water)
+    # tokens not available
     @token_discard = []
+    # tokens used this beat
     @current_tokens = []
   end
 
@@ -140,9 +143,10 @@ class Hikaru < Character
   end
 
   #Checks if hikaru can recover the given token
-  def recover?(token)
+  def recover_token?(token)
     @token_discard.include?(token)
   end
+
   def recover!(token)
     @token_pool << @token_discard.delete(token)
   end

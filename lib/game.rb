@@ -34,7 +34,35 @@ def select_from_methods(selection_name, options)
   end
 end
 
-#TODO def select_from_options
+#MAGIC MIKE
+def select_from_options(selection_name, options)
+  #lamda will take in the calling object and the inputmanager
+  ->(me, input) do
+    #figure out which of the options are valid
+    valid_options = []
+    options.each do |option|
+      #uses the selection_name? as a validator of input
+      validation_method = "#{selection_name}?"
+      valid_options << option.to_s if me.send(validation_method, option)
+    end
+
+    return if valid_options.empty?
+
+    # ask them for input only if theres more than one valid option.
+    if valid_options.count > 1
+      option_names = valid_options.join(';')
+      #Get the option from the user
+      input.require_single_input!(me.character_id, selection_name || option_names, ->(text) {
+                                    valid_options.include?(text)
+                                  })
+      # returns the answer selected by the user (after validation)
+      input.answer(me.character_id)
+    else
+      # or just returns the only valid option
+      selection = valid_options.first
+    end
+  end
+end
 
 class Game
   # Input manager manages input.

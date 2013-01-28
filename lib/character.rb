@@ -135,7 +135,7 @@ class Character
     @base = bases.find{|b| b.name == $2}
   end
 
-  def new_base!(choice)
+  def select_new_base!(choice)
     @clashed_bases << @base
     @hand.delete(@base)
     choice =~ /([a-z]*)/

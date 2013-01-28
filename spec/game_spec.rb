@@ -71,8 +71,8 @@ describe Game do
         subject.input!(0, "pass")
         subject.input!(1, "pass")
 #        puts subject.game_state[:events][-5..-1]
-        subject.game_state[:events][-3].should == "ante:nil;nil"
-        subject.game_state[:events][-2].should == "reveal:advancing_drive;geomantic_shot"
+#        subject.game_state[:events][-3].should == "ante:nil;nil"
+        subject.game_state[:events][-1].should == "Reveal: Player 1 plays Advancing Drive; Player 2 plays Geomantic Shot"
       end
 
       context "after ante/plan" do
