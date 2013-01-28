@@ -6,6 +6,7 @@ class Character
     @input_manager = input_manager
     @events = events
     @position = character_id == 0 ? 1 : 5
+    @clashed_bases = []
 
     @hand = [
       Grasp.new,
@@ -20,7 +21,7 @@ class Character
   end
 
   def reveal_attack_pair!
-    "#{@style.name}_#{@base.name}"
+    "#{@style.name.capitalize} #{@base.name.capitalize}"
   end
   def is_active!
   end
@@ -111,6 +112,7 @@ class Character
   def recycle!
     @stunned = false
     @hand += @discard2
+    @hand += @clashed_bases
     @discard2 = @discard1
     @discard1 = [@style, @base]
   end
@@ -127,6 +129,13 @@ class Character
     choice =~ /([a-z]*)_([a-z]*)/
     @style = styles.find{|s| s.name == $1}
     @base = bases.find{|b| b.name == $2}
+  end
+
+  def new_base!(choice)
+    @clashed_bases << @base
+    @hand.delete(@base)
+    choice =~ /([a-z]*)/
+    @base = bases.find{|b| b.name == $1}
   end
 
   def retreat?(n_s)
@@ -173,7 +182,9 @@ class Character
     end
   end
 
-
+  def no_cards?
+    !@hand.empty?
+  end
 
   # input callbacks. These check the validity of input that the player does.
   # is this the best design? I dunno. It does make it easy for us to identify

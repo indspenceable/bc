@@ -27,7 +27,7 @@ describe Game do
       it "asks both players to choose discards" do
         subject.required_input.should == {
         0 => "select_discards",
-        1 => "select_discards",
+        1 => "select_discards"
         }
       end
       it "puts the players in their starting locations" do
@@ -70,8 +70,7 @@ describe Game do
         #ante
         subject.input!(0, "pass")
         subject.input!(1, "pass")
-        puts "----------------------------------------------------------------------------"
-        puts subject.game_state[:events][-5..-1]
+#        puts subject.game_state[:events][-5..-1]
         subject.game_state[:events][-3].should == "ante:nil;nil"
         subject.game_state[:events][-2].should == "reveal:advancing_drive;geomantic_shot"
       end
@@ -87,7 +86,8 @@ describe Game do
             subject.input!(1, "pass")
           end
           it "clashes if the priority is the same" do
-            subject.game_state[:events][-1].include?("clash").should == 'true'
+            subject.game_state[:events][-1].include?("Clash").should == true
+            puts subject.game_state[:events][-1]
             subject.required_input.should == {
               0 => "select_new_base",
               1 => "select_new_base"
@@ -96,19 +96,19 @@ describe Game do
           it "start of beat happens after clashes are resolved" do
             subject.input!(0, "shot")
             subject.input!(1, "burst")
-            subject.game_state[:events][-1].include?("beatstart").should == 'true'
+            subject.game_state[:events][-1].include?("Start of beat").should == 'true'
             end
           it "continues to clash until priorities are different" do
             subject.input!(0, "burst")
             subject.input!(1, "shot")
-            subject.game_state[:events][-1].include?("clash").should == 'true'
+            subject.game_state[:events][-1].include?("Clash").should == 'true'
             subject.required_input.should == {
               0 => "select_new_base",
               1 => "select_new_base"
             }
             subject.input!(0, "drive")
             subject.input!(1, "strike")
-            subject.game_state[:events][-1].include?("beatstart").should == 'true'
+            subject.game_state[:events][-1].include?("Start of beat").should == 'true'
           end
           it "recycles correctly in the case of a clash" do
             subject.input!(0, "drive")

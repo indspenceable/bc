@@ -34,6 +34,8 @@ def select_from_methods(selection_name, options)
   end
 end
 
+#TODO def select_from_options
+
 class Game
   # Input manager manages input.
   class InputManager
@@ -244,15 +246,15 @@ class Game
 
   def handle_clashes!
     while @player0.priority == @player1.priority
-      log_event("Clash!!")
+      log_event!("Clash!!")
       return :no_cards if @player0.no_cards? || @player1.no_cards?
-      # Mark an event as a clash!
       @input_manager.require_multi_input!("select_new_base",
         @player0.base_options_callback,
         @player1.base_options_callback
       )
       @player0.new_base!(@input_manager.answers(0))
       @player1.new_base!(@input_manager.answers(1))
+      reveal!
     end
   end
 
