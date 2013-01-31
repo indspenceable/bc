@@ -139,16 +139,18 @@ class Hikaru < Character
   end
 
   def recover_token!
-    select_from_options('recover_token',
-      recover: %w(earth fire water wind)).call(self, @input_manager)
+    select_from_methods('recover_token',
+      recover: %w(earth fire water wind pass)).call(self, @input_manager)
   end
 
   #Checks if hikaru can recover the given token
-  def recover_token?(token)
+  def recover?(token)
+    return true if token == "pass"
     @token_discard.include?(token)
   end
 
   def recover!(token)
+    return if token == "pass"
     @token_pool << @token_discard.delete(token)
   end
 

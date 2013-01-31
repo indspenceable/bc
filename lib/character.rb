@@ -187,7 +187,7 @@ class Character
   end
 
   def no_cards?
-    !@hand.empty?
+    @hand.empty?
   end
 
   # input callbacks. These check the validity of input that the player does.
@@ -210,6 +210,12 @@ class Character
     ->(text) do
       text =~ /([a-z]*)_([a-z]*)/
       bases.map(&:name).include?($2) && styles.map(&:name).include?($1)
+    end
+  end
+  def base_options_callback
+    ->(text) do
+      text =~ /([a-z]*)/
+      bases.map(&:name).include?($1)
     end
   end
 end
