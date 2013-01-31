@@ -35,3 +35,8 @@ post '/games/:game_id/' do
     'requiredInput' => game.required_input[params['player_id'].to_i]
   })
 end
+
+# static assets
+get '/:file' do
+  File.read(File.join('public', params[:file]))
+end
