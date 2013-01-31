@@ -72,7 +72,8 @@ describe Game do
         subject.input!(1, "pass")
 #        puts subject.game_state[:events][-5..-1]
 #        subject.game_state[:events][-3].should == "ante:nil;nil"
-        subject.game_state[:events][-1].should == "Reveal: Player 1 plays Advancing Drive; Player 2 plays Geomantic Shot"
+        subject.game_state[:events][-3].should == "Reveal: Player 1 plays Advancing Drive; Player 2 plays Geomantic Shot"
+        # The last event is the start of the beat
       end
 
       context "after ante/plan" do
@@ -96,19 +97,19 @@ describe Game do
           it "start of beat happens after clashes are resolved" do
             subject.input!(0, "shot")
             subject.input!(1, "burst")
-            subject.game_state[:events][-1].include?("Start of beat").should == 'true'
+            subject.game_state[:events][-3].include?("Start of beat").should == true
             end
           it "continues to clash until priorities are different" do
             subject.input!(0, "burst")
             subject.input!(1, "shot")
-            subject.game_state[:events][-1].include?("Clash").should == 'true'
+            subject.game_state[:events][-1].include?("Clash").should == true
             subject.required_input.should == {
               0 => "select_new_base",
               1 => "select_new_base"
             }
             subject.input!(0, "drive")
             subject.input!(1, "strike")
-            subject.game_state[:events][-1].include?("Start of beat").should == 'true'
+            subject.game_state[:events][-1].include?("End of beat").should == true
           end
           it "recycles correctly in the case of a clash" do
             subject.input!(0, "drive")
@@ -118,10 +119,10 @@ describe Game do
             #Trance End of Beat
             subject.input!(1, "")
             #do these need to be strike/drive objects or are we just doing strings?
-            subject.game_state[:players][0][:available_bases].include?("drive").should == 'false'
-            subject.game_state[:players][0][:available_bases].include?("strike").should == 'true'
-            subject.game_state[:players][1][:available_bases].include?("strike").should == 'false'
-            subject.game_state[:players][1][:available_bases].include?("drive").should == 'true'
+            subject.game_state[:players][0][:available_bases].include?("drive").should == false
+            subject.game_state[:players][0][:available_bases].include?("strike").should == true
+            subject.game_state[:players][1][:available_bases].include?("strike").should == false
+            subject.game_state[:players][1][:available_bases].include?("drive").should == true
           end
           it "continues to clash until either player is out of cards"            
         end
@@ -137,14 +138,14 @@ describe Game do
           subject.game_state(0).beatend.should == "trance"
           subject.game_state(0).beatend.should == nil
           subject.required_input.should == {
-            0 => "beatstart:burst",
+            0 => "burst_move_back",
             1 => nil
           }
           subject.input!(0, "2") # to move back 2 spaces during Start of Beat
           subject.game_state[:events][-1].should == "beatstart:1,advancing;0,burst"
           subject.input!(1, "2") #Drive: advance 2 during Before Activation
           subject.required_input.should == {
-            0 => "beatend:trance",
+            0 => "trance_recover_token",
             1 => nil
           }
           subject.input!(0, "earth")

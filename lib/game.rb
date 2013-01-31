@@ -280,13 +280,14 @@ class Game
   def handle_clashes!
     while @player0.priority == @player1.priority
       log_event!("Clash!!")
-      return :no_cards if @player0.no_cards? || @player1.no_cards?
+      return :no_cards if (@player0.no_cards? || @player1.no_cards?)
+      puts "----------------------------------------------clashtest----------------------------"
       @input_manager.require_multi_input!("select_new_base",
         @player0.base_options_callback,
         @player1.base_options_callback
       )
-      @player0.new_base!(@input_manager.answers(0))
-      @player1.new_base!(@input_manager.answers(1))
+      @player0.select_new_base!(@input_manager.answer(0))
+      @player1.select_new_base!(@input_manager.answer(1))
       reveal!
     end
   end
@@ -299,15 +300,18 @@ class Game
       @active_player, @reactive_player = @player1, @player0
     end
     #some characters care if they are active...
+    log_event!("Player #{@active_player.character_id} is the active player")
     @active_player.is_active!
     @reactive_player.is_reactive!
   end
 
   def start_of_beat!
+    log_event!("Start of beat")
     @active_player.start_of_beat!
     @reactive_player.start_of_beat!
   end
   def end_of_beat!
+    log_event!("End of beat")
     @active_player.end_of_beat!
     @reactive_player.end_of_beat!
   end
@@ -324,12 +328,16 @@ class Game
 
         current.on_hit!
         damage_dealt = opponent.take_hit!(current.power)
+        log_event!("Player #{current.character_id} hits Player #{opponent.character_id} for 
+          #{damage_dealt} damage!")
         if damage_dealt > 0
-
           current.on_damage!
         end
+      else
+        log_event!("Player #{current.character_id} misses!")
       end
       current.after_activating!
+    else log_event!("Player #{current.character_id} is stunned!")
     end
   end
 
