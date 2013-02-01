@@ -10,13 +10,13 @@ var init = function(player_id, game_id, character_names) {
     } else return false;
   }
   var setup_inputs = function(question) {
-    $('.freeForm').hide()
-    $('.answerLinks').hide()
-    $('.myhand').removeClass('select_me')
+    $('.free-form').hide()
+    $('.answer-links').hide()
+    $('.my-hand').removeClass('select_me')
     var opts = options_for_question(question)
     if (opts) {
-      $('.freeForm').hide()
-      var $answerLinks = $('.answerLinks')
+      $('.free-form').hide()
+      var $answerLinks = $('.answer-links')
       $answerLinks.empty()
       for (var i = 0; i < opts.length; i += 1) {
         var str = '<a href="#" onclick="return(false);" choice="' + opts[i] + '"> ' + pretty(opts[i]) + " </a>"
@@ -24,20 +24,20 @@ var init = function(player_id, game_id, character_names) {
       }
       $answerLinks.show()
     } else if (question == "select_attack_pairs") {
-      $('.freeForm').hide()
-      $('.answerLinks').hide()
-      $('.myHand').addClass('selectMe')
+      $('.free-form').hide()
+      $('.answer-links').hide()
+      $('.my-hand').addClass('select-me')
     } else if (question) {
       // Use Freeform Input
-      $('.freeForm').show()
-      $('.answerLinks').hide()
+      $('.free-form').show()
+      $('.answer-links').hide()
     }
   }
   var setUI = function(data) {
     // We should short circuit unless there have been updates.
     $('.board .space').empty()
     var requiredInput = data['requiredInput']
-    $('.currentQuestion').html(pretty(requiredInput))
+    $('.current-question').html(pretty(requiredInput))
       setup_inputs(requiredInput)
     var gameState = data['gameState']
     $('.eventLog').html(gameState['events'].join("<br/>"))
@@ -57,6 +57,7 @@ var init = function(player_id, game_id, character_names) {
   var setBase = function(baseName) {
     base = baseName
     console.log(base,style)
+    // This needs to fill in the appropriate image.
     if (base && style) {
       sendPair()
     }
@@ -65,16 +66,17 @@ var init = function(player_id, game_id, character_names) {
   var setStyle = function(styleName) {
     style=styleName
     console.log(base,style)
+    // This needs to fill in the appropriate image.
     if (base && style) {
       sendPair()
     }
   }
   var sendPair = function() {
     console.log("c")
-    $('.freeForm input').val(style + "_" + base)
+    $('.free-form input').val(style + "_" + base)
     base = undefined
     style = undefined
-    $('.freeForm').submit()
+    $('.free-form').submit()
   }
   // ---------------------------------------
 
@@ -89,16 +91,16 @@ var init = function(player_id, game_id, character_names) {
       }, 'json')
       return false;
     })
-    $('.answerLinks').on('click', 'a', function() {
-      $('.freeForm input').val($(this).attr('choice'))
-      $('.freeForm').submit()
+    $('.answer-links').on('click', 'a', function() {
+      $('.free-form input').val($(this).attr('choice'))
+      $('.free-form').submit()
     })
     ping()
-    $('.myCards').on('click', '.selectMe .bases .card', function() {
+    $('.my-cards').on('click', '.select-me .bases .card', function() {
       console.log("a")
       setBase($(this).text())
     })
-    $('.myCards').on('click', '.selectMe .styles .card', function() {
+    $('.my-cards').on('click', '.select-me .styles .card', function() {
       console.log("b")
       setStyle($(this).text())
     })

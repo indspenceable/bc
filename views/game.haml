@@ -8,7 +8,14 @@
     %h1
       Battlecon
     .game
+      .my-attack-pair.attack-pair
+        .style
+        .base
+      .their-attack-pair.attack-pair
+        .style
+        .base
       .board
+        Current Game board: </br>
         .space.space-0
         .space.space-1
         .space.space-2
@@ -16,8 +23,9 @@
         .space.space-4
         .space.space-5
         .space.space-6
-      .myCards
-        .myHand
+      .my-cards.card-collection
+        ME </br>
+        .my-hand
           .bases
             .card dash
             .card grasp
@@ -28,14 +36,16 @@
             .card advancing
         .discard1
         .discard2
-      .theirCards
+      .their-cards.card-collection
+        them </br>
+      .clear{:style => "clear: both"}
       .eventLog
       .userInput
         .prompt
           You need to answer:
-          %span.currentQuestion
-        .answerLinks
-        %form.freeForm
+          %span.current-question
+        .answer-links
+        %form.free-form
           %input{:type => "text"}
   %script{:src => "/game.js"}
   :javascript
