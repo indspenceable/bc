@@ -1,4 +1,6 @@
 var init = function(player_id, game_id, character_names) {
+  var cachedEventCount = undefined;
+  var cachedQuestion = undefined;
   var pretty = function(str) {
     return ({
       'select_character': "Please select a character:"
@@ -34,11 +36,19 @@ var init = function(player_id, game_id, character_names) {
     }
   }
   var setUI = function(data) {
+    if (data['gameState']['events'].length == cachedEventCount &&
+      data['requiredInput'] == cachedQuestion) {
+      return;
+    }
+
+    cachedEventCount = data['gameState']['events'].length;
+    cachedQuestion = data['requiredInput'];
+    console.log("UPDATING")
     // We should short circuit unless there have been updates.
     $('.board .space').empty()
     var requiredInput = data['requiredInput']
     $('.current-question').html(pretty(requiredInput))
-      setup_inputs(requiredInput)
+    setup_inputs(requiredInput)
     var gameState = data['gameState']
     $('.eventLog').html(gameState['events'].join("<br/>"))
   }
