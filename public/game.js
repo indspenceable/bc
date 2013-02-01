@@ -1,6 +1,7 @@
 var init = function(player_id, game_id, character_names) {
   var pretty = function(str) {
     return ({
+      'select_character': "Please select a character:"
     }[str] || str)
   }
   var options_for_question = function(question) {
@@ -36,10 +37,10 @@ var init = function(player_id, game_id, character_names) {
     // We should short circuit unless there have been updates.
     $('.board .space').empty()
     var requiredInput = data['requiredInput']
-    $('.currentQuestion').html(requiredInput)
+    $('.currentQuestion').html(pretty(requiredInput))
       setup_inputs(requiredInput)
     var gameState = data['gameState']
-    $('.eventLog').html(gameState['events'].join("\n"))
+    $('.eventLog').html(gameState['events'].join("<br/>"))
   }
   var ping = function() {
     $.get('/ping/' + game_id + '/', {
@@ -49,6 +50,9 @@ var init = function(player_id, game_id, character_names) {
       setTimeout(ping, 1000)
     }, 'json')
   }
+
+  // This is for select_attack_pairs choice.
+  // ---------------------------------------
   var base
   var setBase = function(baseName) {
     base = baseName
@@ -72,6 +76,8 @@ var init = function(player_id, game_id, character_names) {
     style = undefined
     $('.freeForm').submit()
   }
+  // ---------------------------------------
+
   $(function() {
     $('input').closest('form').on('submit', function() {
       var $input = $(this).find('input')
