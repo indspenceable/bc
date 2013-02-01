@@ -22,7 +22,7 @@ var init = function(player_id, game_id, character_names) {
         $answerLinks.append(str)
       }
       $answerLinks.show()
-    } else if (question == "select_discards") {
+    } else if (question == "select_attack_pairs") {
       $('.freeForm').hide()
       $('.answerLinks').hide()
       $('.myHand').addClass('selectMe')
@@ -52,20 +52,22 @@ var init = function(player_id, game_id, character_names) {
   var base
   var setBase = function(baseName) {
     base = baseName
+    console.log(base,style)
     if (base && style) {
-      sendPair
+      sendPair()
     }
   }
   var style
   var setStyle = function(styleName) {
     style=styleName
+    console.log(base,style)
     if (base && style) {
-      sendPair
+      sendPair()
     }
   }
   var sendPair = function() {
     console.log("c")
-    $('.freeForm input').val(base + "_" + style)
+    $('.freeForm input').val(style + "_" + base)
     base = undefined
     style = undefined
     $('.freeForm').submit()
