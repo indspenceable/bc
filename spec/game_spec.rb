@@ -131,12 +131,19 @@ describe Game do
           subject.input!(0, "trance_burst")
           subject.input!(1, "advancing_drive")
           #ante
+          puts "\n\n\n\n\n1"
+          puts subject.required_input.to_s
           subject.input!(0, "pass")
+          puts "\n\n\n\n\n2"
+          puts subject.required_input.to_s
           subject.input!(1, "pass")
-          subject.game_state(0).beatstart.should == "burst"
-          subject.game_state(1).beatstart.should == "advancing"
-          subject.game_state(0).beatend.should == "trance"
-          subject.game_state(0).beatend.should == nil
+          puts "----------------------------------------------clashtest----------------------------"
+          # subject.game_state(0).beatstart.should == "burst"
+          # subject.game_state(1).beatstart.should == "advancing"
+          # subject.game_state(0).beatend.should == "trance"
+          # subject.game_state(0).beatend.should == nil
+          puts subject.game_state[:events]
+          puts "\n\n\n\n"
           subject.required_input.should == {
             0 => "burst_move_back",
             1 => nil

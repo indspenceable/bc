@@ -152,6 +152,7 @@ class Character
   end
   def advance?(n_s)
     n = Integer(n_s)
+    puts "\n\n\nposition = #{position}\n\n\n"
     #like retreat but one space is occupied by opponent.
     if position > @opponent.position
       n <= position-1

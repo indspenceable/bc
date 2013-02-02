@@ -16,7 +16,7 @@ class Drive < Base
   def initialize
     super("drive", 1, 3, 4)
   end
-  def before_activation!
+  def before_activating!
     {'drive_advance' => select_from_methods(
       advance: [1,2])
     }

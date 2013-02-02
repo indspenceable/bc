@@ -4,9 +4,9 @@ require_relative "hikaru"
 #MAGIC METHOD
 def select_from_methods(selection_name, options)
   option_list = []
-  options.each do |k, v|
-    v.each do |cv|
-      option_list << [k, cv]
+  options.each do |method, arg_options|
+    v.each do |arg_option|
+      option_list << [method, arg_option]
     end
   end
   ->(me, input) do
@@ -195,6 +195,10 @@ class Game
   #    phase - string
   #    *events - list of event strings to be separated by ';'
   def log_event!(phase, *events)
+    if (events.empty?)
+      @events << phase
+      return @events
+    end
     @events << (phase + ': ' + events.join('; '))
     puts @events
   end
@@ -244,6 +248,7 @@ class Game
   end
 
   def ante!
+    # TODO implement previous active player rule
     current_player_id = 0
     number_of_passes = 0
     while number_of_passes < 2
@@ -281,7 +286,6 @@ class Game
     while @player0.priority == @player1.priority
       log_event!("Clash!!")
       return :no_cards if (@player0.no_cards? || @player1.no_cards?)
-      puts "----------------------------------------------clashtest----------------------------"
       @input_manager.require_multi_input!("select_new_base",
         @player0.base_options_callback,
         @player1.base_options_callback
