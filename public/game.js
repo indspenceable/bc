@@ -1,4 +1,6 @@
 var init = function(player_id, game_id, character_names) {
+  var cachedEventCount = undefined;
+  var cachedQuestion = undefined;
   var pretty = function(str) {
     return ({
       'select_character': "Please select a character:"
@@ -34,12 +36,30 @@ var init = function(player_id, game_id, character_names) {
     }
   }
   var setUI = function(data) {
-    // We should short circuit unless there have been updates.
-    $('.board .space').empty()
+    // short circuit unless more events have happened, or
+    // there is a new question.
+    if (data['gameState']['events'].length == cachedEventCount &&
+      data['requiredInput'] == cachedQuestion) {
+      return;
+    }
+    cachedEventCount = data['gameState']['events'].length;
+    cachedQuestion = data['requiredInput'];
+
+    // Do everything required for this question.
     var requiredInput = data['requiredInput']
-    $('.current-question').html(pretty(requiredInput))
-      setup_inputs(requiredInput)
+    $('.current-question').text(pretty(requiredInput))
+    setup_inputs(requiredInput)
+
+    // Updates related to the gamestate
     var gameState = data['gameState']
+    if (!gameState.players) { return }
+    // clear the board
+    console.log(gameState)
+    $('.board .space').empty()
+    $('.space-' + gameState.players[0].location).text('0')
+    $('.space-' + gameState.players[1].location).text('1')
+
+
     $('.eventLog').html(gameState['events'].join("<br/>"))
   }
   var ping = function() {

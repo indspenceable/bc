@@ -1,4 +1,4 @@
-require_relative "card"
+require_relative "card" 
 
 class Grasp < Base
   def initialize
@@ -17,7 +17,7 @@ class Drive < Base
     super("drive", 1, 3, 4)
   end
   def before_activating!
-    {'drive_advance' => select_from_methods(
+    {'drive_advance' => select_from_methods("drive_advance",
       advance: [1,2])
     }
   end
@@ -55,5 +55,11 @@ end
 class Dash < Base
   def initialize
     super('dash', 0, 0, 9)
+  end
+  def after_activating!
+    {
+      "dash_move" => select_from_methods("dash_move",
+        retreat: [1, 2, 3], advance: [1, 2, 3])
+    }
   end
 end
