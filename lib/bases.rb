@@ -18,7 +18,7 @@ class Drive < Base
   end
   def before_activating!
     {'drive_advance' => select_from_methods("drive_advance",
-      advance: [1,2])
+      advance: [1, 2])
     }
   end
 end

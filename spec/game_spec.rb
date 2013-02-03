@@ -26,8 +26,8 @@ describe Game do
     context "setup" do
       it "asks both players to choose discards" do
         subject.required_input.should == {
-        0 => "select_discards",
-        1 => "select_discards"
+        0 => "select_attack_pairs",
+        1 => "select_attack_pairs"
         }
       end
       it "puts the players in their starting locations" do
@@ -37,8 +37,10 @@ describe Game do
     end
     context "from the start of beat 0" do
       before :each do
-        subject.input!(0, "sweeping_dash;focused_grasp")
-        subject.input!(1, "focused_grasp;sweeping_dash")
+        subject.input!(0, "sweeping_dash")
+        subject.input!(1, "focused_grasp")
+        subject.input!(0, "focused_grasp")
+        subject.input!(1, "sweeping_dash")
       end
       it "asks both players to choose attack pairs" do
         subject.required_input.should == {
@@ -48,7 +50,7 @@ describe Game do
       end
       it "does not allow characters to select attacks and styles that are on cooldown" do
         #focused was in the initial discard
-        expect{ subject.input!(0, "attack:focused_drive") }.to raise_error
+        expect{ subject.input!(0, "focused_drive") }.to raise_error
       end
       it "allows characters who ante to ante between planning and reveal" do
         #attack
@@ -61,7 +63,7 @@ describe Game do
         }
       end
       it "skips the ante phase if no players can ante" do
-        subject
+
       end
       it "reveal happens right after cards are revealed" do
         #attack
@@ -72,7 +74,7 @@ describe Game do
         subject.input!(1, "pass")
 #        puts subject.game_state[:events][-5..-1]
 #        subject.game_state[:events][-3].should == "ante:nil;nil"
-        subject.game_state[:events][-3].should == "Reveal: Player 1 plays Advancing Drive; Player 2 plays Geomantic Shot"
+        subject.game_state[:events][-3].should == "Reveal: Player 0 plays Advancing Drive; Player 1 plays Geomantic Shot"
         # The last event is the start of the beat
       end
 
@@ -97,7 +99,7 @@ describe Game do
           it "start of beat happens after clashes are resolved" do
             subject.input!(0, "shot")
             subject.input!(1, "burst")
-            subject.game_state[:events][-3].include?("Start of beat").should == true
+            subject.game_state[:events][-4].include?("Start of beat").should == true
             end
           it "continues to clash until priorities are different" do
             subject.input!(0, "burst")
@@ -109,20 +111,21 @@ describe Game do
             }
             subject.input!(0, "drive")
             subject.input!(1, "strike")
-            subject.game_state[:events][-1].include?("End of beat").should == true
+            subject.game_state[:events][-1].include?("Start of beat").should == true
           end
           it "recycles correctly in the case of a clash" do
             subject.input!(0, "drive")
             subject.input!(1, "strike")
             #Drive before activate
-            subject.input!(0, "2")
+            subject.input!(0, "advance_2")
             #Trance End of Beat
-            subject.input!(1, "")
+            #subject.input!(1, "")
             #do these need to be strike/drive objects or are we just doing strings?
-            subject.game_state[:players][0][:available_bases].include?("drive").should == false
-            subject.game_state[:players][0][:available_bases].include?("strike").should == true
-            subject.game_state[:players][1][:available_bases].include?("strike").should == false
-            subject.game_state[:players][1][:available_bases].include?("drive").should == true
+            
+            subject.game_state[:players][0][:hand].include?("drive").should == false
+            subject.game_state[:players][0][:hand].include?("strike").should == true
+            subject.game_state[:players][1][:hand].include?("strike").should == false
+            subject.game_state[:players][1][:hand].include?("drive").should == true
           end
           it "continues to clash until either player is out of cards"            
         end
@@ -137,13 +140,14 @@ describe Game do
           puts "\n\n\n\n\n2"
           puts subject.required_input.to_s
           subject.input!(1, "pass")
-          puts "----------------------------------------------clashtest----------------------------"
           # subject.game_state(0).beatstart.should == "burst"
           # subject.game_state(1).beatstart.should == "advancing"
           # subject.game_state(0).beatend.should == "trance"
           # subject.game_state(0).beatend.should == nil
+          puts "\n"
           puts subject.game_state[:events]
-          puts "\n\n\n\n"
+          puts "\n\n\n\n3"
+          # Or should the required in put also have the drive's before activate?
           subject.required_input.should == {
             0 => "burst_move_back",
             1 => nil

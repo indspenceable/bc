@@ -5,7 +5,7 @@ require_relative "hikaru"
 def select_from_methods(selection_name, options)
   option_list = []
   options.each do |method, arg_options|
-    v.each do |arg_option|
+    arg_options.each do |arg_option|
       option_list << [method, arg_option]
     end
   end
@@ -148,10 +148,13 @@ class Game
         select_attack_pairs!
         ante!
         reveal!
+        puts "just revealed"
         # if either player runs out of cards, go to the next turn
         next if handle_clashes! == :no_cards
         determine_active_player!
+        puts "sob"
         start_of_beat!
+        puts "activate"
         activate!(@active_player, @reactive_player)
         activate!(@reactive_player, @active_player)
         end_of_beat!
@@ -252,8 +255,8 @@ class Game
     p0a1 = @input_manager.answer(0)
     p1a1 = @input_manager.answer(1)
 
-    @players[0].set_initial_discards!("#{p0a0}{p0a1}")
-    @players[1].set_initial_discards!("#{p1a0}{p1a1}")
+    @players[0].set_initial_discards!("#{p0a0};#{p0a1}")
+    @players[1].set_initial_discards!("#{p1a0};#{p1a1}")
   end
 
   def select_attack_pairs!
@@ -297,14 +300,13 @@ class Game
   end
 
   def reveal!
-    log_event!("Reveal", "Player 1 plays #{@players[0].reveal_attack_pair!}", "Player 2 plays #{@players[1].reveal_attack_pair!}")
+    log_event!("Reveal", "Player 0 plays #{@players[0].reveal_attack_pair!}", "Player 1 plays #{@players[1].reveal_attack_pair!}")
   end
 
   def handle_clashes!
     while @players[0].priority == @players[1].priority
       log_event!("Clash!!")
       return :no_cards if (@players[0].no_cards? || @players[1].no_cards?)
-      puts "----------------------------------------------clashtest----------------------------"
       @input_manager.require_multi_input!("select_new_base",
         @players[0].base_options_callback,
         @players[1].base_options_callback
@@ -345,6 +347,7 @@ class Game
 
   def activate!(current, opponent)
     unless current.stunned?
+      puts "#{current.character_id} activating"
       current.before_activating!
       # are they in range?
       if current.in_range?
@@ -371,11 +374,27 @@ class Game
     character_list.map(&:character_name)
   end
 
+  def hand_s(hand)
+    hand_s = []
+    hand.each do |card|
+      hand_s << card.name
+    end
+    hand_s
+  end
+
   # returns a hash of player info, for that player id.
   # this adds more information if player_id and as_seen_by_id match
   def player_info_for(player_id, as_seen_by_id)
     {
-      :location => @players[player_id].position
+      :location => @players[player_id].position,
+      #:hand => hand_s(@players[player_id].hand)
+      :hand => ->(hand) {
+        hand_s = []
+        hand.each do |card|
+          hand_s << card.name
+        end
+        hand_s
+        }.(@players[player_id].hand)
     }
   end
 end
