@@ -22,10 +22,10 @@ def select_from_methods(selection_name, options)
     if valid_options.count > 1
       option_names = valid_options.map{|k,v| "#{k}_#{v}"}.join(';')
       # ask them for the option number they want to do
-      input.require_single_input!(me.character_id, selection_name || option_names, ->(text) {
+      input.require_single_input!(me.player_id, selection_name || option_names, ->(text) {
         valid_options.include?(text.split('_'))
       })
-      method, argument = input.answer(me.character_id).split('_')
+      method, argument = input.answer(me.player_id).split('_')
     else
       method, argument = valid_options.first
     end
@@ -52,11 +52,11 @@ def select_from_options(selection_name, options)
     if valid_options.count > 1
       option_names = valid_options.join(';')
       #Get the option from the user
-      input.require_single_input!(me.character_id, selection_name || option_names, ->(text) {
+      input.require_single_input!(me.player_id, selection_name || option_names, ->(text) {
                                     valid_options.include?(text)
                                   })
       # returns the answer selected by the user (after validation)
-      input.answer(me.character_id)
+      input.answer(me.player_id)
     else
       # or just returns the only valid option
       selection = valid_options.first
@@ -325,7 +325,7 @@ class Game
       @active_player, @reactive_player = @players[1], @players[0]
     end
     #some characters care if they are active...
-    log_event!("Player #{@active_player.character_id} is the active player")
+    log_event!("Player #{@active_player.player_id} is the active player")
     @active_player.is_active!
     @reactive_player.is_reactive!
   end
@@ -347,23 +347,23 @@ class Game
 
   def activate!(current, opponent)
     unless current.stunned?
-      puts "#{current.character_id} activating"
+      puts "#{current.player_id} activating"
       current.before_activating!
       # are they in range?
       if current.in_range?
 
         current.on_hit!
         damage_dealt = opponent.take_hit!(current.power)
-        log_event!("Player #{current.character_id} hits Player #{opponent.character_id} for 
+        log_event!("Player #{current.player_id} hits Player #{opponent.player_id} for
           #{damage_dealt} damage!")
         if damage_dealt > 0
           current.on_damage!
         end
       else
-        log_event!("Player #{current.character_id} misses!")
+        log_event!("Player #{current.player_id} misses!")
       end
       current.after_activating!
-    else log_event!("Player #{current.character_id} is stunned!")
+    else log_event!("Player #{current.player_id} is stunned!")
     end
   end
 
