@@ -128,6 +128,8 @@ class Game
     end
   end
 
+  attr_accessor :active_player, :reactive_player
+
   def initialize
     @valid_inputs_thus_far = []
     setup_game!(@valid_inputs_thus_far)
@@ -387,14 +389,9 @@ class Game
   def player_info_for(player_id, as_seen_by_id)
     {
       :location => @players[player_id].position,
-      #:hand => hand_s(@players[player_id].hand)
-      :hand => ->(hand) {
-        hand_s = []
-        hand.each do |card|
-          hand_s << card.name
-        end
-        hand_s
-        }.(@players[player_id].hand)
+      # aaron - lets just send a list of card names.
+      :bases => @players[player_id].bases.map(&:name),
+      :styles => @players[player_id].styles.map(&:name),
     }
   end
 end
