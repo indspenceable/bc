@@ -14,7 +14,9 @@ var init = function(player_id, game_id, character_names) {
   var setup_inputs = function(question) {
     $('.free-form').hide()
     $('.answer-links').hide()
-    $('.my-hand').removeClass('select_me')
+    $('.p' + player_id + '-hand').find('.bases, .styles').removeClass('select-me')
+    $('.current-attack-pair').hide()
+
     var opts = options_for_question(question)
     if (opts) {
       $('.free-form').hide()
@@ -28,7 +30,8 @@ var init = function(player_id, game_id, character_names) {
     } else if (question == "select_attack_pairs") {
       $('.free-form').hide()
       $('.answer-links').hide()
-      $('.my-hand').addClass('select-me')
+      $('.p' + player_id + '-hand').find('.bases, .styles').addClass('select-me')
+      $('.current-attack-pair').empty().show()
     } else if (question) {
       // Use Freeform Input
       $('.free-form').show()
@@ -59,6 +62,19 @@ var init = function(player_id, game_id, character_names) {
     $('.space-' + gameState.players[0].location).text('0')
     $('.space-' + gameState.players[1].location).text('1')
 
+    // show the players hands
+
+    for (var pn = 0; pn <= 1; pn++) {
+      console.log("pn is ", pn)
+      var $bases = $('.p' + pn + '-hand .bases').empty()
+      var $styles = $('.p' + pn + '-hand .styles').empty()
+      for (var index in gameState.players[pn].bases) {
+        $('<div/>').addClass('card').text(gameState.players[pn].bases[index]).appendTo($bases)
+      }
+      for (var index in gameState.players[pn].styles) {
+        $('<div/>').addClass('card').text(gameState.players[pn].styles[index]).appendTo($styles)
+      }
+    }
 
     $('.eventLog').html(gameState['events'].join("<br/>"))
   }
@@ -76,28 +92,33 @@ var init = function(player_id, game_id, character_names) {
   var base
   var setBase = function(baseName) {
     base = baseName
-    console.log(base,style)
     // This needs to fill in the appropriate image.
-    if (base && style) {
-      sendPair()
-    }
+    setPair()
   }
   var style
   var setStyle = function(styleName) {
     style=styleName
-    console.log(base,style)
     // This needs to fill in the appropriate image.
+    setPair()
+  }
+  var setPair = function() {
+    var cap = $('.current-attack-pair')
+    cap.text(
+      (style ? style : "---") + " " + (base ? base : "---")
+    )
+
     if (base && style) {
-      sendPair()
+      $('<div/>').addClass('click-me').text('submit').click(function() {
+        $('.free-form input').val(style + "_" + base)
+        base = undefined
+        style = undefined
+        $('.free-form').submit()
+      }).appendTo(cap)
     }
   }
-  var sendPair = function() {
-    console.log("c")
-    $('.free-form input').val(style + "_" + base)
-    base = undefined
-    style = undefined
-    $('.free-form').submit()
-  }
+
+
+
   // ---------------------------------------
 
   $(function() {
@@ -116,12 +137,10 @@ var init = function(player_id, game_id, character_names) {
       $('.free-form').submit()
     })
     ping()
-    $('.my-cards').on('click', '.select-me .bases .card', function() {
-      console.log("a")
+    $('.p' + player_id + '-cards').on('click', '.select-me.bases .card', function() {
       setBase($(this).text())
     })
-    $('.my-cards').on('click', '.select-me .styles .card', function() {
-      console.log("b")
+    $('.p' + player_id + '-cards').on('click', '.select-me.styles .card', function() {
       setStyle($(this).text())
     })
   })

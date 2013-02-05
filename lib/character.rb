@@ -1,11 +1,15 @@
 class Character
+<<<<<<< HEAD
   attr_reader :character_id,  :position, :hand
+=======
+  attr_reader :player_id, :position, :hand
+>>>>>>> b4edd31112055c6fef3efc582f87d8f97feaaac2
   attr_accessor :opponent
-  def initialize character_id, input_manager, events
-    @character_id = character_id
+  def initialize player_id, input_manager, events
+    @player_id = player_id
     @input_manager = input_manager
     @events = events
-    @position = character_id == 0 ? 1 : 5
+    @position = player_id == 0 ? 1 : 5
     @clashed_bases = []
 
     @hand = [
@@ -58,10 +62,10 @@ class Character
       end
       while actions_to_do.any?
         if actions_to_do.count > 1
-          @input_manager.require_single_input!(character_id, "choose_action_from:#{actions_to_do.keys.join(',')}",
+          @input_manager.require_single_input!(player_id, "choose_action_from:#{actions_to_do.keys.join(',')}",
             ->(text) { actions_to_do.key?(text) })
 
-          actions_to_do.delete(@input_manager.answer(character_id)).call(self, @input_manager)
+          actions_to_do.delete(@input_manager.answer(player_id)).call(self, @input_manager)
         else
           actions_to_do.values.pop.call(self, @input_manager)
           return
@@ -154,7 +158,6 @@ class Character
   end
   def advance?(n_s)
     n = Integer(n_s)
-    #puts "\n\n\nn=#{n}; Player#{character_id} position = #{position}; Opp @ #{@opponent.position}\n\n\n"
     #like retreat but one space is occupied by opponent.
     if position > @opponent.position
       n <= position-1

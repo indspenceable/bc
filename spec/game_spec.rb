@@ -121,13 +121,13 @@ describe Game do
             #Trance End of Beat
             #subject.input!(1, "")
             #do these need to be strike/drive objects or are we just doing strings?
-            
-            subject.game_state[:players][0][:hand].include?("drive").should == false
-            subject.game_state[:players][0][:hand].include?("strike").should == true
-            subject.game_state[:players][1][:hand].include?("strike").should == false
-            subject.game_state[:players][1][:hand].include?("drive").should == true
+
+            subject.game_state[:players][0][:bases].include?("drive").should == false
+            subject.game_state[:players][0][:bases].include?("strike").should == true
+            subject.game_state[:players][1][:bases].include?("strike").should == false
+            subject.game_state[:players][1][:bases].include?("drive").should == true
           end
-          it "continues to clash until either player is out of cards"            
+          it "continues to clash until either player is out of cards"
         end
         it "start/end of beat effects happen at start/end of beat" do
           #attack pairs
@@ -173,7 +173,7 @@ describe Game do
           subject.input!(1, "pass")
           end
           it "correctly selects active/reactive characters" do
-            subject.active_player.should == 1
+            subject.active_player.player_id.should == 1
           end
           it "before/after activating effects happen at right time for active/reactive characters"
         end
@@ -182,7 +182,7 @@ describe Game do
 
       it "soak reduces the ammount of damage you take"
         # TODO Hikaru does not have any soak
-      
+
       it "if a player is reduce to < 1 life, they lose"
 
         it "each match lasts 15 turns, at which point the winner is decided even if both players are > 0 life"

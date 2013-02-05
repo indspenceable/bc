@@ -29,6 +29,9 @@
 .select-me .card:hover{
   cursor: pointer;
 }
+.click-me {
+  cursor: pointer;
+}
 
 .attack-pair {
   display: inline-block;

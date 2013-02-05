@@ -22,10 +22,10 @@ def select_from_methods(selection_name, options)
     if valid_options.count > 1
       option_names = valid_options.map{|k,v| "#{k}_#{v}"}.join(';')
       # ask them for the option number they want to do
-      input.require_single_input!(me.character_id, selection_name || option_names, ->(text) {
+      input.require_single_input!(me.player_id, selection_name || option_names, ->(text) {
         valid_options.include?(text.split('_'))
       })
-      method, argument = input.answer(me.character_id).split('_')
+      method, argument = input.answer(me.player_id).split('_')
     else
       method, argument = valid_options.first
     end
@@ -52,11 +52,11 @@ def select_from_options(selection_name, options)
     if valid_options.count > 1
       option_names = valid_options.join(';')
       #Get the option from the user
-      input.require_single_input!(me.character_id, selection_name || option_names, ->(text) {
+      input.require_single_input!(me.player_id, selection_name || option_names, ->(text) {
                                     valid_options.include?(text)
                                   })
       # returns the answer selected by the user (after validation)
-      input.answer(me.character_id)
+      input.answer(me.player_id)
     else
       # or just returns the only valid option
       selection = valid_options.first
@@ -127,6 +127,8 @@ class Game
       @required_input.keys.any?{|k| !@answers.key?(k) }
     end
   end
+
+  attr_accessor :active_player, :reactive_player
 
   def initialize
     @valid_inputs_thus_far = []
@@ -322,7 +324,7 @@ class Game
       @active_player, @reactive_player = @players[1], @players[0]
     end
     #some characters care if they are active...
-    log_event!("Player #{@active_player.character_id} is the active player")
+    log_event!("Player #{@active_player.player_id} is the active player")
     @active_player.is_active!
     @reactive_player.is_reactive!
   end
@@ -350,16 +352,16 @@ class Game
 
         current.on_hit!
         damage_dealt = opponent.take_hit!(current.power)
-        log_event!("Player #{current.character_id} hits Player #{opponent.character_id} for 
+        log_event!("Player #{current.player_id} hits Player #{opponent.player_id} for
           #{damage_dealt} damage!")
         if damage_dealt > 0
           current.on_damage!
         end
       else
-        log_event!("Player #{current.character_id} misses!")
+        log_event!("Player #{current.player_id} misses!")
       end
       current.after_activating!
-    else log_event!("Player #{current.character_id} is stunned!")
+    else log_event!("Player #{current.player_id} is stunned!")
     end
   end
 
@@ -370,20 +372,13 @@ class Game
     character_list.map(&:character_name)
   end
 
-  # def hand_s(hand)
-  #   hand_s = []
-  #   hand.each do |card|
-  #     hand_s << card.name
-  #   end
-  #   hand_s
-  # end
-
   # returns a hash of player info, for that player id.
   # this adds more information if player_id and as_seen_by_id match
   def player_info_for(player_id, as_seen_by_id)
     {
       :location => @players[player_id].position,
       #:hand => hand_s(@players[player_id].hand)
+      # TODO maybe we should remove the :hand
       :hand => ->(hand) {
         hand_s = []
         hand.each do |card|
@@ -392,6 +387,9 @@ class Game
         hand_s
       }.(@players[player_id].hand),
       :stunned => @players[player_id].stunned?
+      :bases => @players[player_id].bases.map(&:name),
+      :styles => @players[player_id].styles.map(&:name),
     }
   end
 end
+  
