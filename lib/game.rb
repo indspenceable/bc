@@ -138,7 +138,7 @@ class Game
     @events = []
     @player_locations = {
       0 => 1,
-      1 => 5,
+      1 => 5
     }
     catch :input_required do
       select_characters!
@@ -148,13 +148,10 @@ class Game
         select_attack_pairs!
         ante!
         reveal!
-        puts "just revealed"
         # if either player runs out of cards, go to the next turn
         next if handle_clashes! == :no_cards
         determine_active_player!
-        puts "sob"
         start_of_beat!
-        puts "activate"
         activate!(@active_player, @reactive_player)
         activate!(@reactive_player, @active_player)
         end_of_beat!
@@ -204,7 +201,7 @@ class Game
       return @events
     end
     @events << (phase + ': ' + events.join('; '))
-    puts @events
+    return @events
   end
 
 
@@ -331,12 +328,12 @@ class Game
   end
 
   def start_of_beat!
-    log_event!("Start of beat")
+    log_event!("Start of beat #{@round_number}")
     @active_player.start_of_beat!
     @reactive_player.start_of_beat!
   end
   def end_of_beat!
-    log_event!("End of beat")
+    log_event!("End of beat #{@round_number}")
     @active_player.end_of_beat!
     @reactive_player.end_of_beat!
   end
@@ -347,7 +344,6 @@ class Game
 
   def activate!(current, opponent)
     unless current.stunned?
-      puts "#{current.character_id} activating"
       current.before_activating!
       # are they in range?
       if current.in_range?
@@ -374,13 +370,13 @@ class Game
     character_list.map(&:character_name)
   end
 
-  def hand_s(hand)
-    hand_s = []
-    hand.each do |card|
-      hand_s << card.name
-    end
-    hand_s
-  end
+  # def hand_s(hand)
+  #   hand_s = []
+  #   hand.each do |card|
+  #     hand_s << card.name
+  #   end
+  #   hand_s
+  # end
 
   # returns a hash of player info, for that player id.
   # this adds more information if player_id and as_seen_by_id match
@@ -394,7 +390,8 @@ class Game
           hand_s << card.name
         end
         hand_s
-        }.(@players[player_id].hand)
+      }.(@players[player_id].hand),
+      :stunned => @players[player_id].stunned?
     }
   end
 end

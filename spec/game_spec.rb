@@ -191,21 +191,34 @@ describe Game do
     context "regarding damaging and stun effects" do
       before :each do
         #discard
-        subject.input!(0, "sweeping_dash;focused_grasp")
-        subject.input!(1, "focused_grasp;sweeping_dash")
-        subject.player_locations = {
-          0 => 1,
-          1 => 4 
-        }
+        subject.input!(0, "sweeping_dash")
+        subject.input!(1, "focused_grasp")
+        subject.input!(0, "focused_grasp")
+        subject.input!(1, "sweeping_dash")
+        #.instance_variable_set(:@position, 4)
         #attacks
+        subject.input!(0, "trance_drive")
+        subject.input!(1, "geomantic_strike")
+
+        #ante
+        subject.input!(0, "pass")
+        subject.input!(1, "pass")
+
+        subject.input!(1, "ante_fire")
+        subject.input!(0, "advance_1")
+        puts subject.required_input
+
         subject.input!(0, "advancing_palmstrike")
         subject.input!(1, "trance_drive")
         #ante
         subject.input!(0, "pass")
         subject.input!(1, "pass")
+        #choose action to resolve first
+        subject.input!(0, "advancing_advance")
       end
       it "attacks that damage stun if they do more damage than opponents stun guard and soak." do
-        subject.game_state[:players][1][:stunned].should == 'true'
+        puts subject.game_state[:events]
+        subject.game_state[:players][1][:stunned].should == true
       end
       it "doesn't do before/after activating if you are stunned" do
         #no actions for player one should happen

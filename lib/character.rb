@@ -1,5 +1,5 @@
 class Character
-  attr_reader :character_id, :position, :hand
+  attr_reader :character_id,  :position, :hand
   attr_accessor :opponent
   def initialize character_id, input_manager, events
     @character_id = character_id
@@ -138,11 +138,8 @@ class Character
   end
 
   def select_new_base!(choice)
-    puts choice
     @clashed_bases << @base
-    puts "-----Clashed hand: #{bases} \n"
     @hand.delete(@base)
-    puts "-----New hand: #{bases}"
     choice =~ /([a-z]*)/
     @base = bases.find{|b| b.name == $1}
   end
@@ -157,7 +154,7 @@ class Character
   end
   def advance?(n_s)
     n = Integer(n_s)
-    puts "\n\n\nn=#{n}; Player#{character_id} position = #{position}; Opp @ #{@opponent.position}\n\n\n"
+    #puts "\n\n\nn=#{n}; Player#{character_id} position = #{position}; Opp @ #{@opponent.position}\n\n\n"
     #like retreat but one space is occupied by opponent.
     if position > @opponent.position
       n <= position-1

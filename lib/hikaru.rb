@@ -92,7 +92,12 @@ class Hikaru < Character
       Geomantic.new,
     ]
     # tokens available
-    @token_pool = %w(earth wind fire water)
+    @token_pool = [
+      Earth.new,
+      Wind.new,
+      Fire.new,
+      Water.new
+    ]
     # tokens not available
     @token_discard = []
     # tokens used this beat
@@ -115,7 +120,7 @@ class Hikaru < Character
   end
 
   def effect_sources
-    super + @current_tokens
+    super + @current_tokens.values
   end
 
 
@@ -131,11 +136,16 @@ class Hikaru < Character
 
   def ante!(choice)
     return if choice == "pass"
-    @current_tokens << @token_pool.delete(choice)
+    @current_tokens << *@token_pool.delete_if ->(token){
+      token.name == choice
+    }
   end
 
   def ante?(choice)
-    (@token_pool + ["pass"]).include?(choice)
+    return true if choice == "pass"
+    (@token_pool).each ->(token){
+      return (token.name == choice)
+    }
   end
 
   def recover_token!
@@ -151,12 +161,44 @@ class Hikaru < Character
 
   def recover!(token)
     return if token == "pass"
-    @token_pool << @token_discard.delete(token)
+    @token_pool << *@token_discard.delete_if ->(discarded_token){
+      discarded_token.name == token
+    }
   end
 
+#this and ante? should be merged
   def ante_callback
     ->(text) do
-      (@token_pool + ["pass"]).include?(text)
+    return true if text == "pass"
+    (@token_pool).each ->(token){
+      return (token.name == text) 
     end
+  end
+end
+
+class Fire < Token
+  def initialize
+    super("fire", 0, 3, 0)
+  end
+end
+
+class Earth < Token
+  def initialize
+    super("earth", 0, 0, 0)
+  end
+  def stun_guard
+    3
+  end
+end
+
+class Wind < Token
+  def initialize
+    super("wind", 0, 0, 2)
+  end
+end
+
+class Water < Token
+  def initialize
+    super("water", -1..1, 0, 0)
   end
 end
