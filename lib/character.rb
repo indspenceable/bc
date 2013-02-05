@@ -1,7 +1,4 @@
 class Character
-<<<<<<< HEAD
-  attr_reader :character_id,  :position, :hand
-=======
   attr_reader :player_id, :position, :hand
 >>>>>>> b4edd31112055c6fef3efc582f87d8f97feaaac2
   attr_accessor :opponent
