@@ -189,7 +189,7 @@ class Hikaru < Character
 
   def recover!(token)
     return if token == "pass"
-    @token_pool += @token_discard.delete_if{ |token| token.name == choice }
+    @token_pool += @token_discard.delete_if{ |discarded_token| discarded_token.name == token }
   end
   #this and ante? should be merged
   def ante_callback
@@ -197,6 +197,6 @@ class Hikaru < Character
       return true if (text == "pass")
       @token_pool.each{ |token| return true if (token.name == text) }
       false
-    end  
+    end
   end
 end
