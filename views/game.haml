@@ -14,86 +14,112 @@
         .span4.offset2
           .attack-pair.row
             .span2.funny-well.style
-              Focused
+              .name Focused
               .rpp
                 .range 1
                 .power 1
                 .priority 1
+              .effects
+                %em On Hit:
+                Recover one token.
             .span2.funny-well.base
-              Strike
+              .name Strike
               .rpp
                 .range 1
                 .power 1
                 .priority 1
+              .effects
+                %em Stun Guard:
+                5
         .span4
           .attack-pair.row
             .span2.funny-well.style
-              Focused
+              .name Focused
               .rpp
                 .range 1
                 .power 1
                 .priority 1
+              .effects
+                %em On Hit:
+                Recover one token.
             .span2.funny-well.base
-              Strike
+              .name Strike
               .rpp
                 .range 1
                 .power 1
                 .priority 1
+              .effects
+                %em On Hit:
+                Recover one token.
       .row
-        .span1.space.offset2 1
-        .span1.space 2
-        .span1.space 3
-        .span1.space 4
-        .span1.space 5
-        .span1.space 6
-        .span1.space 7
+        .span1.space.offset2
+        .span1.space
+        .span1.space
+        .span1.space
+        .span1.space
+        .span1.space
+        .span1.space
       .row
         .span2.funny-well
-          %h2 Tokens
-          %h6 (Will use Collapsable Plugin)
-          .token Earth
-          .token Water
-          .token Wind
-          .token Fire
+          %h4.heading Tokens
+          .collapsable
+            .token Earth
+            .token Water
+            .token Wind
+            .token Fire
         .span2.funny-well
-          %h4 Styles
-          .card Advancing
-          .card Trance
-          .card Geomantic
-          .card Sweeping
-          .card Focused
+          %h4.heading Styles
+          .collapsable
+            .card Advancing
+            .card Trance
+            .card Geomantic
+            .card Sweeping
+            .card Focused
         .span2.funny-well
-          %h4 Bases
-          .card Dash
-          .card Grasp
-          .card Palm Strike
-          .card Drive
-          .card Strike
-          .card Shot
-          .card Burst
+          %h4.heading Bases
+          .collapsable
+            .card Dash
+            .card Grasp
+            .card Palm Strike
+            .card Drive
+            .card Strike
+            .card Shot
+            .card Burst
         .span2.funny-well
-          %h4 Styles
-          .card Advancing
-          .card Trance
-          .card Geomantic
-          .card Sweeping
-          .card Focused
+          %h4.heading Styles
+          .collapsable
+            .card Advancing
+            .card Trance
+            .card Geomantic
+            .card Sweeping
+            .card Focused
         .span2.funny-well
-          %h4 Bases
-          .card Dash
-          .card Grasp
-          .card Palm Strike
-          .card Drive
-          .card Strike
-          .card Shot
-          .card Burst
+          %h4.heading Bases
+          .collapsable
+            .card Dash
+            .card Grasp
+            .card Palm Strike
+            .card Drive
+            .card Strike
+            .card Shot
+            .card Burst
         .span2.funny-well
-          %h2 Tokens
-          %h6 (Will use Collapsable Plugin)
-          .token Earth
-          .token Water
-          .token Wind
-          .token Fire
+          %h4.heading Tokens
+          .collapsable
+            .token Earth
+            .token Water
+            .token Wind
+            .token Fire
+      .row
+        .span12
+          .well
+            %h6 Game log
+            %p Event here!
+            %p another event!
+            %p event log is great!
   %script{:src => "/game.js"}
   :javascript
+    $('body').on('click', '.heading', function() {
+      $(this).siblings('.collapsable').toggle()
+    })
     //Game.init("#{@player_id}", "#{@game_id}", #{Game.character_names})

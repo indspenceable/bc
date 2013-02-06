@@ -1,5 +1,4 @@
 .attack-pair {
-  height: 250px;
   /*background-color: #ccc;*/
 }
 .space {
@@ -8,12 +7,32 @@
 
 .space, .funny-well {
   min-height: 50px;
+  height: 100%;
+  margin-bottom: 5px;
   background-color: #eee;
+  border: 1px solid #ccc;
+  padding: 4px;
+  box-sizing: border-box;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
 }
 
-.style {
+.name {
+  text-align: center;
+}
+.style .rpp {
   text-align: right;
+}
+
+.heading {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.my-area .funny-well {
+  background-color: #cec;
+}
+.their-area .funny-well {
+  background-color: #ecc;
 }
