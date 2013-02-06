@@ -386,7 +386,7 @@ class Game
         end
         hand_s
       }.(@players[player_id].hand),
-      :stunned => @players[player_id].stunned?
+      :stunned => @players[player_id].stunned?,
       :bases => @players[player_id].bases.map(&:name),
       :styles => @players[player_id].styles.map(&:name),
     }

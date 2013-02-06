@@ -136,16 +136,16 @@ class Hikaru < Character
 
   def ante!(choice)
     return if choice == "pass"
-    @current_tokens << *@token_pool.delete_if ->(token){
+    @current_tokens += @token_pool.delete_if do |token|
       token.name == choice
-    }
+    end
   end
 
   def ante?(choice)
     return true if choice == "pass"
-    (@token_pool).each ->(token){
+    @token_pool.each do |token|
       return (token.name == choice)
-    }
+    end
   end
 
   def recover_token!
@@ -161,17 +161,18 @@ class Hikaru < Character
 
   def recover!(token)
     return if token == "pass"
-    @token_pool << *@token_discard.delete_if ->(discarded_token){
+    @token_pool += @token_discard.delete_if do |discarded_token|
       discarded_token.name == token
-    }
+    end
   end
 
 #this and ante? should be merged
   def ante_callback
     ->(text) do
-    return true if text == "pass"
-    (@token_pool).each ->(token){
-      return (token.name == text) 
+      return true if text == "pass"
+      @token_pool.each do |token|
+        return (token.name == text)
+      end
     end
   end
 end
