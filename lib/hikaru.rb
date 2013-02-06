@@ -75,6 +75,33 @@ class PalmStrike < Base
   end
 end
 
+class Fire < Token
+  def initialize
+    super("fire", 0, 3, 0)
+  end
+end
+
+class Earth < Token
+  def initialize
+    super("earth", 0, 0, 0)
+  end
+  def stun_guard
+    3
+  end
+end
+
+class Wind < Token
+  def initialize
+    super("wind", 0, 0, 2)
+  end
+end
+
+class Water < Token
+  def initialize
+    super("water", -1..1, 0, 0)
+  end
+end
+
 class Hikaru < Character
   def self.character_name
     "hikaru"
@@ -120,7 +147,7 @@ class Hikaru < Character
   end
 
   def effect_sources
-    super + @current_tokens.values
+    super + @current_tokens
   end
 
 
@@ -136,16 +163,17 @@ class Hikaru < Character
 
   def ante!(choice)
     return if choice == "pass"
-    @current_tokens << *@token_pool.delete_if ->(token){
-      token.name == choice
-    }
+    @current_tokens += @token_pool.reject{ |token| token.name != choice }
+    @token_pool.delete_if{ |token| token.name == choice }
   end
 
   def ante?(choice)
     return true if choice == "pass"
-    (@token_pool).each ->(token){
-      return (token.name == choice)
+    ret = false
+    @token_pool.each{ |token|
+      return true if (token.name == choice)
     }
+    false
   end
 
   def recover_token!
@@ -161,44 +189,14 @@ class Hikaru < Character
 
   def recover!(token)
     return if token == "pass"
-    @token_pool << *@token_discard.delete_if ->(discarded_token){
-      discarded_token.name == token
-    }
+    @token_pool += @token_discard.delete_if{ |token| token.name == choice }
   end
-
-#this and ante? should be merged
+  #this and ante? should be merged
   def ante_callback
     ->(text) do
-    return true if text == "pass"
-    (@token_pool).each ->(token){
-      return (token.name == text) 
-    end
-  end
-end
-
-class Fire < Token
-  def initialize
-    super("fire", 0, 3, 0)
-  end
-end
-
-class Earth < Token
-  def initialize
-    super("earth", 0, 0, 0)
-  end
-  def stun_guard
-    3
-  end
-end
-
-class Wind < Token
-  def initialize
-    super("wind", 0, 0, 2)
-  end
-end
-
-class Water < Token
-  def initialize
-    super("water", -1..1, 0, 0)
+      return true if (text == "pass")
+      @token_pool.each{ |token| return true if (token.name == text) }
+      false
+    end  
   end
 end

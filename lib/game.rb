@@ -142,6 +142,7 @@ class Game
       0 => 1,
       1 => 5
     }
+    @last_active_player_id = 0
     catch :input_required do
       select_characters!
       select_discards!
@@ -268,8 +269,7 @@ class Game
   end
 
   def ante!
-    # TODO implement previous active player rule
-    current_player_id = 0
+    current_player_id = @last_active_player_id
     number_of_passes = 0
     while number_of_passes < 2
       passed_this_round = true
@@ -295,7 +295,7 @@ class Game
       #toggle the player id between 0 and 1
       current_player_id = (current_player_id + 1) % 2
     end
-    log_event!("Ante", "done")
+    log_event!("Ante phase done")
   end
 
   def reveal!
@@ -386,7 +386,7 @@ class Game
         end
         hand_s
       }.(@players[player_id].hand),
-      :stunned => @players[player_id].stunned?
+      :stunned => @players[player_id].stunned?,
       :bases => @players[player_id].bases.map(&:name),
       :styles => @players[player_id].styles.map(&:name),
     }

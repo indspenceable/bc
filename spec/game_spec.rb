@@ -62,6 +62,19 @@ describe Game do
           # 1 => "ante",
         }
       end
+
+      it "takes ante effects into account" do
+        #attack
+        subject.input!(0, "trance_drive")
+        subject.input!(1, "trance_drive")
+        #ante
+        subject.input!(0, "wind")
+        subject.input!(1, "pass")
+        subject.input!(0, "pass")
+        puts "\n\n\nAnteTrial"
+        puts subject.game_state[:events]
+        puts subject.required_input
+      end
       it "skips the ante phase if no players can ante" do
 
       end
@@ -205,8 +218,7 @@ describe Game do
         subject.input!(1, "pass")
 
         subject.input!(1, "ante_fire")
-        subject.input!(0, "advance_1")
-        puts subject.required_input
+        subject.input!(0, "advance_1")        
 
         subject.input!(0, "advancing_palmstrike")
         subject.input!(1, "trance_drive")
@@ -214,7 +226,9 @@ describe Game do
         subject.input!(0, "pass")
         subject.input!(1, "pass")
         #choose action to resolve first
+        puts subject.required_input
         subject.input!(0, "advancing_advance")
+        puts subject.required_input
       end
       it "attacks that damage stun if they do more damage than opponents stun guard and soak." do
         puts subject.game_state[:events]
