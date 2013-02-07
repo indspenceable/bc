@@ -1,14 +1,36 @@
 require 'sinatra'
 require 'multi_json'
 require 'haml'
+require 'data_mapper'
 require_relative File.join("lib", "game")
 
+class GameRecord
+  include DataMapper::Resource
+  property :id, Serial
+  property :serialized_game, String
+end
+configure do
+  DataMapper.setup(:default, (ENV["DATABASE_URL"] || "sqlite3:///#{Dir.pwd}/development.sqlite3"))
+  DataMapper.auto_upgrade!
+end
+
 # Make games if needed.
-GAMES = Hash.new{ |h,k| h[k] = Game.new }
+def load_game(game_id)
+  game = GameRecord.get(Integer(game_id))
+  if game
+    YAML.load(game.serialized_game)
+  else
+    Game.new()
+  end
+end
+def save_game!(game_id, g)
+  GameRecord.get(Integer(game_id)).update(:serialized_game => YAML.dump(g))
+end
+
 
 get '/games/:game_id/:player_id' do
   @game_id = params[:game_id]
-  @game = GAMES[params[:game_id]]
+  @game = load_game(params[:game_id])
   @player_id = params[:player_id].to_i
   @starting_configuration = ::MultiJson.dump({
     'gameState' => @game.game_state,
@@ -18,8 +40,8 @@ get '/games/:game_id/:player_id' do
 end
 
 get '/ping/:game_id/' do
-  game = GAMES[params[:game_id]]
-  #Return any answer for the given input
+  game = load_game(params[:game_id])
+  # Return any answer for the given input
   ::MultiJson.dump({
     'gameState' => game.game_state,
     'requiredInput' => game.required_input[params['player_id'].to_i]
@@ -27,9 +49,10 @@ get '/ping/:game_id/' do
 end
 
 post '/games/:game_id/' do
-  game = GAMES[params[:game_id]]
+  game = load_game(params[:game_id])
   #Return any answer for the given input
   game.input!(params['player_id'], params['action'])
+  save_game!(params[:game_id], game)
   ::MultiJson.dump({
     'gameState' => game.game_state,
     'requiredInput' => game.required_input[params['player_id'].to_i]
