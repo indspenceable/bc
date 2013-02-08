@@ -18,6 +18,10 @@
   border-radius: 4px;
 }
 
+.event-log {
+  max-height: 200px;
+}
+
 .name {
   text-align: center;
 }
