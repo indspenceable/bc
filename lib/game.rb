@@ -377,15 +377,6 @@ class Game
   def player_info_for(player_id, as_seen_by_id)
     {
       :location => @players[player_id].position,
-      #:hand => hand_s(@players[player_id].hand)
-      # TODO maybe we should remove the :hand
-      :hand => ->(hand) {
-        hand_s = []
-        hand.each do |card|
-          hand_s << card.name
-        end
-        hand_s
-      }.(@players[player_id].hand),
       :stunned => @players[player_id].stunned?,
       :bases => @players[player_id].bases.map(&:name),
       :styles => @players[player_id].styles.map(&:name),
