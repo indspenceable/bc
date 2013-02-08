@@ -1,3 +1,37 @@
+var makeCard = function(range, power, priority, _data) {
+  data = _data || {}
+  data.range = "" + range
+  data.power = "" + power
+  data.priority = "" + priority
+  return data
+}
+var cardDefinitions = {
+  dash: makeCard("N/A", "N/A", 9, {"After Activating": "Move 1, 2, or 3 spaces. If you switch sides with an opponent, they cannot hit you this turn."}),
+  grasp: makeCard(1, 2, 5, {"On Hit": "Move opponent 1 space."}),
+  drive: makeCard(1, 3, 4, {"Before Activating": "Advance 1 or 2 spaces."}),
+  strike: makeCard(1, 4, 3, {"Stun Guard": "5"}),
+  shot: makeCard("1~4", 3, 2, {"Stun Guard": "2"}),
+  burst: makeCard("2~3", 3, 1, {"Start of Beat": "Retreat 1 or 2 spaces."})
+}
+var loadCard = function(styleOrBase, cardName) {
+  var $card = $('.my-pair.attack-pair').find('.' + styleOrBase)
+  $card.find('.name').text(cardName)
+  $card.find('.effects').empty()
+  var card = cardDefinitions[cardName]
+  for (var attr in card) {
+    if (attr == 'range') {
+      $card.find('.range').text(card.range)
+    } else if (attr == "power") {
+      $card.find('.power').text(card.power)
+    } else if (attr == "priority") {
+      $card.find('.priority').text(card.priority)
+    } else {
+      $card.find('.effects').append($('<p/>').html("<b>" + attr + ":</b> " + card[attr]))
+    }
+  }
+}
+
+
 var init = function(player_id, game_id, character_names) {
   var cachedEventCount = undefined;
   var cachedQuestion = undefined;
