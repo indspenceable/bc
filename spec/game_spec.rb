@@ -71,8 +71,6 @@ describe Game do
         subject.input!(0, "wind")
         subject.input!(1, "pass")
         subject.input!(0, "pass")
-        puts "\n\n\nAnteTrial"
-        puts subject.game_state[:events]
         puts subject.required_input
       end
       it "skips the ante phase if no players can ante" do
@@ -85,9 +83,8 @@ describe Game do
         #ante
         subject.input!(0, "pass")
         subject.input!(1, "pass")
-#        puts subject.game_state[:events][-5..-1]
 #        subject.game_state[:events][-3].should == "ante:nil;nil"
-        subject.game_state[:events][-3].should == "Reveal: Player 0 plays Advancing Drive; Player 1 plays Geomantic Shot"
+        subject.game_state[:events][-4].should == "Reveal: Player 0 plays Advancing Drive; Player 1 plays Geomantic Shot"
         # The last event is the start of the beat
       end
 
@@ -112,7 +109,7 @@ describe Game do
           it "start of beat happens after clashes are resolved" do
             subject.input!(0, "shot")
             subject.input!(1, "burst")
-            subject.game_state[:events][-4].include?("Start of beat").should == true
+            subject.game_state[:events][-6].include?("Start of beat").should == true
             end
           it "continues to clash until priorities are different" do
             subject.input!(0, "burst")
@@ -124,7 +121,7 @@ describe Game do
             }
             subject.input!(0, "drive")
             subject.input!(1, "strike")
-            subject.game_state[:events][-1].include?("Start of beat").should == true
+            subject.game_state[:events][-2].include?("Start of beat").should == true
           end
           it "recycles correctly in the case of a clash" do
             subject.input!(0, "drive")
@@ -215,6 +212,8 @@ describe Game do
 
         #ante
         subject.input!(0, "pass")
+        subject.input!(1, "earth")
+        subject.input!(0, "pass")
         subject.input!(1, "pass")
 
         subject.input!(1, "ante_fire")
@@ -226,12 +225,12 @@ describe Game do
         subject.input!(0, "pass")
         subject.input!(1, "pass")
         #choose action to resolve first
-        puts subject.required_input
         subject.input!(0, "advancing_advance")
+        puts "\n\n"
+        puts subject.game_state[:events]
         puts subject.required_input
       end
       it "attacks that damage stun if they do more damage than opponents stun guard and soak." do
-        puts subject.game_state[:events]
         subject.game_state[:players][1][:stunned].should == true
       end
       it "doesn't do before/after activating if you are stunned" do

@@ -34,36 +34,6 @@ def select_from_methods(selection_name, options)
   end
 end
 
-#MAGIC MIKE
-def select_from_options(selection_name, options)
-  #lamda will take in the calling object and the inputmanager
-  ->(me, input) do
-    #figure out which of the options are valid
-    valid_options = []
-    options.each do |option|
-      #uses the selection_name? as a validator of input
-      validation_method = "#{selection_name}?"
-      valid_options << option.to_s if me.send(validation_method, option)
-    end
-
-    return if valid_options.empty?
-
-    # ask them for input only if theres more than one valid option.
-    if valid_options.count > 1
-      option_names = valid_options.join(';')
-      #Get the option from the user
-      input.require_single_input!(me.player_id, selection_name || option_names, ->(text) {
-                                    valid_options.include?(text)
-                                  })
-      # returns the answer selected by the user (after validation)
-      input.answer(me.player_id)
-    else
-      # or just returns the only valid option
-      selection = valid_options.first
-    end
-  end
-end
-
 class Game
   # Input manager manages input.
   class InputManager
@@ -197,7 +167,7 @@ class Game
 
   # log events to the game's event log
   #    phase - string
-  #    *events - list of event strings to be separated by ';'
+  #    *events - list of event strings to be separated by '; '
   def log_event!(phase, *events)
     if (events.empty?)
       @events << phase
@@ -217,21 +187,28 @@ class Game
     )
     @players = [nil, nil]
     # for now, just consume input.
+    event_logger = ->(*inputs) do
+      log_event!(inputs)
+    end
     @players[0] = Game.character_list[
       Game.character_names.index @input_manager.answer(0)].new(
         0,
         @input_manager,
-        @events)
+        @events,
+        event_logger)
     @players[1] = Game.character_list[
       Game.character_names.index @input_manager.answer(1)].new(
         1,
         @input_manager,
-        @events)
+        @events,
+        event_logger)
 
     @players[0].opponent = @players[1]
     @players[1].opponent = @players[0]
   end
   def select_discards!
+    # TODO This should allow players to discard both sets of cards at once
+
     # # select_discards
     # @input_manager.require_multi_input!("select_discards",
     #   # these should shell out to characters individual methods, for roberts

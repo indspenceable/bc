@@ -1,10 +1,11 @@
 class Character
   attr_reader :player_id, :position, :hand
   attr_accessor :opponent
-  def initialize player_id, input_manager, events
+  def initialize player_id, input_manager, events, event_logger
     @player_id = player_id
     @input_manager = input_manager
     @events = events
+    @event_logger = event_logger
     @position = player_id == 0 ? 1 : 5
     @clashed_bases = []
 
@@ -71,11 +72,10 @@ class Character
   end
 
   def priority
-    puts effect_sources.inspect
-    effect_sources.map(&:priority).inject(:+)
+    effect_sources.map(&:priority).inject(&:+)
   end
   def power
-    effect_sources.map(&:power).inject(:+)
+    effect_sources.map(&:power).inject(&:+)
   end
   def range
     effect_sources.map(&:range).inject(0..0) do |old, obj|
@@ -85,10 +85,10 @@ class Character
   end
 
   def stun_guard
-    effect_sources.map(&:stun_guard).inject(:+)
+    effect_sources.map(&:stun_guard).inject(&:+)
   end
   def soak
-    effect_sources.map(&:soak).inject(:+)
+    effect_sources.map(&:soak).inject(&:+)
   end
 
   def take_hit!(damage)
@@ -170,6 +170,7 @@ class Character
     else
       @position += n
     end
+    @event_logger.call("Player #{player_id} retreats #{n_s} to space #{@position + 1}")
   end
 
   def advance!(n_s)
@@ -187,6 +188,7 @@ class Character
         @position += n
       end
     end
+    @event_logger.call("Player #{player_id} advances #{n_s} to space #{@position}")
   end
 
   def no_cards?
