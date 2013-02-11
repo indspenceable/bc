@@ -138,6 +138,10 @@ class Game
     @valid_inputs_thus_far = @valid_inputs_thus_far + [[Integer(player_id), str]]
     required_input
   end
+  def rollback!
+    @valid_inputs_thus_far.pop
+    setup_game!(@valid_inputs_thus_far)
+  end
 
   # returns a hash from player_id to the input they need
   def required_input
