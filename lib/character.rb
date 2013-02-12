@@ -59,7 +59,7 @@ class Character
       end
       while actions_to_do.any?
         if actions_to_do.count > 1
-          @input_manager.require_single_input!(player_id, "choose_action_from:#{actions_to_do.keys.join(',')}",
+          @input_manager.require_single_input!(player_id, "select_from:#{actions_to_do.keys.map{|x| "<#{x}>"}}",
             ->(text) { actions_to_do.key?(text) })
 
           actions_to_do.delete(@input_manager.answer(player_id)).call(self, @input_manager)
@@ -163,17 +163,17 @@ class Character
     end
   end
 
-  def retreat!(n_s)
+  def retreat!(n_s,log_event=true)
     n = Integer(n_s)
     if position < @opponent.position
       @position -= n
     else
       @position += n
     end
-    @event_logger.call("Player #{player_id} retreats #{n_s} to space #{@position + 1}")
+    @event_logger.call("Player #{player_id} retreats #{n_s} to space #{@position + 1}") if log_event
   end
 
-  def advance!(n_s)
+  def advance!(n_s,log_event=true)
     n = Integer(n_s)
     if position > @opponent.position
       if n >= @position - @opponent.position
@@ -188,8 +188,26 @@ class Character
         @position += n
       end
     end
-    @event_logger.call("Player #{player_id} advances #{n_s} to space #{@position}")
+    @event_logger.call("Player #{player_id} advances #{n_s} to space #{@position}") if log_event
   end
+
+  def pull?(n)
+    @opponent.advance?(n)
+  end
+
+  def push?(n)
+    @opponent.retreat?(n)
+  end
+
+  def push!(n)
+    @opponent.retreat!(n, false)
+    @event_logger.call("Player #{@opponent.player_id} gets pushed #{n} to space #{@opponent.position}")
+  end
+  def pull!(n)
+    opponent.advance!(n, false)
+    @event_logger.call("Player #{@opponent.player_id} gets pulled #{n} to space #{@opponent.position}")
+  end
+
 
   def no_cards?
     @hand.empty?

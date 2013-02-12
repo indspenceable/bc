@@ -166,7 +166,7 @@ class Hikaru < Character
 
   def ante!(choice)
     return if choice == "pass"
-    @event_logger.call("Player #{this.player_id} antes #{token}")
+    @event_logger.call("Player #{self.player_id} antes #{choice}")
     @current_tokens += @token_pool.reject{ |token| token.name != choice }
     @token_pool.delete_if{ |token| token.name == choice }
   end
@@ -193,7 +193,7 @@ class Hikaru < Character
 
   def recover!(token)
     return if token == "pass"
-    @event_logger.call("Player #{this.player_id} recovers #{token}")
+    @event_logger.call("Player #{self.player_id} recovers #{choice}")
     @token_pool += @token_discard.delete_if{ |discarded_token| discarded_token.name == token }
   end
   #this and ante? should be merged
