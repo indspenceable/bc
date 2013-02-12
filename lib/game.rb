@@ -2,7 +2,7 @@
 require_relative "hikaru"
 
 #MAGIC METHOD
-def select_from_methods(selection_name, options)
+def select_from_methods(selection_name=nil, options)
   option_list = []
   options.each do |method, arg_options|
     arg_options.each do |arg_option|
@@ -20,9 +20,9 @@ def select_from_methods(selection_name, options)
 
     # ask them for input only if theres more than one valid option.
     if valid_options.count > 1
-      option_names = valid_options.map{|k,v| "#{k}_#{v}"}.join(';')
+      option_names = valid_options.map{|k,v| "<#{k}_#{v}>"}.join('')
       # ask them for the option number they want to do
-      input.require_single_input!(me.player_id, selection_name || option_names, ->(text) {
+      input.require_single_input!(me.player_id, selection_name || "select_from:#{option_names}", ->(text) {
         valid_options.include?(text.split('_'))
       })
       method, argument = input.answer(me.player_id).split('_')

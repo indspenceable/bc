@@ -7,7 +7,10 @@ class Geomantic < Style
   end
   def start_of_beat!
     {
-      "geomantic_ante_token" => select_from_methods("geomantic_ante_select",
+      "geomantic_ante_token" => select_from_methods(
+        # the question should be helpful to the UI
+        # in this case, we'll probably have a case in the UI for ante
+        # but we don't yet :)
         ante: %w(earth wind fire water pass))
     }
   end
@@ -54,7 +57,7 @@ class Advancing < Style
   def start_of_beat!
     #TODO - this doesn't check that you passed your opponent...
     {
-      'advancing_advance' => select_from_methods('advance', advance: [1])
+      'advancing_advance' => select_from_methods(advance: [1])
     }
   end
 end
@@ -65,7 +68,7 @@ class PalmStrike < Base
   def start_of_beat!
     #TODO - this doesn't check that you passed your opponent...
     {
-      'palmstrike_advance' => select_from_methods('advance', advance: [1])
+      'palmstrike_advance' => select_from_methods(advance: [1])
     }
   end
   def on_damage!
@@ -178,7 +181,7 @@ class Hikaru < Character
   end
 
   def recover_token!
-    select_from_methods('recover_token',
+    select_from_methods(
       recover: %w(earth fire water wind pass)).call(self, @input_manager)
   end
 
