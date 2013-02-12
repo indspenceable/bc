@@ -19,7 +19,8 @@
 }
 
 .event-log {
-  max-height: 200px;
+  max-height: 100px;
+  overflow: scroll;
 }
 
 .name {
@@ -41,6 +42,9 @@
   background-color: #ecc;
 }
 
+.select-me {
+  background-color: #cec;
+}
 .select-me .card {
   cursor: pointer;
 }

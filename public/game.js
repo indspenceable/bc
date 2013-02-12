@@ -21,7 +21,15 @@ var init = function(player_id, game_id, character_names) {
     drive: makeCard(1, 3, 4, {"Before Activating": "Advance 1 or 2 spaces."}),
     strike: makeCard(1, 4, 3, {"Stun Guard": "5"}),
     shot: makeCard("1~4", 3, 2, {"Stun Guard": "2"}),
-    burst: makeCard("2~3", 3, 1, {"Start of Beat": "Retreat 1 or 2 spaces."})
+    burst: makeCard("2~3", 3, 1, {"Start of Beat": "Retreat 1 or 2 spaces."}),
+
+    palmstrike: makeCard(1, 2, 5, {"Start of Beat": "Advance 1 space.", "On Damage": "Recover an elemental token of your choice."}),
+    geomantic: makeCard(0, 1, 0, {"Start of Beat": "You may ante another token for this beat."}),
+    focused: makeCard(0, 1, 0, {"On Hit": "Recover an elemental token of your choice."}),
+    trance: makeCard("0~1", 0, 0, {"Start of Beat": "Return all anted tokens to your pool. You don't get their effects this turn.", "End of Beat": "Recover an elemental token of your choice."}),
+    sweeping: makeCard(0, -1, 3, {"passive": "If hikaru gets hit this turn, he takes 2 additional damage."}),
+    advancing: makeCard(0, 1, 1, {"Start of beat": "Advance 1 space. If this causes you to switch sides with an opponent, you get +1 power this beat."})
+
   }
   var loadCard = function(styleOrBase, cardName, $pair) {
     var $card = $pair.find('.' + styleOrBase)
@@ -76,13 +84,14 @@ var init = function(player_id, game_id, character_names) {
     $answers.show()
   }
 
-  var setup_inputs = function(question) {
+  var resetInputs = function() {
     $('.bases, .styles, tokens').removeClass("select-me")
     $('.free-form').hide()
     $('.js-answers').hide()
+  }
 
-    console.log("Question is: ", question)
-
+  var setup_inputs = function(question) {
+    resetInputs();
     if (question == "select_attack_pairs") {
       selectAttackPair()
     } else if (question == "select_character") {
@@ -98,8 +107,11 @@ var init = function(player_id, game_id, character_names) {
 
 
 
-  var displayBoard = function() {
-    // TODO - danny
+  var displayBoard = function(p0, p1) {
+    console.log("LOCATIONS: ", p0, p1)
+    $('.board').find('.space').empty()
+    $('.board').find('.s' + p0).text("0")
+    $('.board').find('.s' + p1).text("1")
   }
   var fillHand = function(pn, bases, styles) {
     var $root = (pn == player_id ? $(".js-mine") : $('.js-theirs'))
@@ -114,12 +126,7 @@ var init = function(player_id, game_id, character_names) {
     }
   }
 
-  var fillEventLog = function() {}
-
-
   var setUI = function(data) {
-    $('.js-loading').hide()
-    $('.js-in-game').show()
     // short circuit unless more events have happened, or
     // there is a new question.
     if (data['gameState']['events'].length == cachedEventCount &&
@@ -130,6 +137,9 @@ var init = function(player_id, game_id, character_names) {
     cachedEventCount = data['gameState']['events'].length;
     cachedQuestion = data['requiredInput'];
 
+    $('.js-loading').hide()
+    $('.js-in-game').show()
+
     // Do everything required for this question.
     var requiredInput = data['requiredInput']
     setup_inputs(requiredInput)
@@ -138,13 +148,13 @@ var init = function(player_id, game_id, character_names) {
     var gameState = data['gameState']
     if (!gameState.players) { return }
     // Display the board
-    displayBoard()
+    displayBoard(gameState.players[0].location, gameState.players[1].location)
     // show the players hands
     for (var pn = 0; pn <= 1; pn++) {
       fillHand(pn, gameState.players[pn].bases, gameState.players[pn].styles)
     }
     // Show the event log.
-    $('.eventLog').html(gameState['events'].join("<br/>"))
+    $('.event-log').html(gameState['events'].reverse().join("<br/>"))
   }
 
 
@@ -170,14 +180,16 @@ var init = function(player_id, game_id, character_names) {
     }
   }
   var submitAttackPair = function() {
+    $('.js-finalize-attack-pair').hide()
+    resetInputs();
     submitData(style + "_" + base)
     style = undefined
     base = undefined
-    $('.js-finalize-attack-pair').hide()
   }
 
   // Ajax methods
   var ping = function() {
+    console.log('ping.')
     $.get('/ping/' + game_id + '/', {
       'player_id': player_id
     }, function(data) {
@@ -219,6 +231,10 @@ var init = function(player_id, game_id, character_names) {
     $('.js-answers').on('click', '.btn', function() {
       submitData($(this).text())
       $('.js-answers').hide()
+    })
+    $('.js-choose-character').on('click', '.btn', function() {
+      submitData($(this).text())
+      $('.js-choose-character').hide()
     })
 
     ping()

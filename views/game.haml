@@ -15,7 +15,7 @@
       .js-choose-character{:style => "display: none"}
         .row
           - Game.character_names.each do |name|
-            %a= name
+            %a.btn= name
       .js-in-game{:style => "display: none"}
         .row.attack-pairs
           .span6
@@ -64,17 +64,17 @@
                 .effects
                   %em On Hit:
                   Recover one token.
+        .row.board
+          .span1.space.offset2.s0
+          .span1.space.s1
+          .span1.space.s2
+          .span1.space.s3
+          .span1.space.s4
+          .span1.space.s5
+          .span1.space.s6
         .row
-          .span1.space.offset2
-          .span1.space
-          .span1.space
-          .span1.space
-          .span1.space
-          .span1.space
-          .span1.space
-        .row.event-log
           .span12
-            .well
+            .well.event-log
               %h6 Game log
               %p Event here!
               %p another event!
