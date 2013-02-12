@@ -40,3 +40,14 @@
 .their-area .funny-well {
   background-color: #ecc;
 }
+
+.select-me .card {
+  cursor: pointer;
+}
+.js-finalize-attack-pair {
+  cursor: pointer;
+}
+
+.effects {
+  /*font-size: 10px;*/
+}
