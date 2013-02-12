@@ -100,9 +100,13 @@ class Game
 
   attr_accessor :active_player, :reactive_player
 
-  def initialize
-    @valid_inputs_thus_far = []
+  def initialize(inputs=[])
+    @valid_inputs_thus_far = inputs
     setup_game!(@valid_inputs_thus_far)
+  end
+
+  def valid_inputs
+    @valid_inputs_thus_far
   end
 
   def setup_game!(inputs)

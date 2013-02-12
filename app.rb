@@ -7,7 +7,7 @@ require_relative File.join("lib", "game")
 class GameRecord
   include DataMapper::Resource
   property :id, Serial
-  property :serialized_game, String
+  property :serialized_inputs, String
 end
 configure do
   DataMapper.setup(:default, (ENV["DATABASE_URL"] || "sqlite3:///#{Dir.pwd}/development.sqlite3"))
@@ -18,13 +18,18 @@ end
 def load_game(game_id)
   game = GameRecord.get(Integer(game_id))
   if game
-    YAML.load(game.serialized_game)
+    Game.new(YAML.load(game.serialized_inputs))
   else
     Game.new()
   end
 end
 def save_game!(game_id, g)
-  GameRecord.get(Integer(game_id)).update(:serialized_game => YAML.dump(g))
+  game = GameRecord.get(Integer(game_id))
+  if game
+    game.update!(:serialized_inputs => YAML.dump(g.valid_inputs))
+  else
+    GameRecord.create(id: Integer(game_id), :serialized_inputs => YAML.dump(g.valid_inputs)).save!
+  end
 end
 
 
