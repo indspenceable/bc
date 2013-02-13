@@ -6,6 +6,9 @@ function capitaliseFirstLetter(string)
 var init = function(player_id, game_id, character_names) {
   var cachedEventCount = undefined;
   var cachedQuestion = undefined;
+
+  var need;
+
   var $root = function(pn) {
     return (pn == player_id ? $(".js-mine") : $('.js-theirs'))
   }
@@ -68,6 +71,11 @@ var init = function(player_id, game_id, character_names) {
   }
   var selectAttackPair = function() {
     $root(player_id).find('.js-bases, .js-styles').addClass("select-me")
+    need = 'both'
+  }
+  var selectBase = function() {
+    $root(player_id).find('.js-bases').addClass("select-me")
+    need = 'base'
   }
   var freeFormInput = function() {
     $('.free-form').show()
@@ -94,6 +102,8 @@ var init = function(player_id, game_id, character_names) {
     console.log("question is: ", question)
     if (/^attack_pair/.test(question)) {
       selectAttackPair()
+    } else if (/^select_base/.test(question)) {
+      selectBase()
     } else if (question == "select_character") {
       chooseCharacter()
     } else if (question == "ante") {
@@ -112,7 +122,13 @@ var init = function(player_id, game_id, character_names) {
     $('.board').find('.s' + p0).text("0")
     $('.board').find('.s' + p1).text("1")
   }
-  var fillHand = function(pn, bases, styles) {
+  var fillCards = function(pn, currentBase, currentStyle, bases, styles) {
+    if (currentBase) {
+      loadCard('base', currentBase.toLowerCase(), $root(pn).filter('.attack-pair'))
+    }
+    if (currentStyle) {
+      loadCard('style', currentStyle.toLowerCase(), $root(pn).filter('.attack-pair'))
+    }
     var $bases = $root(pn).find('.js-bases').empty()
     var $styles = $root(pn).find('.js-styles').empty()
     for (var index in bases) {
@@ -148,7 +164,11 @@ var init = function(player_id, game_id, character_names) {
     displayBoard(gameState.players[0].location, gameState.players[1].location)
     // show the players hands
     for (var pn = 0; pn <= 1; pn++) {
-      fillHand(pn, gameState.players[pn].bases, gameState.players[pn].styles)
+      fillCards(pn,
+        gameState.players[pn].current_base,
+        gameState.players[pn].current_style,
+        gameState.players[pn].bases,
+        gameState.players[pn].styles)
     }
     // Show the event log.
     $('.event-log').html(gameState['events'].reverse().join("<br/>"))
@@ -160,25 +180,29 @@ var init = function(player_id, game_id, character_names) {
   var base
   var setBase = function(baseName) {
     base = baseName.toLowerCase()
-    loadCard('base', base.toLowerCase(), $('.my-pair'))
+    loadCard('base', base.toLowerCase(), $root(player_id).filter('.attack-pair'))
     // This needs to fill in the appropriate image.
     setPair()
   }
   var style
   var setStyle = function(styleName) {
     style = styleName.toLowerCase()
-    loadCard('style', style.toLowerCase(), $('.my-pair'))
+    loadCard('style', style.toLowerCase(), $root(player_id).filter('.attack-pair'))
     // This needs to fill in the appropriate image.
     setPair()
   }
   var setPair = function() {
-    if (style && base) {
+    if ((style || need=="base") && base) {
       $('.js-finalize-attack-pair').show()
     }
   }
   var submitAttackPair = function() {
     $('.js-finalize-attack-pair').hide()
-    submitData(style + "_" + base)
+    if (need == "base") {
+      submitData(base)
+    } else {
+      submitData(style + "_" + base)
+    }
     style = undefined
     base = undefined
   }
