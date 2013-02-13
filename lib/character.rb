@@ -59,9 +59,14 @@ class Character
     @base = bases.find{|b| b.name == $1}
     @hand.delete(@base)
   end
-  def regain_cards!
+  def regain_bases!
     @hand += @clashed_bases
     @clashed_bases = []
+  end
+  def regain_cards!
+    regain_bases!
+    @hand << @style
+    @style = nil
   end
 
 

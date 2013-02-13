@@ -126,12 +126,12 @@ class Game
         ante!
         reveal!
         # if either player runs out of cards, go to the next turn
-        clashes_result = handle_clashes!
-        regain_cards!
-        if clashes_result == :no_cards
+        if handle_clashes! == :no_cards
           log_event!("A player ran out of cards. Turn is cycling.")
+          regain_cards!
           next
         end
+        regain_bases!
         determine_active_player!
         start_of_beat!
         activate!(@active_player, @reactive_player)
@@ -314,6 +314,11 @@ class Game
     end
   end
 
+  def regain_bases!
+    @players.each do |p|
+      p.regain_bases!
+    end
+  end
   def regain_cards!
     @players.each do |p|
       p.regain_cards!
