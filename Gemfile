@@ -1,6 +1,7 @@
 source :rubygems
 
 gem 'sinatra'
+gem 'thin'
 gem 'rake'
 gem 'multi_json'
 gem 'haml'
