@@ -89,7 +89,7 @@ class Game
     def answer!(player_id, string)
       raise "We weren't asking that player for anything." unless @required_input.key?(player_id)
       _, validator = @required_input[player_id]
-      raise "Invalid answer to #{@required_input[player_id].first}" unless validator.call(string)
+      raise "Invalid answer \"#{string}\" to #{@required_input[player_id].first}" unless validator.call(string)
       @required_input.delete(player_id)
       @answers[player_id] = string.downcase
     end

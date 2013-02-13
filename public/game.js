@@ -6,7 +6,9 @@ function capitaliseFirstLetter(string)
 var init = function(player_id, game_id, character_names) {
   var cachedEventCount = undefined;
   var cachedQuestion = undefined;
-
+  var $root = function(pn) {
+    return (pn == player_id ? $(".js-mine") : $('.js-theirs'))
+  }
 
   var makeCard = function(range, power, priority, _data) {
     data = _data || {}
@@ -36,9 +38,7 @@ var init = function(player_id, game_id, character_names) {
     $card.find('.name').text(capitaliseFirstLetter(cardName))
     $card.find('.effects').empty()
     var card = cardDefinitions[cardName]
-    console.log(cardName)
     for (var attr in card) {
-      console.log("attr is ", attr)
       if (attr == 'range') {
         $card.find('.range').text(card.range)
       } else if (attr == "power") {
@@ -46,7 +46,6 @@ var init = function(player_id, game_id, character_names) {
       } else if (attr == "priority") {
         $card.find('.priority').text(card.priority)
       } else {
-        console.log("2attr is ", attr)
         $card.find('.effects').append($('<p/>').html("<b>" + attr + ":</b> " + card[attr]))
       }
     }
@@ -68,7 +67,7 @@ var init = function(player_id, game_id, character_names) {
     $('.js-choose-character').show()
   }
   var selectAttackPair = function() {
-    $('.js-bases, .js-styles').addClass("select-me")
+    $root(player_id).find('.js-bases, .js-styles').addClass("select-me")
   }
   var freeFormInput = function() {
     $('.free-form').show()
@@ -85,13 +84,14 @@ var init = function(player_id, game_id, character_names) {
   }
 
   var resetInputs = function() {
-    $('.bases, .styles, tokens').removeClass("select-me")
+    $('.js-bases, .js-styles, .js-tokens').removeClass("select-me")
     $('.free-form').hide()
     $('.js-answers').hide()
   }
 
   var setup_inputs = function(question) {
     resetInputs();
+    console.log("question is: ", question)
     if (question == "select_attack_pairs") {
       selectAttackPair()
     } else if (question == "select_character") {
@@ -108,16 +108,13 @@ var init = function(player_id, game_id, character_names) {
 
 
   var displayBoard = function(p0, p1) {
-    console.log("LOCATIONS: ", p0, p1)
     $('.board').find('.space').empty()
     $('.board').find('.s' + p0).text("0")
     $('.board').find('.s' + p1).text("1")
   }
   var fillHand = function(pn, bases, styles) {
-    var $root = (pn == player_id ? $(".js-mine") : $('.js-theirs'))
-    console.log("root is", $root)
-    var $bases = $root.find('.js-bases').empty()
-    var $styles = $root.find('.js-styles').empty()
+    var $bases = $root(pn).find('.js-bases').empty()
+    var $styles = $root(pn).find('.js-styles').empty()
     for (var index in bases) {
       $('<div/>').addClass('card').text(bases[index]).appendTo($bases)
     }
@@ -181,7 +178,6 @@ var init = function(player_id, game_id, character_names) {
   }
   var submitAttackPair = function() {
     $('.js-finalize-attack-pair').hide()
-    resetInputs();
     submitData(style + "_" + base)
     style = undefined
     base = undefined
