@@ -380,6 +380,7 @@ class Game
   # this adds more information if player_id and as_seen_by_id match
   def player_info_for(player_id, as_seen_by_id)
     {
+      :life => @players[player_id].life,
       :location => @players[player_id].position,
       :stunned => @players[player_id].stunned?,
       :bases => @players[player_id].bases.map(&:name),

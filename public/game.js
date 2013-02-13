@@ -169,6 +169,9 @@ var init = function(player_id, game_id, character_names) {
         gameState.players[pn].current_style,
         gameState.players[pn].bases,
         gameState.players[pn].styles)
+      // Display player life
+      $root(pn).filter('.life').text("P" + pn + ": " + gameState.players[pn].life + " Life")
+
     }
     // Show the event log.
     $('.event-log').html(gameState['events'].reverse().join("<br/>"))
