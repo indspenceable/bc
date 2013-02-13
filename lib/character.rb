@@ -43,6 +43,22 @@ class Character
       card.is_a?(Style)
     end
   end
+  def current_base
+    @base && @base.name
+  end
+  def current_style
+    @style && @style.name
+  end
+  def clash!
+    @clashed_bases << @base
+    @base = nil
+  end
+
+  def select_new_base!(choice)
+    choice =~ /([a-z]*)/
+    @base = bases.find{|b| b.name == $1}
+    @hand.delete(@base)
+  end
 
 
   %w(reveal! start_of_beat! before_activating! on_hit! on_damage!
@@ -120,8 +136,7 @@ class Character
     @hand += @clashed_bases
     @discard2 = @discard1
     @discard1 = [@style, @base]
-    @hand.delete(@base)
-    @hand.delete(@style)
+    @base = @style = nil
   end
 
   def effect_sources
@@ -136,13 +151,8 @@ class Character
     choice =~ /([a-z]*)_([a-z]*)/
     @style = styles.find{|s| s.name == $1}
     @base = bases.find{|b| b.name == $2}
-  end
-
-  def select_new_base!(choice)
-    @clashed_bases << @base
     @hand.delete(@base)
-    choice =~ /([a-z]*)/
-    @base = bases.find{|b| b.name == $1}
+    @hand.delete(@style)
   end
 
   def retreat?(n_s)

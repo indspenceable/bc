@@ -289,15 +289,17 @@ class Game
 
   def handle_clashes!
     while @players[0].priority == @players[1].priority
+      @players.each do |p|
+        p.clash!
+      end
       log_event!("Clash!!")
       return :no_cards if (@players[0].no_cards? || @players[1].no_cards?)
-      @input_manager.require_multi_input!("select_new_base",
+      @input_manager.require_multi_input!("select_base_clash",
         @players[0].base_options_callback,
         @players[1].base_options_callback
       )
       @players[0].select_new_base!(@input_manager.answer(0))
       @players[1].select_new_base!(@input_manager.answer(1))
-      reveal!
     end
   end
 
@@ -365,6 +367,8 @@ class Game
       :stunned => @players[player_id].stunned?,
       :bases => @players[player_id].bases.map(&:name),
       :styles => @players[player_id].styles.map(&:name),
+      :current_base => @players[player_id].current_base,
+      :current_style => @players[player_id].current_style,
     }
   end
 end
