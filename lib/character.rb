@@ -219,8 +219,8 @@ class Character
   end
 
 
-  def no_cards?
-    @hand.empty?
+  def no_bases?
+    bases.empty?
   end
 
   # input callbacks. These check the validity of input that the player does.

@@ -293,7 +293,7 @@ class Game
         p.clash!
       end
       log_event!("Clash!!")
-      return :no_cards if (@players[0].no_cards? || @players[1].no_cards?)
+      return :no_cards if (@players[0].no_bases? || @players[1].no_bases?)
       @input_manager.require_multi_input!("select_base_clash",
         @players[0].base_options_callback,
         @players[1].base_options_callback
