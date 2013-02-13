@@ -10,7 +10,7 @@ class GameRecord
   property :serialized_inputs, String
 end
 configure do
-  DataMapper.setup(:default, ENV["DATABASE_URL"])
+  DataMapper.setup(:default, ENV["HEROKU_POSTGRESQL_SILVER_URL"])
   # || "sqlite3:///#{Dir.pwd}/development.sqlite3")
   DataMapper.auto_upgrade!
 end
