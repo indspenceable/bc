@@ -31,6 +31,11 @@ def save_game!(game_id, g)
     GameRecord.create(id: Integer(game_id), :serialized_inputs => YAML.dump(g.valid_inputs)).save!
   end
 end
+def transaction(game_id)
+  game = load_game(game_id)
+  yield game
+  save_game!(game_id, game)
+end
 
 
 get '/games/:game_id/:player_id' do
