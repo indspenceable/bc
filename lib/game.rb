@@ -126,7 +126,12 @@ class Game
         ante!
         reveal!
         # if either player runs out of cards, go to the next turn
-        next if handle_clashes! == :no_cards
+        clashes_result = handle_clashes!
+        regain_cards!
+        if clashes_result == :no_cards
+          log_event!("A player ran out of cards. Turn is cycling.")
+          next
+        end
         determine_active_player!
         start_of_beat!
         activate!(@active_player, @reactive_player)
@@ -242,6 +247,8 @@ class Game
 
     @players[0].set_initial_discards!("#{p0a0};#{p0a1}")
     @players[1].set_initial_discards!("#{p1a0};#{p1a1}")
+
+    log_event!("Select initial discards", "Player 0 discards #{p0a0} and #{p0a1}.", "Player 1 discards #{p1a0} and #{p1a1}.")
   end
 
   def select_attack_pairs!
@@ -289,10 +296,10 @@ class Game
 
   def handle_clashes!
     while @players[0].priority == @players[1].priority
+      log_event!("Clash!!")
       @players.each do |p|
         p.clash!
       end
-      log_event!("Clash!!")
       return :no_cards if (@players[0].no_bases? || @players[1].no_bases?)
       @input_manager.require_multi_input!("select_base_clash",
         @players[0].base_options_callback,
@@ -300,6 +307,16 @@ class Game
       )
       @players[0].select_new_base!(@input_manager.answer(0))
       @players[1].select_new_base!(@input_manager.answer(1))
+
+      log_event!("Resolve Clash", @players.each_with_index.map do |p, i|
+        "Player #{i} reveals #{p.current_base_name}"
+      end)
+    end
+  end
+
+  def regain_cards!
+    @players.each do |p|
+      p.regain_cards!
     end
   end
 
@@ -367,8 +384,8 @@ class Game
       :stunned => @players[player_id].stunned?,
       :bases => @players[player_id].bases.map(&:name),
       :styles => @players[player_id].styles.map(&:name),
-      :current_base => @players[player_id].current_base,
-      :current_style => @players[player_id].current_style,
+      :current_base => @players[player_id].current_base_name,
+      :current_style => @players[player_id].current_style_name,
     }
   end
 end

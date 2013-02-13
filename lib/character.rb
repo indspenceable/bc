@@ -43,10 +43,10 @@ class Character
       card.is_a?(Style)
     end
   end
-  def current_base
+  def current_base_name
     @base && @base.name
   end
-  def current_style
+  def current_style_name
     @style && @style.name
   end
   def clash!
@@ -58,6 +58,10 @@ class Character
     choice =~ /([a-z]*)/
     @base = bases.find{|b| b.name == $1}
     @hand.delete(@base)
+  end
+  def regain_cards!
+    @hand += @clashed_bases
+    @clashed_bases = []
   end
 
 
