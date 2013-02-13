@@ -7,7 +7,7 @@ require_relative File.join("lib", "game")
 class GameRecord
   include DataMapper::Resource
   property :id, Serial
-  property :serialized_inputs, String
+  property :serialized_inputs, Text
 end
 configure do
   DataMapper.setup(:default, ENV["HEROKU_POSTGRESQL_SILVER_URL"] || "sqlite3:///#{Dir.pwd}/development.sqlite3")
