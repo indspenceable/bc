@@ -92,7 +92,7 @@ var init = function(player_id, game_id, character_names) {
   var setup_inputs = function(question) {
     resetInputs();
     console.log("question is: ", question)
-    if (question == "select_attack_pairs") {
+    if (/^attack_pair/.test(question)) {
       selectAttackPair()
     } else if (question == "select_character") {
       chooseCharacter()
