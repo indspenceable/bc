@@ -69,8 +69,21 @@ class Character
     @style = nil
   end
 
+  # order doens't matter on reveal.
+  def reveal!
+    @revealed = true
+    actions_to_do = {}
+    effect_sources.each do |source|
+      if source.respond_to?(trigger)
+        actions_to_do.merge!(source.send(trigger))
+      end
+    end
+    actions_to_do.each do |callback|
+      callback.call(self, @input_manager)
+    end
+  end
 
-  %w(reveal! start_of_beat! before_activating! on_hit! on_damage!
+  %w(start_of_beat! before_activating! on_hit! on_damage!
     after_activating! end_of_beat!).each do |trigger|
     define_method(trigger) do
       #TODO - this is wrong. this should be recalculated after each iteration, keeping track of
