@@ -17,6 +17,7 @@ def select_from_methods(selection_name=nil, options)
     end
 
     return if valid_options.empty?
+    ans = nil
 
     # ask them for input only if theres more than one valid option.
     if valid_options.count > 1
@@ -25,12 +26,15 @@ def select_from_methods(selection_name=nil, options)
       input.require_single_input!(me.player_id, selection_name || "select_from:#{option_names}", ->(text) {
         valid_options.include?(text.split('_'))
       })
-      method, argument = input.answer(me.player_id).split('_')
+      ans = input.answer(me.player_id)
+      method, argument = ans.split('_')
     else
+      ans = valid_options.first.join('_')
       method, argument = valid_options.first
     end
     # do that option number
     me.send("#{method}!", argument)
+    return ans
   end
 end
 
@@ -149,6 +153,9 @@ class Game
   end
   def rollback!
     @valid_inputs_thus_far.pop
+    setup_game!(@valid_inputs_thus_far)
+  end
+  def retry!
     setup_game!(@valid_inputs_thus_far)
   end
 
@@ -270,15 +277,21 @@ class Game
 
       # if they can ante, make them. If they don't pass, note that,
       # and enact the ante
-      if current_player.can_ante?
-        @input_manager.require_single_input!(current_player_id,
-          "ante", current_player.ante_callback)
-        answer = @input_manager.answer(current_player_id)
+      # if current_player.can_ante?
+      #
+      #   They can always ante, they just might not have options other than "pass"
+      #
+        # @input_manager.require_single_input!(current_player_id,
+        #   "ante", current_player.ante_callback)
+        # answer = @input_manager.answer(current_player_id)
+        puts "opts are #{current_player.ante_options}"
+        answer = select_from_methods(ante: current_player.ante_options).call(current_player, @input_manager)
+
         #TODO fix so "Player 1 passes" instead of "Player 1 antes pass"
         log_event!("Ante", "Player #{current_player_id} antes #{answer}")
-        passed_this_round = (answer == "pass")
+        passed_this_round = (answer == "ante_pass")
         current_player.ante!(answer)
-      end
+      # end
       if passed_this_round
         number_of_passes += 1
       else

@@ -164,6 +164,10 @@ class Hikaru < Character
     @token_pool.any?
   end
 
+  def ante_options
+    super + (@current_tokens.empty? ? @token_pool.map(&:name) : [])
+  end
+
   def ante!(choice)
     return if choice == "pass"
     @event_logger.call("Player #{self.player_id} antes #{choice}")

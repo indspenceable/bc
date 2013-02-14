@@ -232,6 +232,10 @@ class Character
     bases.empty?
   end
 
+  def ante_options
+    ["pass"]
+  end
+
   # input callbacks. These check the validity of input that the player does.
   # is this the best design? I dunno. It does make it easy for us to identify
   # when theres an error due to invalid input, though.
