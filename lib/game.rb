@@ -126,6 +126,7 @@ class Game
       select_discards!
       15.times do |round_number|
         @round_number = round_number + 1 # 1 based
+        clear_old_effects!
         select_attack_pairs!
         # moved to within select_attack_pairs!
         # ante!
@@ -198,6 +199,9 @@ class Game
     return @events
   end
 
+  def clear_old_effects!
+    @players.each(&:clear_old_effects!)
+  end
 
   # phases of the game
   def select_characters!

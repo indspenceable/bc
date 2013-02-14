@@ -48,6 +48,9 @@ class Sweeping < Style
     super('sweeping', 0, -1, 3)
   end
   # TODO - sweeping extra hit
+  def reveal!(me)
+    me.extra_damage_this_beat!
+  end
 end
 
 class Advancing < Style
@@ -57,7 +60,13 @@ class Advancing < Style
   def start_of_beat!
     #TODO - this doesn't check that you passed your opponent...
     {
-      'advancing_advance' => select_from_methods(advance: [1])
+      'advancing_advance' => ->(me, inpt) {
+        direction = me.position - me.opponent.position
+        select_from_methods(advance: [1]).call(me,inpt)
+        if (me.position - me.opponent.position)*(direction) < 0
+          me.advancing_bonus!
+        end
+      }
     }
   end
 end
@@ -153,6 +162,34 @@ class Hikaru < Character
     super + @current_tokens
   end
 
+  def clear_old_effects!
+    @sweeping = false
+    @advancing_bonus = false
+  end
+
+  # can we generalize this pattern?
+  def advancing_bonus!
+    @advancing_bonus = true
+  end
+  def extra_damage_this_beat!
+    @sweeping = true
+  end
+
+  def take_hit!(damage)
+    if @sweeping
+      super(damage+2)
+    else
+      super(damage)
+    end
+  end
+
+  def power
+    if @advancing_bonus
+      super+1
+    else
+      super
+    end
+  end
 
   def recycle!
     super

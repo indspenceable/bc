@@ -112,6 +112,7 @@ class Character
   end
   def range
     effect_sources.map(&:range).inject(0..0) do |old, obj|
+      break nil if old.nil? || obj.nil?
       obj = obj..obj if obj.is_a?(Numeric)
       (old.first + obj.first) .. (old.last + obj.last)
     end
@@ -142,7 +143,7 @@ class Character
     (position - @opponent.position).abs
   end
   def in_range?
-    range.include?(distance)
+    range.include?(distance) && !opponent.dodge?
   end
   def can_ante?
     false
@@ -246,6 +247,16 @@ class Character
 
   def token_pool
     []
+  end
+
+  def clear_old_effects!
+    @dodge = false
+  end
+  def dash_dodge!
+    @dodge = true
+  end
+  def dodges?
+    @dodge
   end
 
   # input callbacks. These check the validity of input that the player does.

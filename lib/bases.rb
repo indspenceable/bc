@@ -1,4 +1,4 @@
-require_relative "card" 
+require_relative "card"
 
 class Grasp < Base
   def initialize
@@ -51,11 +51,17 @@ class Burst < Base
 end
 class Dash < Base
   def initialize
-    super('dash', 0, 0, 9)
+    super('dash', nil, 0, 9)
   end
   def after_activating!
     {
-      "dash_move" => select_from_methods(retreat: [1, 2, 3], advance: [1, 2, 3])
+      "dash_move" => ->(me, inpt) {
+        direction = me.position - me.opponent.position
+        select_from_methods(retreat: [1, 2, 3], advance: [1, 2, 3]).call(me, inpt)
+        if (me.position - me.opponent.position) * direction < 0
+          me.dash_dodge!
+        end
+      }
     }
   end
 end
