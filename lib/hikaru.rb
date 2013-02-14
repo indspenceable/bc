@@ -185,10 +185,10 @@ class Hikaru < Character
       recover: %w(earth fire water wind pass)).call(self, @input_manager)
   end
 
-  #Checks if hikaru can recover the given token
-  def recover?(token)
-    return true if token == "pass"
-    @token_discard.include?(token)
+  # Checks if hikaru can recover the given token
+  def recover?(choice)
+    return true if choice == "pass"
+    @token_discard.any?{|token| token.name == choice}
   end
 
   def recover!(token)
