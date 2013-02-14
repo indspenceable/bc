@@ -156,7 +156,7 @@ class Character
     (position - @opponent.position).abs
   end
   def in_range?
-    range.include?(distance) && !opponent.dodge?
+    range && range.include?(distance) && !opponent.dodges?
   end
   def can_ante?
     false

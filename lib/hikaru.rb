@@ -235,4 +235,9 @@ class Hikaru < Character
     # return if token == "pass"
     @token_pool += @token_discard.delete_if{ |discarded_token| discarded_token.name == choice }
   end
+
+  def return_tokens_to_pool!
+    @token_pool += @current_tokens
+    @current_tokens = []
+  end
 end
