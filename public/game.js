@@ -8,6 +8,8 @@ var init = function(player_id, game_id, character_names) {
   var cachedQuestion = undefined;
 
   var need;
+  var needAlert = false;
+  var faviconTimeout = 100;
 
   var $root = function(pn) {
     return (pn == player_id ? $(".js-mine") : $('.js-theirs'))
@@ -170,6 +172,13 @@ var init = function(player_id, game_id, character_names) {
     // Do everything required for this question.
     var requiredInput = data['requiredInput']
     setup_inputs(requiredInput)
+    if (!needAlert && requiredInput) {
+      console.log("Setting timeout.")
+      needAlert = requiredInput
+      setFaviconToAlert();
+    }
+    needAlert = requiredInput
+
 
     // Updates related to the gamestate
     var gameState = data['gameState']
@@ -244,6 +253,16 @@ var init = function(player_id, game_id, character_names) {
     }, 'json')
   }
 
+  var setFaviconToAlert = function() {
+    if (needAlert) {
+      $("#favicon").attr("href","/alert-icon.png");
+      setTimeout(setFaviconToDefault, faviconTimeout)
+    }
+  }
+  var setFaviconToDefault = function() {
+    $("#favicon").attr("href","/icon.png");
+    setTimeout(setFaviconToAlert, faviconTimeout)
+  }
 
   // ---------------------------------------
 

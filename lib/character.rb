@@ -49,7 +49,6 @@ class Character
   def current_base_name(seen_by=@player_id)
     # either its the current player, or we've revealed, and theres a base, then
     # return its name
-    puts "(seen_by == @player_id || @revealed) [#{seen_by}] [#{@player_id}]"
     (seen_by == @player_id || @revealed) && @base && @base.name
 
   end
