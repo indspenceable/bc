@@ -404,6 +404,7 @@ class Game
       :styles => @players[player_id].styles.map(&:name),
       :current_base => @players[player_id].current_base_name,
       :current_style => @players[player_id].current_style_name,
+      :token_pool => @players[player_id].token_pool
     }
   end
 end

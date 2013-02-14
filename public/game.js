@@ -126,7 +126,7 @@ var init = function(player_id, game_id, character_names) {
     $('.board').find('.s' + p0).text("0")
     $('.board').find('.s' + p1).text("1")
   }
-  var fillCards = function(pn, currentBase, currentStyle, bases, styles) {
+  var fillCards = function(pn, currentBase, currentStyle, bases, styles, tokens) {
     if (currentBase) {
       loadCard('base', currentBase.toLowerCase(), $root(pn).filter('.attack-pair'))
     } else {
@@ -139,11 +139,15 @@ var init = function(player_id, game_id, character_names) {
     }
     var $bases = $root(pn).find('.js-bases').empty()
     var $styles = $root(pn).find('.js-styles').empty()
+    var $tokens = $root(pn).find('.js-tokens').empty()
     for (var index in bases) {
       $('<div/>').addClass('card').text(bases[index]).appendTo($bases)
     }
     for (var index in styles) {
       $('<div/>').addClass('card').text(styles[index]).appendTo($styles)
+    }
+    for (var index in tokens) {
+      $('<div/>').addClass('token').text(tokens[index]).appendTo($tokens)
     }
   }
 
@@ -157,6 +161,8 @@ var init = function(player_id, game_id, character_names) {
     // Set the cache so we'll shortcircuit next time.
     cachedEventCount = data['gameState']['events'].length;
     cachedQuestion = data['requiredInput'];
+
+    console.log(data)
 
     $('.js-loading').hide()
     $('.js-in-game').show()
@@ -176,7 +182,8 @@ var init = function(player_id, game_id, character_names) {
         gameState.players[pn].current_base,
         gameState.players[pn].current_style,
         gameState.players[pn].bases,
-        gameState.players[pn].styles)
+        gameState.players[pn].styles,
+        gameState.players[pn].token_pool)
       // Display player life
       $root(pn).filter('.life').text("P" + pn + ": " + gameState.players[pn].life + " Life")
 
