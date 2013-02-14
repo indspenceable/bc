@@ -33,21 +33,30 @@ class Character
   def is_reactive!
   end
 
-  def bases
-    @hand.select do |card|
+  def bases(seen_by=@player_id)
+    # if we haven't revealed, but this not another player
+    c_hand = (seen_by == @player_id) ? @hand - [@base, @style] : @hand
+    c_hand.select do |card|
       card.is_a?(Base)
     end
   end
-  def styles
-    @hand.select do |card|
+  def styles(seen_by=@player_id)
+    c_hand = (seen_by == @player_id) ? @hand - [@base, @style] : @hand
+    c_hand.select do |card|
       card.is_a?(Style)
     end
   end
-  def current_base_name
-    @base && @base.name
+  def current_base_name(seen_by=@player_id)
+    # either its the current player, or we've revealed, and theres a base, then
+    # return its name
+    puts "(seen_by == @player_id || @revealed) [#{seen_by}] [#{@player_id}]"
+    (seen_by == @player_id || @revealed) && @base && @base.name
+
   end
-  def current_style_name
-    @style && @style.name
+  def current_style_name(seen_by=@player_id)
+    # either its the current player, or we've revealed, and theres a style, then
+    # return its name
+    (seen_by == @player_id || @revealed) && @style && @style.name
   end
   def clash!
     @clashed_bases << @base
@@ -71,6 +80,10 @@ class Character
 
   # order doens't matter on reveal.
   def reveal!
+    @hand.delete(@base)
+    @hand.delete(@style)
+    @revealed = true
+
     effect_sources.each do |source|
       if source.respond_to?(:reveal!)
         source.reveal!(self)
@@ -166,11 +179,10 @@ class Character
 
 
   def set_attack_pair!(choice)
+    @revealed = false
     choice =~ /([a-z]*)_([a-z]*)/
     @style = styles.find{|s| s.name == $1}
     @base = bases.find{|b| b.name == $2}
-    @hand.delete(@base)
-    @hand.delete(@style)
   end
 
   def retreat?(n_s)

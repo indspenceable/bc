@@ -128,8 +128,7 @@ class Game
         @round_number = round_number + 1 # 1 based
         clear_old_effects!
         select_attack_pairs!
-        # moved to within select_attack_pairs!
-        # ante!
+        ante!
         reveal!
         # if either player runs out of cards, go to the next turn
         if handle_clashes! == :no_cards
@@ -268,13 +267,8 @@ class Game
       @players[0].valid_attack_pair_callback,
       @players[1].valid_attack_pair_callback
     )
-    p0_answer = @input_manager.answer(0)
-    p1_answer = @input_manager.answer(1)
-
-    ante!
-
-    @players[0].set_attack_pair!(p0_answer)
-    @players[1].set_attack_pair!(p1_answer)
+    @players[0].set_attack_pair!(@input_manager.answer(0))
+    @players[1].set_attack_pair!(@input_manager.answer(1))
   end
 
   def ante!
@@ -411,10 +405,10 @@ class Game
       :life => @players[player_id].life,
       :location => @players[player_id].position,
       :stunned => @players[player_id].stunned?,
-      :bases => @players[player_id].bases.map(&:name),
-      :styles => @players[player_id].styles.map(&:name),
-      :current_base => @players[player_id].current_base_name,
-      :current_style => @players[player_id].current_style_name,
+      :bases => @players[player_id].bases(as_seen_by_id).map(&:name),
+      :styles => @players[player_id].styles(as_seen_by_id).map(&:name),
+      :current_base => @players[player_id].current_base_name(as_seen_by_id),
+      :current_style => @players[player_id].current_style_name(as_seen_by_id),
       :token_pool => @players[player_id].token_pool
     }
   end
