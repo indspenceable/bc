@@ -88,7 +88,7 @@ class Earth < Token
   def initialize
     super("earth", 0, 0, 0)
   end
-  def stun_guard
+  def soak
     3
   end
 end

@@ -71,15 +71,10 @@ class Character
 
   # order doens't matter on reveal.
   def reveal!
-    @revealed = true
-    actions_to_do = {}
     effect_sources.each do |source|
-      if source.respond_to?(trigger)
-        actions_to_do.merge!(source.send(trigger))
+      if source.respond_to?(:reveal!)
+        source.reveal!(self)
       end
-    end
-    actions_to_do.each do |callback|
-      callback.call(self, @input_manager)
     end
   end
 

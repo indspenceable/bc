@@ -309,6 +309,7 @@ class Game
   end
 
   def reveal!
+    @players.each(&:reveal!)
     log_event!("Reveal", "Player 0 plays #{@players[0].reveal_attack_pair!}", "Player 1 plays #{@players[1].reveal_attack_pair!}")
   end
 
