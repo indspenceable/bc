@@ -165,47 +165,35 @@ class Hikaru < Character
   end
 
   def ante_options
-    super + (@current_tokens.empty? ? @token_pool.map(&:name) : [])
+    (@current_tokens.empty? ? @token_pool.map(&:name) : []) + super
   end
 
   def ante!(choice)
-    return if choice == "pass"
     @event_logger.call("Player #{self.player_id} antes #{choice}")
+    return if choice == "pass"
     @current_tokens += @token_pool.reject{ |token| token.name != choice }
     @token_pool.delete_if{ |token| token.name == choice }
   end
 
   def ante?(choice)
     return true if choice == "pass"
-    ret = false
-    @token_pool.each{ |token|
-      return true if (token.name == choice)
-    }
-    false
+    @token_pool.any?{ |token| (token.name == choice) }
   end
 
   def recover_token!
     select_from_methods(
-      recover: %w(earth fire water wind pass)).call(self, @input_manager)
+      recover: %w(earth fire water wind)).call(self, @input_manager)
   end
 
   # Checks if hikaru can recover the given token
   def recover?(choice)
-    return true if choice == "pass"
+    # return true if choice == "pass"
     @token_discard.any?{|token| token.name == choice}
   end
 
   def recover!(token)
-    return if token == "pass"
     @event_logger.call("Player #{self.player_id} recovers #{choice}")
+    # return if token == "pass"
     @token_pool += @token_discard.delete_if{ |discarded_token| discarded_token.name == token }
-  end
-  #this and ante? should be merged
-  def ante_callback
-    ->(text) do
-      return true if (text == "pass")
-      @token_pool.each{ |token| return true if (token.name == text) }
-      false
-    end
   end
 end

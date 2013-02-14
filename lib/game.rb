@@ -284,11 +284,10 @@ class Game
         # @input_manager.require_single_input!(current_player_id,
         #   "ante", current_player.ante_callback)
         # answer = @input_manager.answer(current_player_id)
-        puts "opts are #{current_player.ante_options}"
         answer = select_from_methods(ante: current_player.ante_options).call(current_player, @input_manager)
 
         #TODO fix so "Player 1 passes" instead of "Player 1 antes pass"
-        log_event!("Ante", "Player #{current_player_id} antes #{answer}")
+        # log_event!("Ante", "Player #{current_player_id} antes #{answer}")
         passed_this_round = (answer == "ante_pass")
         current_player.ante!(answer)
       # end
