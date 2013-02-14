@@ -21,6 +21,7 @@ var init = function(player_id, game_id, character_names) {
     return data
   }
   var cardDefinitions = {
+    emptyCard: makeCard('', '', '', {}),
     dash: makeCard("N/A", "N/A", 9, {"After Activating": "Move 1, 2, or 3 spaces. If you switch sides with an opponent, they cannot hit you this turn."}),
     grasp: makeCard(1, 2, 5, {"On Hit": "Move opponent 1 space."}),
     drive: makeCard(1, 3, 4, {"Before Activating": "Advance 1 or 2 spaces."}),
@@ -34,11 +35,11 @@ var init = function(player_id, game_id, character_names) {
     trance: makeCard("0~1", 0, 0, {"Start of Beat": "Return all anted tokens to your pool. You don't get their effects this turn.", "End of Beat": "Recover an elemental token of your choice."}),
     sweeping: makeCard(0, -1, 3, {"passive": "If hikaru gets hit this turn, he takes 2 additional damage."}),
     advancing: makeCard(0, 1, 1, {"Start of beat": "Advance 1 space. If this causes you to switch sides with an opponent, you get +1 power this beat."})
-
   }
-  var loadCard = function(styleOrBase, cardName, $pair) {
+
+  var loadCard = function(styleOrBase, cardName, $pair, overrideCardName) {
     var $card = $pair.find('.' + styleOrBase)
-    $card.find('.name').text(capitaliseFirstLetter(cardName))
+    $card.find('.name').text(overrideCardName || capitaliseFirstLetter(cardName))
     $card.find('.effects').empty()
     var card = cardDefinitions[cardName]
     for (var attr in card) {
@@ -52,6 +53,9 @@ var init = function(player_id, game_id, character_names) {
         $card.find('.effects').append($('<p/>').html("<b>" + attr + ":</b> " + card[attr]))
       }
     }
+  }
+  var clearCard = function(styleOrBase, $pair) {
+    loadCard(styleOrBase, 'emptyCard', $pair, "");
   }
 
   var pretty = function(str) {
@@ -125,9 +129,13 @@ var init = function(player_id, game_id, character_names) {
   var fillCards = function(pn, currentBase, currentStyle, bases, styles) {
     if (currentBase) {
       loadCard('base', currentBase.toLowerCase(), $root(pn).filter('.attack-pair'))
+    } else {
+      clearCard('base', $root(pn).filter('.attack-pair'))
     }
     if (currentStyle) {
       loadCard('style', currentStyle.toLowerCase(), $root(pn).filter('.attack-pair'))
+    } else {
+      clearCard('style', $root(pn).filter('.attack-pair'))
     }
     var $bases = $root(pn).find('.js-bases').empty()
     var $styles = $root(pn).find('.js-styles').empty()
