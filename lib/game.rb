@@ -127,7 +127,8 @@ class Game
       15.times do |round_number|
         @round_number = round_number + 1 # 1 based
         select_attack_pairs!
-        ante!
+        # moved to within select_attack_pairs!
+        # ante!
         reveal!
         # if either player runs out of cards, go to the next turn
         if handle_clashes! == :no_cards
@@ -263,8 +264,13 @@ class Game
       @players[0].valid_attack_pair_callback,
       @players[1].valid_attack_pair_callback
     )
-    @players[0].set_attack_pair!(@input_manager.answer(0))
-    @players[1].set_attack_pair!(@input_manager.answer(1))
+    p0_answer = @input_manager.answer(0)
+    p1_answer = @input_manager.answer(1)
+
+    ante!
+
+    @players[0].set_attack_pair!(p0_answer)
+    @players[1].set_attack_pair!(p1_answer)
   end
 
   def ante!
