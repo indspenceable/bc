@@ -211,8 +211,10 @@ class Hikaru < Character
   end
 
   def ante!(choice)
-    @event_logger.call("Player #{self.player_id} antes #{choice}")
-    return if choice == "pass"
+    if choice == "pass"
+      log_me!("passes.")
+    end
+    log_me!("antes #{@token_pool.find{ |token| token.name != choice }.name_and_effect}")
     @current_tokens += @token_pool.reject{ |token| token.name != choice }
     @token_pool.delete_if{ |token| token.name == choice }
   end
@@ -233,7 +235,7 @@ class Hikaru < Character
   end
 
   def recover!(choice)
-    @event_logger.call("Player #{self.player_id} recovers #{choice}")
+    log_me!("recovers #{choice}")
     # return if token == "pass"
     @token_pool += @token_discard.reject{ |token| token.name != choice }
     @token_discard.delete_if{ |discarded_token| discarded_token.name == choice }

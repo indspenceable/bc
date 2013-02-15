@@ -114,6 +114,7 @@ class Cadenza < Character
   end
   def iron_body!(action)
     return if action == "pass"
+    log_me!("discards an iron body token for infinite stun guard.")
     @token_count -= 1
     @iron_body_stun_guard = true
   end

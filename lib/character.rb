@@ -149,7 +149,12 @@ class Character
     actual_damage
   end
 
+  def log_me!(msg)
+    @event_logger.call("P#{player_id} #{msg}")
+  end
+
   def receive_damage!(damage)
+    log_me!("gets hit for #{damage} damage")
     @life -= damage
   end
 
@@ -159,7 +164,10 @@ class Character
 
   def stunned!
     # can't get stunned with stun immunity!
-    @stunned = true unless stun_immunity?
+    unless stun_immunity?
+      log_me!("is stunned!")
+      @stunned = true
+    end
   end
   def stunned?
     !!@stunned
