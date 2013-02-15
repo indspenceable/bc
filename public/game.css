@@ -52,6 +52,6 @@
   cursor: pointer;
 }
 
-.effects {
+.js-current-effects, .effects {
   /*font-size: 10px;*/
 }
