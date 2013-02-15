@@ -143,28 +143,14 @@ class Hikaru < Character
     @current_tokens = []
   end
 
-  def set_initial_discards!(choice)
-    choice =~ /([a-z]*)_([a-z]*);([a-z]*)_([a-z]*)/
-    s1 = styles.find{|s| s.name == $1}
-    b1 = bases.find{|b| b.name == $2}
-    s2 = styles.find{|s| s.name == $3}
-    b2 = bases.find{|b| b.name == $4}
-
-    @discard1 = [s1, b1]
-    @discard2 = [s2, b2]
-    @hand.delete(b1)
-    @hand.delete(b2)
-    @hand.delete(s1)
-    @hand.delete(s2)
-  end
-
   def effect_sources
     super + @current_tokens
   end
 
-  def clear_old_effects!
+  def reveal!
     @sweeping = false
     @advancing_bonus = false
+    super
   end
 
   # can we generalize this pattern?

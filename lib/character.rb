@@ -137,11 +137,19 @@ class Character
     effect_sources.map(&:soak).inject(&:+)
   end
 
+  def stun_immunity
+    effect_sources.any?(&:stun_immunity)
+  end
+
   def take_hit!(damage)
     actual_damage = damage - soak
-    stunned! if actual_damage > stun_guard
-    @life -= actual_damage
+    stunned! if actual_damage > stun_guard && !stun_immunity?
+    receive_damage!(actual_damage)
     actual_damage
+  end
+
+  def receive_damage!(damage)
+    @life -= damage
   end
 
   def stunned!
@@ -176,6 +184,20 @@ class Character
     sources
   end
 
+  def set_initial_discards!(choice)
+    choice =~ /([a-z]*)_([a-z]*);([a-z]*)_([a-z]*)/
+    s1 = styles.find{|s| s.name == $1}
+    b1 = bases.find{|b| b.name == $2}
+    s2 = styles.find{|s| s.name == $3}
+    b2 = bases.find{|b| b.name == $4}
+
+    @discard2 = [s1, b1]
+    @discard1 = [s2, b2]
+    @hand.delete(b1)
+    @hand.delete(b2)
+    @hand.delete(s1)
+    @hand.delete(s2)
+  end
 
   def set_attack_pair!(choice)
     @revealed = false

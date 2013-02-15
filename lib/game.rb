@@ -126,7 +126,6 @@ class Game
       select_discards!
       15.times do |round_number|
         @round_number = round_number + 1 # 1 based
-        clear_old_effects!
         select_attack_pairs!
         ante!
         reveal!

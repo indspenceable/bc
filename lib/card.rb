@@ -21,6 +21,9 @@ class Card
   def soak
     0
   end
+  def stun_immunity
+    false
+  end
 end
 
 class Style < Card;end
