@@ -1,5 +1,6 @@
 
 require_relative "hikaru"
+require_relative "cadenza"
 
 #MAGIC METHOD
 def select_from_methods(selection_name=nil, options)
