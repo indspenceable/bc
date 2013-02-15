@@ -143,7 +143,7 @@ class Character
 
   def take_hit!(damage)
     actual_damage = damage - soak
-    stunned! if actual_damage > stun_guard && !stun_immunity?
+    stunned! if exceeds_stun_guard?(actual_damage)
     receive_damage!(actual_damage)
     actual_damage
   end
@@ -152,8 +152,13 @@ class Character
     @life -= damage
   end
 
+  def exceeds_stun_guard?(amt)
+    amt > stun_guard
+  end
+
   def stunned!
-    @stunned = true
+    # can't get stunned with stun immunity!
+    @stunned = true unless stun_immunity?
   end
   def stunned?
     !!@stunned
