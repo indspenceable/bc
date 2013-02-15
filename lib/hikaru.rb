@@ -92,7 +92,7 @@ class Fire < Token
     super("fire", 0, 3, 0)
   end
   def name_and_effect
-    "#{name} (+3 power)"
+    "#{name.capitalize} (+3 power)"
   end
 end
 
@@ -104,7 +104,7 @@ class Earth < Token
     3
   end
   def name_and_effect
-    "#{name} (soak 3)"
+    "#{name.capitalize} (soak 3)"
   end
 end
 
@@ -113,7 +113,7 @@ class Wind < Token
     super("wind", 0, 0, 2)
   end
   def name_and_effect
-    "#{name} (+2 priority)"
+    "#{name.capitalize} (+2 priority)"
   end
 end
 
@@ -122,7 +122,7 @@ class Water < Token
     super("water", -1..1, 0, 0)
   end
   def name_and_effect
-    "#{name} (-1 ~ +1 range)"
+    "#{name.capitalize} (-1 ~ +1 range)"
   end
 end
 

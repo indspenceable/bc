@@ -130,7 +130,7 @@ class Cadenza < Character
     (@battery_bonus ? 4 : 0) + super
   end
   def token_pool
-    (["Iron Body Token"] * @token_count) + super
+    (["Iron Body"] * @token_count) + super
   end
 
   #ante-ing iron body tokens
