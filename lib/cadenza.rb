@@ -81,8 +81,15 @@ end
 class Cadenza < Character
   def initialize *args
     super
-
-    @token_count = 0
+    @hand << Press.new
+    @hand += [
+      Battery.new,
+      Clockwork.new,
+      Mechanical.new,
+      Grapnel.new,
+      Hydraulic.new,
+    ]
+    @token_count = 3
   end
   def self.character_name
     'cadenza'
@@ -94,15 +101,15 @@ class Cadenza < Character
     @press_charge_up = true
   end
 
-  def recieve_damage!(damage)
+  def receive_damage!(damage)
     if damage > 0 && @token_count > 0
-      select_from_methods(iron_body: ['yes', 'pass']).call(me, @input_manager)
+      select_from_methods(iron_body: ['yes', 'pass']).call(self, @input_manager)
     end
   end
 
   def iron_body?(action)
     return true if action == "pass"
-    return true if @token_count > 0
+    return @token_count > 0
   end
   def iron_body!(action)
     return if action == "pass"
@@ -127,11 +134,14 @@ class Cadenza < Character
 
   #ante-ing iron body tokens
   def ante_options
-    (@iron_body_stun_immunity ? [] : ["Iron Body"]) + super
+    (@iron_body_stun_immunity ? [] : ["ironbody"]) + super
   end
 
-  alias ante? iron_body?
-  def iron_body!(action)
+  def ante?(action)
+    return true if action == "pass"
+    return @token_count > 0
+  end
+  def ante!(action)
     return if action == "pass"
     @token_count -= 1
     @iron_body_stun_immunity = true

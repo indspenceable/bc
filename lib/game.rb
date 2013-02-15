@@ -293,7 +293,6 @@ class Game
         #TODO fix so "Player 1 passes" instead of "Player 1 antes pass"
         # log_event!("Ante", "Player #{current_player_id} antes #{answer}")
         passed_this_round = (answer == "ante_pass")
-        current_player.ante!(answer)
       # end
       if passed_this_round
         number_of_passes += 1
@@ -313,7 +312,7 @@ class Game
 
   def handle_clashes!
     while @players[0].priority == @players[1].priority
-      log_event!("Clash!!")
+      log_event!("Clash at #{@players[0].priority}/#{@players[1].priority}")
       @players.each do |p|
         p.clash!
       end
@@ -392,7 +391,7 @@ class Game
   end
 
   def self.character_list
-    [Hikaru]
+    [Hikaru, Cadenza]
   end
   def self.character_names
     character_list.map(&:character_name)

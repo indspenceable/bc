@@ -137,14 +137,14 @@ class Character
     effect_sources.map(&:soak).inject(&:+)
   end
 
-  def stun_immunity
+  def stun_immunity?
     effect_sources.any?(&:stun_immunity)
   end
 
   def take_hit!(damage)
     actual_damage = damage - soak
-    stunned! if exceeds_stun_guard?(actual_damage)
     receive_damage!(actual_damage)
+    stunned! if exceeds_stun_guard?(actual_damage)
     actual_damage
   end
 
@@ -306,9 +306,6 @@ class Character
     ->(text) do
       text =~ /([a-z]*)_([a-z]*);([a-z]*)_([a-z]*)/
       s1,b1,s2,b2 = $1, $2, $3, $4
-      puts "b1 is #{b1}/#{text}"
-      puts "hurr: #{bases.map(&:name).include?(b1)} && #{bases.map(&:name).include?(b2)} && #{b1 != b2} &&
-      #{styles.map(&:name).include?(s1)} && #{styles.map(&:name).include?(s2)} && #{s1 != s2}"
       bases.map(&:name).include?(b1) && bases.map(&:name).include?(b2) && b1 != b2 &&
       styles.map(&:name).include?(s1) && styles.map(&:name).include?(s2) && s1 != s2
     end
