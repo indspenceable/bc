@@ -22,15 +22,15 @@ def select_from_methods(selection_name=nil, options)
 
     # ask them for input only if theres more than one valid option.
     if valid_options.count > 1
-      option_names = valid_options.map{|k,v| "<#{k}_#{v}>"}.join('')
+      option_names = valid_options.map{|k,v| "<#{k}##{v}>"}.join('')
       # ask them for the option number they want to do
       input.require_single_input!(me.player_id, selection_name || "select_from:#{option_names}", ->(text) {
-        valid_options.include?(text.split('_'))
+        valid_options.include?(text.split('#'))
       })
       ans = input.answer(me.player_id)
-      method, argument = ans.split('_')
+      method, argument = ans.split('#')
     else
-      ans = valid_options.first.join('_')
+      ans = valid_options.first.join('#')
       method, argument = valid_options.first
     end
     # do that option number
@@ -292,7 +292,7 @@ class Game
 
         #TODO fix so "Player 1 passes" instead of "Player 1 antes pass"
         # log_event!("Ante", "Player #{current_player_id} antes #{answer}")
-        passed_this_round = (answer == "ante_pass")
+        passed_this_round = (answer == 'ante#pass')
       # end
       if passed_this_round
         number_of_passes += 1
