@@ -195,7 +195,7 @@ var init = function(player_id, game_id, character_names) {
         gameState.players[pn].token_pool)
       // Display player life
       $root(pn).filter('.life').text("P" + pn + ": " + gameState.players[pn].life + " Life")
-
+      $root(pn).filter('.js-current-effects').html(gameState.players[pn].current_effects.join("<br/>"))
     }
     // Show the event log.
     $('.event-log').html(gameState['events'].reverse().join("<br/>"))

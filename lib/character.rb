@@ -287,6 +287,10 @@ class Character
     []
   end
 
+  def current_effects
+    []
+  end
+
   def clear_old_effects!
     @dodge = false
   end

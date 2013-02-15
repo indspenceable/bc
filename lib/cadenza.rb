@@ -147,6 +147,15 @@ class Cadenza < Character
     @iron_body_stun_immunity = true
   end
 
+  def current_effects
+    ary = []
+    ary << "Battery (+4 Priority)" if @battery_bonus
+    ary << "Press (+#{@press_charge_ammount} damage)" if @press_charge_up
+    ary << "Stun Guard (Iron Body)" if @iron_body_stun_guard
+    ary << "Stun Immunity (Iron Body)" if @iron_body_stun_immunity
+    ary + super
+  end
+
   def recycle!
     @battery_bonus = @battery_charge
     @battery_charge = nil

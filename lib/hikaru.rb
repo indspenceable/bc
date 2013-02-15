@@ -91,6 +91,9 @@ class Fire < Token
   def initialize
     super("fire", 0, 3, 0)
   end
+  def name_and_effect
+    "#{name} (+3 power)"
+  end
 end
 
 class Earth < Token
@@ -100,17 +103,26 @@ class Earth < Token
   def soak
     3
   end
+  def name_and_effect
+    "#{name} (soak 3)"
+  end
 end
 
 class Wind < Token
   def initialize
     super("wind", 0, 0, 2)
   end
+  def name_and_effect
+    "#{name} (+2 priority)"
+  end
 end
 
 class Water < Token
   def initialize
     super("water", -1..1, 0, 0)
+  end
+  def name_and_effect
+    "#{name} (-1 ~ +1 range)"
   end
 end
 
@@ -177,6 +189,10 @@ class Hikaru < Character
     end
   end
 
+  def current_effects
+    super + @current_tokens.map(&:name_and_effect)
+  end
+
   def recycle!
     super
     @token_discard += @current_tokens
@@ -191,7 +207,7 @@ class Hikaru < Character
     (@current_tokens.empty? ? @token_pool.map(&:name) : []) + super
   end
   def token_pool
-    @token_pool.map(&:name)
+    @token_pool.map(&:name_and_effect)
   end
 
   def ante!(choice)
