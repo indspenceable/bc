@@ -143,6 +143,7 @@ class Character
 
   def take_hit!(damage)
     actual_damage = damage - soak
+    actual_damage = 0 if actual_damage < 0
     receive_damage!(actual_damage)
     stunned! if exceeds_stun_guard?(actual_damage)
     actual_damage
