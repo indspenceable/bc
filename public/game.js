@@ -5,6 +5,7 @@ function capitaliseFirstLetter(string)
 
 var init = function(player_id, game_id, character_names) {
   var cachedInputNumber = -1;
+  var cachedRequiredInput;
 
   var need;
   var needAlert = false;
@@ -164,11 +165,13 @@ var init = function(player_id, game_id, character_names) {
   var setUI = function(data) {
     // short circuit unless more events have happened, or
     // there is a new question.
-    if (data.gameState && data.gameState.input_number == cachedInputNumber) {
+    if (data.gameState && data.gameState.input_number == cachedInputNumber &&
+      data.requiredInput == cachedRequiredInput) {
       return;
     }
     // Set the cache so we'll shortcircuit next time.
     cachedInputNumber = data.gameState.input_number;
+    cachedRequiredInput = data.requiredInput
 
     console.log(data)
 

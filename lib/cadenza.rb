@@ -125,7 +125,12 @@ class Cadenza < Character
   end
 
   def power
-    super + (@press_charge_up ? @press_charge_ammount : 0)
+    if @press_charge_up
+      log_me!("gets #{@press_charge_ammount} bonus damage from press!")
+      @press_charge_ammount + super
+    else
+      super
+    end
   end
   def priority
     (@battery_bonus ? 4 : 0) + super
@@ -161,6 +166,7 @@ class Cadenza < Character
   def recycle!
     @battery_bonus = @battery_charge
     @battery_charge = nil
+    log_me!("gets +4 priority from battery.") if @battery_bonus
 
     @press_charge_up = nil
     @press_charge_ammount = 0
