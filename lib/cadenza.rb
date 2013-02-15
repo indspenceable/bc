@@ -103,7 +103,7 @@ class Cadenza < Character
 
   def receive_damage!(damage)
     super
-    if damage > 0 && @token_count > 0
+    if damage > 0 && @token_count > 0 && exceeds_stun_guard?(damage)
       select_from_methods(iron_body: ['yes', 'pass']).call(self, @input_manager)
     end
   end
