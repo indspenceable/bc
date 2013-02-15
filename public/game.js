@@ -31,12 +31,21 @@ var init = function(player_id, game_id, character_names) {
     shot: makeCard("1~4", 3, 2, {"Stun Guard": "2"}),
     burst: makeCard("2~3", 3, 1, {"Start of Beat": "Retreat 1 or 2 spaces."}),
 
+    //Hikaru
     palmstrike: makeCard(1, 2, 5, {"Start of Beat": "Advance 1 space.", "On Damage": "Recover an elemental token of your choice."}),
     geomantic: makeCard(0, 1, 0, {"Start of Beat": "You may ante another token for this beat."}),
     focused: makeCard(0, 1, 0, {"On Hit": "Recover an elemental token of your choice."}),
     trance: makeCard("0~1", 0, 0, {"Start of Beat": "Return all anted tokens to your pool. You don't get their effects this turn.", "End of Beat": "Recover an elemental token of your choice."}),
     sweeping: makeCard(0, -1, 3, {"passive": "If hikaru gets hit this turn, he takes 2 additional damage."}),
-    advancing: makeCard(0, 1, 1, {"Start of beat": "Advance 1 space. If this causes you to switch sides with an opponent, you get +1 power this beat."})
+    advancing: makeCard(0, 1, 1, {"Start of beat": "Advance 1 space. If this causes you to switch sides with an opponent, you get +1 power this beat."}),
+
+    //Cadenza
+    battery: makeCard(0, 1, -1, {"passive": "You get +4 priority next beat."}),
+    clockwork: makeCard(0, 3, -3, {"Soak": 3}),
+    hydraulic: makeCard(0, 2, -1, {"Before Activating": "Advance 1 space."}),
+    mechanical: makeCard(0, 2, -2, {"End of Beat": "Advance up to 3 spaces."}),
+    grapnel: makeCard("2~4", 0, 0, {"On Hit": "Pull opponent up to 3 spaces."}),
+    press: makeCard("1~2", 1, 0, {"Stun Guard": 2, "passive": "Deals additional damage equal to the ammount of damage you have taken this beat."}),
   }
 
   var loadCard = function(styleOrBase, cardName, $pair, overrideCardName) {
