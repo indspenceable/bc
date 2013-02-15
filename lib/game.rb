@@ -42,15 +42,18 @@ end
 class Game
   # Input manager manages input.
   class InputManager
+    attr_reader :input_counter
     def initialize(input_buffer)
       @required_input = {}
       @input_buffer = Hash.new{|h, k| h[k] = []}
       input_buffer.each do |player_id, str|
         @input_buffer[player_id] << str
       end
+      @input_counter = 0
     end
     def require_single_input!(player_id, input_string, validator)
       raise "Didn't answer previous question" if input_required?
+      @input_counter+=1
       @answers = {}
       @required_input = {
         player_id => [input_string, validator]
@@ -59,6 +62,7 @@ class Game
     end
     def require_multi_input!(input_string, *validators)
       raise "Didn't answer previous question" if input_required?
+      @input_counter+=1
       @answers = {}
       @required_input = {}
       validators.each_with_index do |validator, idx|
@@ -180,6 +184,7 @@ class Game
         player_info_for(0, player_id),
         player_info_for(1, player_id)
       ],
+      :input_number => @input_manager.input_counter,
       :current_phase => "select_character"
     }
   end

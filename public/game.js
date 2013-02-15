@@ -4,8 +4,7 @@ function capitaliseFirstLetter(string)
 }
 
 var init = function(player_id, game_id, character_names) {
-  var cachedEventCount = undefined;
-  var cachedQuestion = undefined;
+  var cachedInputNumber = -1;
 
   var need;
   var needAlert = false;
@@ -165,13 +164,11 @@ var init = function(player_id, game_id, character_names) {
   var setUI = function(data) {
     // short circuit unless more events have happened, or
     // there is a new question.
-    if (data['gameState']['events'].length == cachedEventCount &&
-      data['requiredInput'] == cachedQuestion) {
+    if (data.gameState && data.gameState.input_number == cachedInputNumber) {
       return;
     }
     // Set the cache so we'll shortcircuit next time.
-    cachedEventCount = data['gameState']['events'].length;
-    cachedQuestion = data['requiredInput'];
+    cachedInputNumber = data.gameState.input_number;
 
     console.log(data)
 
