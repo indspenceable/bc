@@ -214,7 +214,7 @@ class Hikaru < Character
     if choice == "pass"
       log_me!("passes.")
     end
-    log_me!("antes #{@token_pool.find{ |token| token.name != choice }.name_and_effect}")
+    log_me!("antes #{@token_pool.find{ |token| token.name == choice }.name_and_effect}")
     @current_tokens += @token_pool.reject{ |token| token.name != choice }
     @token_pool.delete_if{ |token| token.name == choice }
   end
