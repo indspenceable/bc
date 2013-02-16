@@ -129,9 +129,6 @@ var init = function(player_id, game_id, character_names) {
     return;
   }
 
-
-
-
   var displayBoard = function(p0, p1) {
     $('.board').find('.space').empty()
     $('.board').find('.s' + p0).text("0")
@@ -159,6 +156,12 @@ var init = function(player_id, game_id, character_names) {
     }
     for (var index in tokens) {
       $('<div/>').addClass('token').text(tokens[index]).appendTo($tokens)
+    }
+  }
+
+  var setExtraData = function(pn, data) {
+    if (data.trap) {
+      $('.board').find('.s' + data.trap).append("P" + pn + "'s Trap")
     }
   }
 
@@ -205,6 +208,7 @@ var init = function(player_id, game_id, character_names) {
       // Display player life
       $root(pn).filter('.life').text("P" + pn + ": " + gameState.players[pn].life + " Life")
       $root(pn).filter('.js-current-effects').html(gameState.players[pn].current_effects.join("<br/>"))
+      setExtraData(pn, gameState.players[pn].extra_data)
     }
     // Show the event log.
     $('.event-log').html(gameState['events'].reverse().join("<br/>"))

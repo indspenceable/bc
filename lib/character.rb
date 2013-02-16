@@ -257,6 +257,10 @@ class Character
     []
   end
 
+  def teleport_to?(n)
+    opponent.position != n
+  end
+
   def advance!(n_s,log_event=true)
     n = Integer(n_s)
     if position > @opponent.position

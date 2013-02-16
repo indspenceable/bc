@@ -1,6 +1,7 @@
 
 require_relative "hikaru"
 require_relative "cadenza"
+require_relative 'khadath'
 
 #MAGIC METHOD
 def select_from_methods(selection_name=nil, options)
@@ -400,7 +401,7 @@ class Game
   end
 
   def self.character_list
-    [Hikaru, Cadenza]
+    [Hikaru, Cadenza, Khadath]
   end
   def self.character_names
     character_list.map(&:character_name)
