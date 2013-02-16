@@ -220,32 +220,33 @@ class Character
     @base = bases.find{|b| b.name == $2}
   end
 
-  def retreat?(n_s)
+  def retreat?(n_s, push=false)
     n = Integer(n_s)
     if position < @opponent.position
-      n <= position
+      traversed_spaces = position.downto(position - n_s).to_a
     else
-      n <= 6-position
+      traversed_spaces = position.upto(position + n_s).to_a
     end
-  end
-  def advance?(n_s)
-    n = Integer(n_s)
-    #like retreat but one space is occupied by opponent.
-    if position > @opponent.position
-      n <= position-1
-    else
-      n <= 6-position-1
-    end
+    return false if traversed_spaces.any?{|x| x < 0 || x > 6 }
+    return false if !push && (@opponent.blocked_spaces & traversed_spaces).any?
+    true
   end
 
-  def retreat!(n_s,log_event=true)
+  def advance?(n_s, pull=false)
     n = Integer(n_s)
-    if position < @opponent.position
-      @position -= n
+    jump = n_s < distance ? 0 : 1
+    if position > @opponent.position
+      traversed_spaces = position.downto(position - n_s - jump).to_a
     else
-      @position += n
+      traversed_spaces = position.upto(position + n_s + jump).to_a
     end
-    @event_logger.call("Player #{player_id} retreats #{n_s} to space #{@position + 1}") if log_event
+    return false if traversed_spaces.any?{|x| x < 0 || x > 6 }
+    return false if !pull && (@opponent.blocked_spaces & traversed_spaces).any?
+    true
+  end
+
+  def blocked_spaces
+    []
   end
 
   def advance!(n_s,log_event=true)
@@ -266,12 +267,22 @@ class Character
     @event_logger.call("Player #{player_id} advances #{n_s} to space #{@position}") if log_event
   end
 
+  def retreat!(n_s,log_event=true)
+    n = Integer(n_s)
+    if position < @opponent.position
+      @position -= n
+    else
+      @position += n
+    end
+    @event_logger.call("Player #{player_id} retreats #{n_s} to space #{@position + 1}") if log_event
+  end
+
   def pull?(n)
-    @opponent.advance?(n)
+    @opponent.advance?(n, true)
   end
 
   def push?(n)
-    @opponent.retreat?(n)
+    @opponent.retreat?(n, true)
   end
 
   def push!(n)
