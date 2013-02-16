@@ -93,7 +93,7 @@ class Character
   def passive_abilities!
     effect_sources.each do |source|
       if source.respond_to?(:passive!)
-        source.reveal!(self)
+        source.passive!(self)
       end
     end
   end
