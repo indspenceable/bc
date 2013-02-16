@@ -142,6 +142,7 @@ class Game
         end
         regain_bases!
         determine_active_player!
+        passive_abilities!
         start_of_beat!
         activate!(@active_player, @reactive_player)
         activate!(@reactive_player, @active_player)
@@ -294,7 +295,6 @@ class Game
         #   "ante", current_player.ante_callback)
         # answer = @input_manager.answer(current_player_id)
         answer = select_from_methods(ante: current_player.ante_options).call(current_player, @input_manager)
-
         #TODO fix so "Player 1 passes" instead of "Player 1 antes pass"
         # log_event!("Ante", "Player #{current_player_id} antes #{answer}")
         passed_this_round = (answer == 'ante#pass')
@@ -313,6 +313,10 @@ class Game
   def reveal!
     @players.each(&:reveal!)
     log_event!("Reveal", "Player 0 plays #{@players[0].reveal_attack_pair!}", "Player 1 plays #{@players[1].reveal_attack_pair!}")
+  end
+
+  def passive_abilities!
+    @players.each(&:passive_abilities!)
   end
 
   def handle_clashes!
@@ -415,6 +419,7 @@ class Game
       :current_style => @players[player_id].current_style_name(as_seen_by_id),
       :token_pool => @players[player_id].token_pool,
       :current_effects => @players[player_id].current_effects,
+      :extra_data => @players[player_id].extra_data
     }
   end
 end

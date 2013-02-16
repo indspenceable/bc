@@ -67,7 +67,7 @@ class Press < Base
   def stun_guard
     6
   end
-  def reveal!(me)
+  def passive!(me)
     me.reveal_press!
   end
 end

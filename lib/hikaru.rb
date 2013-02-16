@@ -48,7 +48,7 @@ class Sweeping < Style
     super('sweeping', 0, -1, 3)
   end
   # TODO - sweeping extra hit
-  def reveal!(me)
+  def passive!(me)
     me.extra_damage_this_beat!
   end
 end

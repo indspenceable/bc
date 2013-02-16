@@ -90,6 +90,14 @@ class Character
     end
   end
 
+  def passive_abilities!
+    effect_sources.each do |source|
+      if source.respond_to?(:passive!)
+        source.reveal!(self)
+      end
+    end
+  end
+
   %w(start_of_beat! before_activating! on_hit! on_damage!
     after_activating! end_of_beat!).each do |trigger|
     define_method(trigger) do
@@ -319,6 +327,17 @@ class Character
   end
   def dodges?
     @dodge
+  end
+
+  def extra_data
+    {}
+  end
+
+  def ante?(choice)
+    return true if choice == "pass"
+    false
+  end
+  def ante!(choice)
   end
 
   # input callbacks. These check the validity of input that the player does.
