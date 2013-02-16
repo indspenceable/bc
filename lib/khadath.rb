@@ -76,6 +76,12 @@ class Snare < Base
   end
 end
 
+class TrapPenalty < Token
+  def initialize(amt)
+    super("trap_penalty", 0, 0, amt)
+  end
+end
+
 class Khadath < Character
   def self.character_name
     "khadath"
@@ -94,13 +100,13 @@ class Khadath < Character
     @trap = nil
   end
 
-  def they_are_on_trap?
+  def they_are_on_or_next_to_trap?
     @trap && (@opponent.position - @trap).abs <= 1
   end
 
 
   def bonus_if_on_or_adacent_to_trap
-    if they_are_on_trap?
+    if they_are_on_or_next_to_trap?
       @hunters_bonus = true
     end
   end
@@ -132,12 +138,21 @@ class Khadath < Character
   end
   def set_trap_in_range?(n)
     return false if @no_moving_trap_this_beat
+    if @position < @opponent.position
+      dest = @position + Integer(n)
+    else
+      dest = @position - Integer(n)
+    end
     # no one is on that location, and its within range)
-    @position != Integer(n) && @opponent.position != Integer(n) &&
-    range && range.include?((@position - Integer(n)).abs)
+    @position != dest && @opponent.position != dest &&
+    range && range.include?(Integer(n))
   end
   def set_trap_in_range!(n)
-    @trap = Integer(n)
+    if @position < @opponent.position
+      @trap = @position + Integer(n)
+    else
+      @trap = @position - Integer(n)
+    end
   end
 
   def dodge_trapped_opponents!
@@ -156,9 +171,13 @@ class Khadath < Character
     @hits_on_and_adjacent_to_trap = true
   end
 
+  def no_moving_trap_this_beat!
+    @no_moving_trap_this_beat = true
+  end
+
   def in_range?
     if @hits_on_and_adjacent_to_trap
-      they_are_on_trap?
+      they_are_on_or_next_to_trap?
     else
       super
     end
@@ -183,6 +202,31 @@ class Khadath < Character
         super
       end
     end
+  end
+
+  # effect sources provided by your opponent, like trap penalty
+  def opponent_effect_sources
+    rtn = []
+    if they_are_on_or_next_to_trap?
+      if @trap == @opponent.position
+        rtn << TrapPenalty.new(-3)
+      else
+        rtn << TrapPenalty.new(-1)
+      end
+    end
+    rtn + super
+  end
+  # these are current effects provided by your opponent, like trap penalty
+  def current_opponent_effects
+    rtn = []
+    if they_are_on_or_next_to_trap?
+      if @trap == @opponent.position
+        rtn << "Gate Trap (-3 priority)"
+      else
+        rtn << "Gate Trap (-1 priority)"
+      end
+    end
+    rtn + super
   end
 
   def extra_data

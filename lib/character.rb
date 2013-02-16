@@ -203,7 +203,12 @@ class Character
     sources = []
     sources << @style if @style
     sources << @base if @base
+    sources += @opponent.opponent_effect_sources
     sources
+  end
+  # effect sources provided by your opponent, like trap penalty
+  def opponent_effect_sources
+    []
   end
 
   def set_initial_discards!(choice)
@@ -323,6 +328,10 @@ class Character
   end
 
   def current_effects
+    @opponent.current_opponent_effects
+  end
+  # these are current effects provided by your opponent, like trap penalty
+  def current_opponent_effects
     []
   end
 
