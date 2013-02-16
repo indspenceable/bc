@@ -213,6 +213,7 @@ class Hikaru < Character
   def ante!(choice)
     if choice == "pass"
       log_me!("passes.")
+      return
     end
     log_me!("antes #{@token_pool.find{ |token| token.name == choice }.name_and_effect}")
     @current_tokens += @token_pool.reject{ |token| token.name != choice }
