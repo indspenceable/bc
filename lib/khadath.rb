@@ -121,7 +121,7 @@ class Khadath < Character
   end
   def set_trap?(n)
     return false if @no_moving_trap_this_beat
-    @position != n && @opponent.position != n
+    @position != Integer(n) && @opponent.position != Integer(n)
   end
   def set_trap!(n)
     @trap = Integer(n)
@@ -133,8 +133,8 @@ class Khadath < Character
   def set_trap_in_range?(n)
     return false if @no_moving_trap_this_beat
     # no one is on that location, and its within range)
-    @position != n && @opponent.position != n &&
-    range && range.include?((@position - n).abs)
+    @position != Integer(n) && @opponent.position != Integer(n) &&
+    range && range.include?((@position - Integer(n)).abs)
   end
   def set_trap_in_range!(n)
     @trap = Integer(n)
@@ -142,6 +142,10 @@ class Khadath < Character
 
   def dodge_trapped_opponents!
     @dodge_trapped_opponents = true
+  end
+
+  def dodges?
+    super || @dodge_trapped_opponents
   end
 
   def teleport_to_unoccupied_space!
