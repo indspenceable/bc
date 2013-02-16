@@ -30,6 +30,20 @@
   text-align: right;
 }
 
+/* Range, power, priority */
+.style .range:before {
+  content: "Range: ";
+  font-weight: bold;
+}
+.style .priority:before {
+  content: "Priority: ";
+  font-weight: bold;
+}
+.style .power:before {
+  content: "Power: ";
+  font-weight: bold;
+}
+
 .heading {
   text-decoration: underline;
   cursor: pointer;
