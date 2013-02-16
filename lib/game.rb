@@ -216,6 +216,10 @@ class Game
       ->(text) { Game.character_names.include?(text) },
       ->(text) { Game.character_names.include?(text) }
     )
+
+    log_event!("Player 0 chooses: #{@input_manager.answer(0)}")
+    log_event!("Player 1 chooses: #{@input_manager.answer(1)}")
+
     @players = [nil, nil]
     # for now, just consume input.
     event_logger = ->(*inputs) do
@@ -359,7 +363,7 @@ class Game
       @active_player, @reactive_player = @players[1], @players[0]
     end
     #some characters care if they are active...
-    log_event!("Player #{@active_player.player_id} is the active player")
+    log_event!("Player #{@active_player.player_id} is the active player (#{@active_player.priority} / #{@reactive_player.priority})")
     @active_player.is_active!
     @reactive_player.is_reactive!
   end
