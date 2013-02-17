@@ -74,6 +74,9 @@ class Snare < Base
     me.no_moving_trap_this_beat!
     me.hits_on_and_adjacent_to_trap!
   end
+  def stun_immunity?
+    true
+  end
 end
 
 class TrapPenalty < Token
