@@ -233,7 +233,7 @@ class Character
     @base = bases.find{|b| b.name == $2}
   end
 
-  def retreat?(n_s, push=false)
+  def retreat?(n_s)
     n = Integer(n_s)
     if position < @opponent.position
       traversed_spaces = position.downto(position - n_s).to_a
@@ -241,11 +241,11 @@ class Character
       traversed_spaces = position.upto(position + n_s).to_a
     end
     return false if traversed_spaces.any?{|x| x < 0 || x > 6 }
-    return false if !push && (@opponent.blocked_spaces & traversed_spaces).any?
+    return false if (@opponent.blocked_spaces & traversed_spaces).any?
     true
   end
 
-  def advance?(n_s, pull=false)
+  def advance?(n_s)
     n = Integer(n_s)
     jump = n_s < distance ? 0 : 1
     if position > @opponent.position
@@ -254,7 +254,7 @@ class Character
       traversed_spaces = position.upto(position + n_s + jump).to_a
     end
     return false if traversed_spaces.any?{|x| x < 0 || x > 6 }
-    return false if !pull && (@opponent.blocked_spaces & traversed_spaces).any?
+    return false if (@opponent.blocked_spaces & traversed_spaces).any?
     true
   end
 
@@ -298,11 +298,11 @@ class Character
   end
 
   def pull?(n)
-    @opponent.advance?(n, true)
+    @opponent.advance?(n)
   end
 
   def push?(n)
-    @opponent.retreat?(n, true)
+    @opponent.retreat?(n)
   end
 
   def push!(n)
