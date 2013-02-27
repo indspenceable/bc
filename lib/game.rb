@@ -127,30 +127,42 @@ class Game
       1 => 5
     }
     @last_active_player_id = 0
+    @active = true
     catch :input_required do
-      select_characters!
-      select_discards!
-      15.times do |round_number|
-        @round_number = round_number + 1 # 1 based
-        select_attack_pairs!
-        ante!
-        reveal!
-        # if either player runs out of cards, go to the next turn
-        if handle_clashes! == :no_cards
-          log_event!("A player ran out of cards. Turn is cycling.")
-          regain_cards!
-          next
+      catch :ko do
+        select_characters!
+        select_discards!
+        15.times do |round_number|
+          @round_number = round_number + 1 # 1 based
+          select_attack_pairs!
+          ante!
+          reveal!
+          # if either player runs out of cards, go to the next turn
+          if handle_clashes! == :no_cards
+            log_event!("A player ran out of cards. Turn is cycling.")
+            regain_cards!
+            next
+          end
+          regain_bases!
+          determine_active_player!
+          passive_abilities!
+          start_of_beat!
+          activate!(@active_player, @reactive_player)
+          activate!(@reactive_player, @active_player)
+          end_of_beat!
+          recycle!
         end
-        regain_bases!
-        determine_active_player!
-        passive_abilities!
-        start_of_beat!
-        activate!(@active_player, @reactive_player)
-        activate!(@reactive_player, @active_player)
-        end_of_beat!
-        recycle!
+        # if they get here, the game timed out
+        @active = false
+        # TODO - set winner
+        return
       end
+      # if they get here, one of the characters got KO'd
+      @active = false
+      # TODO set winner
+      return
     end
+    # this means there wasn't enough input; thus, the game isn't over.
   end
 
   def input!(player_id, str)
@@ -187,8 +199,13 @@ class Game
         player_info_for(1, player_id)
       ],
       :input_number => @input_manager.input_counter,
-      :current_phase => "select_character"
+      :current_phase => "select_character",
+      :winner => @winner
     }
+  end
+
+  def active?
+    !!@active
   end
 
   private
