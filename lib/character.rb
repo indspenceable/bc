@@ -369,10 +369,16 @@ class Character
       styles.map(&:name).include?(s1) && styles.map(&:name).include?(s2) && s1 != s2
     end
   end
-  def valid_attack_pair_callback
+  def valid_attack_pair_callback(previous_answer=nil)
     ->(text) do
       text =~ /([a-z]*)_([a-z]*)/
-      bases.map(&:name).include?($2) && styles.map(&:name).include?($1)
+      base_name = $2
+      style_name = $1
+      if previous_answer
+        previous_answer =~ /([a-z]*)_([a-z]*)/
+        return false if $2 == base_name || $1 == style_name
+      end
+      bases.map(&:name).include?(base_name) && styles.map(&:name).include?(style_name)
     end
   end
   def base_options_callback

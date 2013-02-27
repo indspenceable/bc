@@ -255,14 +255,15 @@ class Game
     # @players[1].set_initial_discards!(@input_manager.answer(1))
 
     @input_manager.require_multi_input!("attack_pair_discard_one",
-      @players[0].valid_attack_pair_callback,
-      @players[1].valid_attack_pair_callback,
+      @players[0].valid_attack_pair_callback(nil),
+      @players[1].valid_attack_pair_callback(nil),
     )
     p0a0 = @input_manager.answer(0)
     p1a0 = @input_manager.answer(1)
+
     @input_manager.require_multi_input!("attack_pair_discard_two",
-      @players[0].valid_attack_pair_callback,
-      @players[1].valid_attack_pair_callback,
+      @players[0].valid_attack_pair_callback(p0a0),
+      @players[1].valid_attack_pair_callback(p1a0),
     )
     p0a1 = @input_manager.answer(0)
     p1a1 = @input_manager.answer(1)
