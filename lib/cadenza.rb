@@ -90,6 +90,7 @@ class Cadenza < Character
       Hydraulic.new,
     ]
     @token_count = 3
+    @press_charge_ammount = 0
   end
   def self.character_name
     'cadenza'
