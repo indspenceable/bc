@@ -3,7 +3,12 @@ require_relative "hikaru"
 require_relative "cadenza"
 require_relative 'khadath'
 
-#MAGIC METHOD
+# given a hash from methods to possible aruments prompt the user to select a
+# valid combination.
+# * If none are possible, do nothing.
+# * if only one is possible, do that.
+# * if more than one are possible, prompt the user to choose one of the possible
+#     ones.
 def select_from_methods(selection_name=nil, options)
   option_list = []
   options.each do |method, arg_options|
