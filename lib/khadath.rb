@@ -204,6 +204,8 @@ class Khadath < Character
       else
         super
       end
+    else
+      super
     end
   end
 
