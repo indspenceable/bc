@@ -26,8 +26,14 @@ describe Game do
     context "setup" do
       it "asks both players to choose discards" do
         subject.required_input.should == {
-        0 => "select_attack_pairs",
-        1 => "select_attack_pairs"
+        0 => "attack_pair_discard_one",
+        1 => "attack_pair_discard_one"
+        }
+        subject.input!(0, "sweeping_dash")
+        subject.input!(1, "focused_grasp")
+        subject.required_input.should == {
+        0 => "attack_pair_discard_two",
+        1 => "attack_pair_discard_two"
         }
       end
       it "puts the players in their starting locations" do
@@ -44,8 +50,8 @@ describe Game do
       end
       it "asks both players to choose attack pairs" do
         subject.required_input.should == {
-          0 => "select_attack_pairs",
-          1 => "select_attack_pairs",
+          0 => "attack_pair_select",
+          1 => "attack_pair_select",
         }
       end
       it "does not allow characters to select attacks and styles that are on cooldown" do
@@ -58,7 +64,7 @@ describe Game do
         subject.input!(1, "trance_drive")
         subject.required_input.should == {
           #for now, player 0 will always ante first
-          0 => "ante",
+          0 => "select_from:<ante#earth><ante#wind><ante#fire><ante#water><ante#pass>",
           # 1 => "ante",
         }
       end
@@ -68,9 +74,9 @@ describe Game do
         subject.input!(0, "trance_drive")
         subject.input!(1, "trance_drive")
         #ante
-        subject.input!(0, "wind")
-        subject.input!(1, "pass")
-        subject.input!(0, "pass")
+        subject.input!(0, 'ante#wind')
+        subject.input!(1, 'ante#pass')
+        # subject.input!(0, 'ante#pass') # can't ante 2.
         puts subject.required_input
       end
       it "skips the ante phase if no players can ante" do
@@ -81,8 +87,8 @@ describe Game do
         subject.input!(0, "advancing_drive")
         subject.input!(1, "geomantic_shot")
         #ante
-        subject.input!(0, "pass")
-        subject.input!(1, "pass")
+        subject.input!(0, 'ante#pass')
+        subject.input!(1, 'ante#pass')
 #        subject.game_state[:events][-3].should == "ante:nil;nil"
         subject.game_state[:events][-4].should == "Reveal: Player 0 plays Advancing Drive; Player 1 plays Geomantic Shot"
         # The last event is the start of the beat
@@ -95,15 +101,15 @@ describe Game do
             subject.input!(0, "advancing_strike")
             subject.input!(1, "trance_drive")
             #ante
-            subject.input!(0, "pass")
-            subject.input!(1, "pass")
+            subject.input!(0, 'ante#pass')
+            subject.input!(1, 'ante#pass')
           end
           it "clashes if the priority is the same" do
             subject.game_state[:events][-1].include?("Clash").should == true
             puts subject.game_state[:events][-1]
             subject.required_input.should == {
-              0 => "select_new_base",
-              1 => "select_new_base"
+              0 => "select_base_clash",
+              1 => "select_base_clash"
             }
           end
           it "start of beat happens after clashes are resolved" do
@@ -116,8 +122,8 @@ describe Game do
             subject.input!(1, "shot")
             subject.game_state[:events][-1].include?("Clash").should == true
             subject.required_input.should == {
-              0 => "select_new_base",
-              1 => "select_new_base"
+              0 => "select_base_clash",
+              1 => "select_base_clash"
             }
             subject.input!(0, "drive")
             subject.input!(1, "strike")
@@ -127,7 +133,7 @@ describe Game do
             subject.input!(0, "drive")
             subject.input!(1, "strike")
             #Drive before activate
-            subject.input!(0, "advance_2")
+            subject.input!(0, 'advance#2')
             #Trance End of Beat
             #subject.input!(1, "")
             #do these need to be strike/drive objects or are we just doing strings?
@@ -146,10 +152,10 @@ describe Game do
           #ante
           puts "\n\n\n\n\n1"
           puts subject.required_input.to_s
-          subject.input!(0, "pass")
+          subject.input!(0, 'ante#pass')
           puts "\n\n\n\n\n2"
           puts subject.required_input.to_s
-          subject.input!(1, "pass")
+          subject.input!(1, 'ante#pass')
           # subject.game_state(0).beatstart.should == "burst"
           # subject.game_state(1).beatstart.should == "advancing"
           # subject.game_state(0).beatend.should == "trance"
@@ -157,19 +163,19 @@ describe Game do
           puts "\n"
           puts subject.game_state[:events]
           puts "\n\n\n\n3"
-          # Or should the required in put also have the drive's before activate?
+
+          # burst will automatically move back the one space.
+          # Should ask for drive.
           subject.required_input.should == {
-            0 => "burst_move_back",
-            1 => nil
+            1 => "select_from:<advance#1><advance#2>"
           }
-          subject.input!(0, "2") # to move back 2 spaces during Start of Beat
           subject.game_state[:events][-1].should == "beatstart:1,advancing;0,burst"
-          subject.input!(1, "2") #Drive: advance 2 during Before Activation
+          subject.input!(1, 'advance#2') #Drive: advance 2 during Before Activation
           subject.required_input.should == {
             0 => "trance_recover_token",
             1 => nil
           }
-          subject.input!(0, "earth")
+          subject.input!(0, 'ante#earth')
           subject.game_state[:events][-1].should == "beatend:0,trance_earth"
         end
 
@@ -179,8 +185,8 @@ describe Game do
           subject.input!(0, "trance_burst")
           subject.input!(1, "advancing_drive")
           #ante
-          subject.input!(0, "pass")
-          subject.input!(1, "pass")
+          subject.input!(0, 'ante#pass')
+          subject.input!(1, 'ante#pass')
           end
           it "correctly selects active/reactive characters" do
             subject.active_player.player_id.should == 1
@@ -211,19 +217,21 @@ describe Game do
         subject.input!(1, "geomantic_strike")
 
         #ante
-        subject.input!(0, "pass")
-        subject.input!(1, "earth")
-        subject.input!(0, "pass")
-        subject.input!(1, "pass")
+        subject.input!(0, 'ante#pass')
+        subject.input!(1, 'ante#earth')
+        subject.input!(0, 'ante#pass')
+        # can't ante twice
+        # subject.input!(1, 'ante#pass')
 
-        subject.input!(1, "ante_fire")
-        subject.input!(0, "advance_1")        
+        # Geomantic.
+        subject.input!(1, 'ante#fire')
+        subject.input!(0, "advance#1")
 
         subject.input!(0, "advancing_palmstrike")
         subject.input!(1, "trance_drive")
         #ante
-        subject.input!(0, "pass")
-        subject.input!(1, "pass")
+        subject.input!(0, 'ante#pass')
+        subject.input!(1, 'ante#pass')
         #choose action to resolve first
         subject.input!(0, "advancing_advance")
         puts "\n\n"
@@ -240,8 +248,7 @@ describe Game do
       it "end of beat effects happen even if you are stunned" do
         #Should prompt user for token selection from Trance style
         subject.required_input.should == {
-          0 => nil,
-          1 => "trance"
+          1 => "select_from:<recover#earth><recover#fire>"
         }
       end
     end
