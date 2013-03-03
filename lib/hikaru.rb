@@ -1,5 +1,5 @@
-require_relative "character"
-require_relative "bases"
+require "character"
+require "bases"
 
 class Geomantic < Style
   def initialize

@@ -1,0 +1,12 @@
+!!!
+%html{:lang => 'en'}
+  %head
+    %title
+      BC
+    %link{:href => "/stylesheets/bootstrap.min.css", :type => "text/css", :rel => "stylesheet"}
+    %link{:href => "/stylesheets/game.css", :type => "text/css", :rel => "stylesheet"}
+    %link#favicon{:rel => "shortcut icon", :type => "image/png", href:"/icon.png"}
+    = stylesheet_link_tag    "application", :media => "all"
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+  %body= yield

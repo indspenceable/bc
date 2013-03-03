@@ -1,4 +1,4 @@
-require_relative "card"
+require 'card'
 
 class Grasp < Base
   def initialize
