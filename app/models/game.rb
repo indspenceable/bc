@@ -3,6 +3,8 @@ class Game < ActiveRecord::Base
   attr_accessible :inputs
   serialize :inputs
 
+  before_update :set_active
+
   def play
     GamePlay.new(inputs)
   end
@@ -11,5 +13,11 @@ class Game < ActiveRecord::Base
     g.input!(id, action)
     self.inputs = g.valid_inputs
     save!
+  end
+
+  private
+
+  def set_active
+    self.active = play.active?
   end
 end
