@@ -1,4 +1,4 @@
-class GamesController < ApplicationController
+class GamesController < LoggedInController
   before_filter :locate_game
   def show
     respond_to do |format|
