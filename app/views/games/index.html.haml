@@ -13,5 +13,4 @@
     %tr
       %td
         = link_to "#{game.p0.email} VS #{game.p1.email}", game_path(game)
-        - game_badges(game).each do |badge, color|
-          %span.label{class: "lable-#{color}"}= badge
+        = badges(game_badges(game))

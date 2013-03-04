@@ -3,7 +3,9 @@
 .js-choose-character{:style => "display: none"}
   .row
     - GamePlay.character_names.each do |name|
-      %a.btn= name
+      %a.btn
+        = name
+        = badges(character_badges(name))
 .js-in-game{:style => "display: none"}
   .row.attack-pairs
     .span6
