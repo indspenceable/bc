@@ -4,4 +4,8 @@ Battlecon::Application.routes.draw do
   post "sessions/logout", as: "logout"
   get '/games/challenge', :as => 'challenge'
   resources :games, only: [:show, :update, :index]
+
+  if Rails.env.development?
+    get '/login' => 'sessions#dev_login'
+  end
 end

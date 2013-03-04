@@ -46,6 +46,8 @@
           %a.brand{href: '#'} Battlecon
           %ul.nav.pull-right
             - if current_user
+              %li
+                %a#my-profile= current_user.email
               %li.logged-in
                 %a#personaLogout{href: '#'} Logout
                 :javascript

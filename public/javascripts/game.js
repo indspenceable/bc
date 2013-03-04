@@ -260,7 +260,6 @@ var init = function(player_id, game_id, character_names) {
   var ping = function() {
     console.log('ping.')
     $.get('/games/' + game_id + '.json', {
-      'player_id': player_id
     }, function(data) {
       setUI(data)
       setTimeout(ping, 1000)
@@ -269,8 +268,7 @@ var init = function(player_id, game_id, character_names) {
   var submitData = function(str) {
     $.ajax('/games/' + game_id + '/', {
       data: {
-      'player_id': player_id,
-      'message': str
+        'message': str
       },
       method: 'PUT',
       success: function(data) {
