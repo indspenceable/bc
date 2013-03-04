@@ -3,7 +3,7 @@
 .js-choose-character{:style => "display: none"}
   .row
     - GamePlay.character_names.each do |name|
-      %a.btn
+      %a.btn{charactername: name}
         = name
         = badges(character_badges(name))
 .js-in-game{:style => "display: none"}
@@ -69,6 +69,7 @@
         %p event log is great!
     .span3
       .well.js-current-effects.js-theirs
+  .js-answers
   .row
     .js-mine
       .span2.funny-well
@@ -95,7 +96,6 @@
       .span4.offset4
         %form
           %input{:type => "text", :style => "width: 100%"}
-  .js-answers
 %script{:src => "/javascripts/game.js"}
 :javascript
   Game.init("#{@player_id}", "#{params[:id]}")

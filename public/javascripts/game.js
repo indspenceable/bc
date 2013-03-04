@@ -322,7 +322,7 @@ var init = function(player_id, game_id, character_names) {
       $('.js-answers').hide()
     })
     $('.js-choose-character').on('click', '.btn', function() {
-      submitData($(this).text())
+      submitData($(this).attr('charactername'))
       $('.js-choose-character').hide()
     })
 
