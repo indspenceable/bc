@@ -166,10 +166,6 @@ class Khadath < Character
     super || @dodge_trapped_opponents
   end
 
-  def teleport_to_unoccupied_space!
-    select_from_methods(teleport_to: [0,1,2,3,4,5,6]).call(self, @input_manager)
-  end
-
   def hits_on_and_adjacent_to_trap!
     @hits_on_and_adjacent_to_trap = true
   end
