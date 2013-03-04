@@ -44,7 +44,7 @@
     .container
       .navbar
         .navbar-inner
-          %a.brand{href: '#'} Battlecon
+          = link_to "Battlecon", landing_path, class: 'brand'
           %ul.nav.pull-right
             - if current_user
               %li= link_to "Games", games_path
