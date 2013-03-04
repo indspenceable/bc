@@ -13,6 +13,7 @@
     %script{src: "/javascripts/bootstrap.min.js", type: 'text/javascript'}
     :javascript
       navigator.id.watch({
+        loggedInUser: null,
         onlogin: function(assertion) {
           // A user has logged in! Here you need to:
           // 1. Send the assertion to your backend for verification and to create a session.

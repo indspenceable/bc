@@ -19,6 +19,7 @@ class SessionsController < ApplicationController
 
   def dev_login
     session[:email] = params[:email]
+    User.find_or_create_by_email(session[:email])
     redirect_to games_path
   end
 end
