@@ -9,7 +9,7 @@
           - User.except(current_user).each do |user|
             %li
               = link_to user.email, challenge_path(opponent_id: user.id)
-  -Game.active.each do |game|
+  -Game.active.order("created_at").each do |game|
     %tr
       %td
         = link_to "#{game.p0.email} VS #{game.p1.email}", game_path(game)
