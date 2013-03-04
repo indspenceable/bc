@@ -268,6 +268,9 @@ class Character
   def teleport_to!(n)
     @position = Integer(n)
   end
+  def teleport_to_unoccupied_space!
+    select_from_methods(teleport_to: [0,1,2,3,4,5,6]).call(self, @input_manager)
+  end
 
   def advance!(n_s,log_event=true)
     n = Integer(n_s)
