@@ -11,3 +11,7 @@
  *= require_self
  *= require_tree .
  */
+
+body {
+  background-image: URL('/images/white_wall_hash.png');
+}
