@@ -9,4 +9,10 @@ describe Game do
       Game.find(g_id).reload.inputs.should == [[0, 'hikaru'], [1, 'cadenza']]
     end
   end
+  describe '#set_active' do
+    game = Game.create(inputs: [])
+    game.active = false
+    game.save
+    game.active.should == true
+  end
 end
