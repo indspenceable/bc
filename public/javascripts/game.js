@@ -49,11 +49,19 @@ var init = function(player_id, game_id, character_names) {
 
     // Khadath
     hunters: makeCard(0, 1, 0, {"reveal": "+2 Power +2 Priority if opponent is on or next to your trap."}),
-    teleport: makeCard("0~2", 1, -4, {"passive": "Ranged attakcs don't hit you if your trap is between you and your opponnent.", "End of Beat": "Move anywhere. Move your trap anywhere."}),
+    teleport: makeCard("0~2", 1, -4, {"passive": "Ranged attakcs don't hit you if your trap is between you and your opponnent.", "End of Beat": "Move to any unoccupied space. Move your trap to any unoccupied space."}),
     blight: makeCard("0~2", 0, 0, {"Start of Beat": "Place your trap anywhere in your range."}),
     evacuation: makeCard("0~1", 0, 0, {"Start of Beat": "Place your trap in your current location, then retreat 1 space."}),
     lure: makeCard("0~5", -1, -1, {"On Hit": "Pull your opponent any number of spaces."}),
     snare: makeCard("X", 3, 1, {"passive": "This attack hits opponents on or adjacent to your trap. You can't move your trap this beat.", "Stun Immunity": undefined}),
+
+    trick: makeCard("1~2", 0, -3, {'passive': "Stun Immunity"}),
+    sniper: makeCard("3~6", 1, 2, {"After Activating": "Move 1, 2, or 3 spaces"}),
+    crossfire: makeCard("2~3", 0, -2, {"Soak": 2, "On Hit": "Discard any token from your ammo pool for +2 power this beat."}),
+    pointblank: makeCard("0~1", 0, 0, {"Stun Guard": 2, "On Damage": "Push your opponent up to 2 spaces"}),
+    gunner: makeCard("2~4", 0, 0, {"Before Activating": "Discard any ammo token from your ammo pool for -1~+1 range this beat.", "After Activating": "Advance 1 or 2 spaces."}),
+    reload: makeCard("N/A", "N/A", 4, {"After Actvating": "Move directly to any unoccupied space.", "End of Beat": "Recover all ammo tokesn."})
+
   }
   var loadCard = function(styleOrBase, cardName, $pair, overrideCardName) {
     var $card = $pair.find('.' + styleOrBase)
