@@ -150,7 +150,7 @@ class Character
   end
 
   def take_hit!(damage)
-    actual_damage = damage - soak
+    actual_damage = damage - soak unless opponent.ignore_soak?
     actual_damage = 0 if actual_damage < 0
     receive_damage!(actual_damage)
     stunned! if exceeds_stun_guard?(actual_damage)
@@ -167,7 +167,7 @@ class Character
   end
 
   def exceeds_stun_guard?(amt)
-    amt > stun_guard
+    amt > stun_guard || opponent.ignore_stun_guard?
   end
 
   def stunned!
@@ -356,6 +356,13 @@ class Character
   def ante!(choice)
   end
 
+  def ignore_soak?
+    effect_sources.any?{|source| source.ignore_soak? }
+  end
+
+  def ignore_stun_guard?
+    effect_sources.any?{|source| source.ignore_stun_guard? }
+  end
   # input callbacks. These check the validity of input that the player does.
   # is this the best design? I dunno. It does make it easy for us to identify
   # when theres an error due to invalid input, though.

@@ -24,6 +24,12 @@ class Card
   def stun_immunity
     false
   end
+  def ignore_soak?
+    false
+  end
+  def ignore_stun_guard?
+    false
+  end
 end
 
 class Style < Card;end
