@@ -1,5 +1,25 @@
 class GamesController < LoggedInController
-  before_filter :locate_game
+  before_filter :ensure_game, only: [:show, :ping, :update]
+
+  def index
+  end
+
+  def challenge
+    opponent = User.find(params[:opponent_id])
+    raise "Can't play against yourself!" if opponent.id == current_user.id
+    # is there a game vs this opponent?
+    game = Game.active_between(current_user, opponent)
+    unless game
+      # We need to create a game
+      game = Game.create(
+        :p0_id => current_user.id,
+        :p1_id => opponent.id,
+        :active => true,
+        :inputs => [])
+    end
+    redirect_to game_path(game)
+  end
+
   def show
     respond_to do |format|
       format.json { render json: game_state_hash }
@@ -16,7 +36,7 @@ class GamesController < LoggedInController
 
   def update
     #Return any answer for the given input
-    @game.input_and_save!(params['player_id'].to_i, params['message'])
+    current_game.input_and_save!(params['player_id'].to_i, params['message'])
     render json: game_state_hash
   end
 
@@ -24,18 +44,17 @@ class GamesController < LoggedInController
 
   def game_state_hash
     {
-      'gameState' => @game.play.game_state(params['player_id'].to_i),
-      'requiredInput' => @game.play.required_input[params['player_id'].to_i]
+      'gameState' => current_game.play.game_state(params['player_id'].to_i),
+      'requiredInput' => current_game.play.required_input[params['player_id'].to_i]
     }
   end
 
-  def locate_game
-    @game =   Game.find_by_id(params[:id])
-    unless @game
-      @game = Game.new(inputs: [])
-      @game.id = params[:id]
-      @game.save!
-    end
-    @game
+  def current_game
+    @game ||= Game.find_by_id(params[:id])
+  end
+
+  def ensure_game
+    puts "current action is #{params[:action]}"
+    redirect_to games_path unless current_game
   end
 end

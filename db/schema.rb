@@ -11,14 +11,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130303043210) do
+ActiveRecord::Schema.define(:version => 20130303220323) do
 
   create_table "games", :force => true do |t|
     t.text     "inputs"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.boolean  "active"
+    t.integer  "p0_id"
+    t.integer  "p1_id"
   end
+
+  add_index "games", ["active", "p0_id", "p1_id"], :name => "index_games_on_active_and_p0_id_and_p1_id", :unique => true
 
   create_table "users", :force => true do |t|
     t.string   "email"

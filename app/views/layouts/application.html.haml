@@ -6,10 +6,11 @@
     %link{:href => "/stylesheets/bootstrap.min.css", :type => "text/css", :rel => "stylesheet"}
     %link{:href => "/stylesheets/game.css", :type => "text/css", :rel => "stylesheet"}
     %link#favicon{:rel => "shortcut icon", :type => "image/png", href:"/icon.png"}
-    %script{src: "https://login.persona.org/include.js"}
+    %script{src: "https://login.persona.org/include.js", type: 'text/javascript'}
     = stylesheet_link_tag    "application", :media => "all"
     = javascript_include_tag "application"
     = csrf_meta_tags
+    %script{src: "/javascripts/bootstrap.min.js", type: 'text/javascript'}
     :javascript
       navigator.id.watch({
         onlogin: function(assertion) {
