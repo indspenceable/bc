@@ -46,6 +46,7 @@
           %a.brand{href: '#'} Battlecon
           %ul.nav.pull-right
             - if current_user
+              %li= link_to "Games", games_path
               %li
                 %a#my-profile= current_user.email
               %li.logged-in
