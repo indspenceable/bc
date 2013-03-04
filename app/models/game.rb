@@ -26,6 +26,11 @@ class Game < ActiveRecord::Base
     where(p1_id: user, p0_id: opponent, active: true).first
   end
 
+  def player_id(user)
+    return 0 if p0 == user
+    return 1 if p1 == user
+  end
+
   private
 
   def set_active
