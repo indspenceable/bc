@@ -40,7 +40,7 @@ class Crossfire < Style
   end
   def on_hit!
     {
-      "crossfire_on_hit" => select_from_methods(extra_damage: Rukyuk.token_names)
+      "crossfire_on_hit" => select_from_methods(extra_power: Rukyuk.token_names)
     }
   end
 end
@@ -164,6 +164,14 @@ class Rukyuk < Character
     'rukyuk'
   end
 
+  def can_ante?
+    @token_pool.any?
+  end
+
+  def ante_options
+    (@current_token ? [] : @token_pool.map(&:name)) + super
+  end
+
   def ante!(choice)
     return if choice == "pass"
     log_me!("antes #{@token_pool.find{ |token| token.name == choice }.name_and_effect}")
@@ -198,6 +206,15 @@ class Rukyuk < Character
 
   def current_effects
     Array(@current_token.try(:name_and_effect)) + super
+  end
+
+  def token_pool
+    @token_pool.map(&:name_and_effect)
+  end
+
+  def recycle!
+    super
+    @current_token = nil
   end
 
   def in_range?

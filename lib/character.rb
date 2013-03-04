@@ -150,7 +150,7 @@ class Character
   end
 
   def take_hit!(damage)
-    actual_damage = damage - soak unless opponent.ignore_soak?
+    actual_damage = damage - (opponent.ignore_soak?? 0 : soak)
     actual_damage = 0 if actual_damage < 0
     receive_damage!(actual_damage)
     stunned! if exceeds_stun_guard?(actual_damage)
