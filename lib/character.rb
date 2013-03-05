@@ -168,7 +168,7 @@ class Character
   end
 
   def exceeds_stun_guard?(amt)
-    amt > stun_guard || opponent.ignore_stun_guard?
+    amt > stun_guard || (amt > 0 && opponent.ignore_stun_guard?)
   end
 
   def stunned!
