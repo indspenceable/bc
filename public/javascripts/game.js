@@ -201,8 +201,14 @@ var init = function(player_id, game_id, character_names) {
     // Do everything required for this question.
     var requiredInput = data['requiredInput']
     setup_inputs(requiredInput)
+
+    if (requiredInput) {
+      setFaviconToAlert();
+    } else {
+      setFaviconToDefault();
+    }
+
     if (!needAlert && requiredInput) {
-      console.log("Setting timeout.")
       needAlert = requiredInput
       setFaviconToAlert();
     }
@@ -287,12 +293,12 @@ var init = function(player_id, game_id, character_names) {
 
   var setFaviconToAlert = function() {
     // if (needAlert) {
-    //   $("#favicon").attr("href","/alert-icon.png");
+    $("#favicon").attr("href","/alert-favicon.png");
     //   setTimeout(setFaviconToDefault, faviconTimeout)
     // }
   }
   var setFaviconToDefault = function() {
-    // $("#favicon").attr("href","/icon.png");
+    $("#favicon").attr("href","/favicon.gif");
     // setTimeout(setFaviconToAlert, faviconTimeout)
   }
 
