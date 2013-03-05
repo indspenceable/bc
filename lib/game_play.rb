@@ -232,10 +232,6 @@ class GamePlay
     return @events
   end
 
-  def clear_old_effects!
-    @players.each(&:clear_old_effects!)
-  end
-
   # phases of the game
   def select_characters!
     #character selection

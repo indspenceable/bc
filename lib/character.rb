@@ -197,6 +197,7 @@ class Character
     @hand += @clashed_bases
     @discard2 = @discard1
     @discard1 = [@style, @base]
+    @dodge = false
     @base = @style = nil
   end
 
@@ -340,9 +341,6 @@ class Character
     []
   end
 
-  def clear_old_effects!
-    @dodge = false
-  end
   def dash_dodge!
     @dodge = true
   end
