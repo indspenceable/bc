@@ -38,7 +38,7 @@ describe GamePlay do
     GamePlay.character_names.each do |c2|
       it "doesn't raise errors when you give valid input in a #{c1} #{c2} game." do
         10.times do |i|
-          g = GamePlay.new
+          g = GamePlay.new(['p0', 'p1'])
 
           g.input!(0, c1)
           g.input!(1, c2)

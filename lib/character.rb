@@ -312,7 +312,7 @@ class Character
 
   def push!(n)
     @opponent.retreat!(n, false)
-    @event_logger.call("#{oppponent.player_name} gets pushed #{n} to space #{@opponent.position}")
+    @event_logger.call("#{opponent.player_name} gets pushed #{n} to space #{@opponent.position}")
   end
   def pull!(n)
     opponent.advance!(n, false)
