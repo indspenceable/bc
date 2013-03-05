@@ -54,7 +54,6 @@ class GamesController < LoggedInController
   end
 
   def ensure_game
-    puts "current action is #{params[:action]}"
     redirect_to games_path unless current_game
   end
 end
