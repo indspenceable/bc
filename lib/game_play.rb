@@ -209,6 +209,7 @@ class GamePlay
       ],
       :input_number => @input_manager.input_counter,
       :current_phase => "select_character",
+      :current_beat => @round_number,
       :winner => @winner
     }
   end

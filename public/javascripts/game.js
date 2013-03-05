@@ -218,6 +218,10 @@ var init = function(player_id, game_id, character_names) {
     // Updates related to the gamestate
     var gameState = data['gameState']
     if (!gameState.players) { return }
+    // current beat
+    if(gameState.current_beat) {
+      $('.js-current-beat').html("<h3>" + gameState.current_beat + "</h3>")
+    }
     // Display the board
     displayBoard(gameState.players[0].location, gameState.players[1].location)
     // show the players hands
