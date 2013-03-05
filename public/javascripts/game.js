@@ -55,13 +55,13 @@ var init = function(player_id, game_id, character_names) {
     lure: makeCard("0~5", -1, -1, {"On Hit": "Pull your opponent any number of spaces."}),
     snare: makeCard("X", 3, 1, {"passive": "This attack hits opponents on or adjacent to your trap. You can't move your trap this beat.", "Stun Immunity": undefined}),
 
+    // Rukyuk
     trick: makeCard("1~2", 0, -3, {'passive': "Stun Immunity"}),
     sniper: makeCard("3~6", 1, 2, {"After Activating": "Move 1, 2, or 3 spaces"}),
     crossfire: makeCard("2~3", 0, -2, {"Soak": 2, "On Hit": "Discard any token from your ammo pool for +2 power this beat."}),
     pointblank: makeCard("0~1", 0, 0, {"Stun Guard": 2, "On Damage": "Push your opponent up to 2 spaces"}),
     gunner: makeCard("2~4", 0, 0, {"Before Activating": "Discard any ammo token from your ammo pool for -1~+1 range this beat.", "After Activating": "Move 1 or 2 spaces."}),
-    reload: makeCard("N/A", "N/A", 4, {"After Actvating": "Move directly to any unoccupied space.", "End of Beat": "Recover all ammo tokens."})
-
+    reload: makeCard("N/A", "N/A", 4, {"After Actvating": "Move directly to any unoccupied space.", "End of Beat": "Recover all ammo tokens."}),
   }
   var loadCard = function(styleOrBase, cardName, $pair, overrideCardName) {
     var $card = $pair.find('.' + styleOrBase)
