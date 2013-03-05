@@ -24,7 +24,7 @@ class Gunner < Style
       "gunner_extra_range" => select_from_methods(extra_range: Rukyuk.token_names)
     }
   end
-  def after_activating
+  def after_activating!
     {
       "gunner_movement" => select_from_methods(advance: [1,2], retreat: [1,2])
     }
