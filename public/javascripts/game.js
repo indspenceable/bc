@@ -187,7 +187,8 @@ var init = function(player_id, game_id, character_names) {
 
   var setExtraData = function(pn, data) {
     if (data.trap) {
-      $('.board').find('.s' + data.trap).append("P" + pn + "'s Trap")
+      var color = (pn == 0 ? 'info' : 'important')
+      $('.board').find('.s' + data.trap).append($("<span/>").addClass("label label-" + color).html($('<i/>').addClass('icon-asterisk')))
     }
   }
 
