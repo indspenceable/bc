@@ -451,8 +451,8 @@ class GamePlay
       :token_pool => @players[player_id].token_pool,
       :current_effects => @players[player_id].current_effects,
       :extra_data => @players[player_id].extra_data,
-      :discard1 => @players[player_id].discard1.map(&:name),
-      :discard2 => @players[player_id].discard2.map(&:name),
+      :discard1 => @players[player_id].discard1,
+      :discard2 => @players[player_id].discard2,
     }
   end
 end

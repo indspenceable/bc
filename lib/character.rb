@@ -1,5 +1,5 @@
 class Character
-  attr_reader :player_id, :player_name, :position, :hand, :life, :discard1, :discard2
+  attr_reader :player_id, :player_name, :position, :hand, :life
   attr_accessor :opponent
   def initialize player_id, player_name, input_manager, events, event_logger
     @player_id = player_id
@@ -32,6 +32,13 @@ class Character
   def is_active!
   end
   def is_reactive!
+  end
+
+  def discard1
+    @discard1 ? @discard1.map(&:name) : []
+  end
+  def discard2
+    @discard2 ? @discard2.map(&:name) : []
   end
 
   def bases(seen_by=@player_id)
