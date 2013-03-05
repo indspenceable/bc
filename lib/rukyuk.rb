@@ -60,7 +60,7 @@ class Trick < Style
   def initialize
     super("trick", (1..2), 0, -3)
   end
-  def stun_immunity
+  def stun_immunity?
     true
   end
 end

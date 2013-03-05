@@ -72,12 +72,6 @@ class Press < Base
   end
 end
 
-class IronBodyStunImmunity < Token
-  def stun_immunity
-    true
-  end
-end
-
 class Cadenza < Character
   def initialize *args
     super
@@ -107,6 +101,10 @@ class Cadenza < Character
     if damage > 0 && @token_count > 0 && exceeds_stun_guard?(damage)
       select_from_methods(iron_body: ['yes', 'pass']).call(self, @input_manager)
     end
+  end
+
+  def stun_immunity?
+    super || @iron_body_stun_immunity
   end
 
   def iron_body?(action)
@@ -151,6 +149,7 @@ class Cadenza < Character
   end
   def ante!(action)
     return if action == "pass"
+    log_me!("antes an iron body token.")
     @token_count -= 1
     @iron_body_stun_immunity = true
   end

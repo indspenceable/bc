@@ -147,7 +147,7 @@ class Character
   end
 
   def stun_immunity?
-    effect_sources.any?(&:stun_immunity)
+    effect_sources.any?(&:stun_immunity?)
   end
 
   def take_hit!(damage)

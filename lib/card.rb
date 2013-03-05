@@ -21,7 +21,7 @@ class Card
   def soak
     0
   end
-  def stun_immunity
+  def stun_immunity?
     false
   end
   def ignore_soak?
