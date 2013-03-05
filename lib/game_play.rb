@@ -115,7 +115,8 @@ class GamePlay
 
   attr_accessor :active_player, :reactive_player
 
-  def initialize(inputs=[])
+  def initialize(player_names, inputs=[])
+    @player_names = player_names
     @valid_inputs_thus_far = inputs
     setup_game!(@valid_inputs_thus_far)
   end
@@ -239,8 +240,8 @@ class GamePlay
       ->(text) { GamePlay.character_names.include?(text) }
     )
 
-    log_event!("Player 0 chooses: #{@input_manager.answer(0)}")
-    log_event!("Player 1 chooses: #{@input_manager.answer(1)}")
+    log_event!("#{@player_names[0]} chooses: #{@input_manager.answer(0)}")
+    log_event!("#{@player_names[1]} chooses: #{@input_manager.answer(1)}")
 
     @players = [nil, nil]
     # for now, just consume input.
@@ -250,12 +251,14 @@ class GamePlay
     @players[0] = GamePlay.character_list[
       GamePlay.character_names.index @input_manager.answer(0)].new(
         0,
+        @player_names[0],
         @input_manager,
         @events,
         event_logger)
     @players[1] = GamePlay.character_list[
       GamePlay.character_names.index @input_manager.answer(1)].new(
         1,
+        @player_names[1],
         @input_manager,
         @events,
         event_logger)
@@ -293,7 +296,7 @@ class GamePlay
     @players[0].set_initial_discards!("#{p0a0};#{p0a1}")
     @players[1].set_initial_discards!("#{p1a0};#{p1a1}")
 
-    log_event!("Select initial discards", "Player 0 discards #{p0a0} and #{p0a1}.", "Player 1 discards #{p1a0} and #{p1a1}.")
+    log_event!("Select initial discards", "#{@player_names[0]} discards #{p0a0} and #{p0a1}.", "#{@player_names[1]} discards #{p1a0} and #{p1a1}.")
   end
 
   def select_attack_pairs!
@@ -340,7 +343,7 @@ class GamePlay
 
   def reveal!
     @players.each(&:reveal!)
-    log_event!("Reveal", "Player 0 plays #{@players[0].reveal_attack_pair!}", "Player 1 plays #{@players[1].reveal_attack_pair!}")
+    log_event!("Reveal", "#{@player_names[0]} plays #{@players[0].reveal_attack_pair!}", "#{@player_names[1]} plays #{@players[1].reveal_attack_pair!}")
   end
 
   def passive_abilities!
@@ -349,7 +352,7 @@ class GamePlay
 
   def handle_clashes!
     while @players[0].priority == @players[1].priority
-      log_event!("Clash at #{@players[0].priority}/#{@players[1].priority}")
+      log_event!("Clash at #{@players[0].priority} priority")
       @players.each do |p|
         p.clash!
       end
@@ -362,7 +365,7 @@ class GamePlay
       @players[1].select_new_base!(@input_manager.answer(1))
 
       log_event!("Resolve Clash", @players.each_with_index.map do |p, i|
-        "Player #{i} reveals #{p.current_base_name}"
+        "#{@player_names[i]} reveals #{p.current_base_name}"
       end)
     end
   end
@@ -386,7 +389,7 @@ class GamePlay
       @active_player, @reactive_player = @players[1], @players[0]
     end
     #some characters care if they are active...
-    log_event!("Player #{@active_player.player_id} is the active player (#{@active_player.priority} / #{@reactive_player.priority})")
+    log_event!("#{active_player.player_name} is the active player (#{@active_player.priority} / #{@reactive_player.priority})")
     @active_player.is_active!
     @reactive_player.is_reactive!
   end
@@ -414,16 +417,16 @@ class GamePlay
 
         current.on_hit!
         damage_dealt = opponent.take_hit!(current.power)
-        log_event!("Player #{current.player_id} hits Player #{opponent.player_id} for
+        log_event!("#{current.player_name} hits #{opponent.player_name} for
           #{damage_dealt} damage!")
         if damage_dealt > 0
           current.on_damage!
         end
       else
-        log_event!("Player #{current.player_id} misses!")
+        log_event!("#{current.player_name} misses!")
       end
       current.after_activating!
-    else log_event!("Player #{current.player_id} is stunned!")
+    else log_event!("#{current.player_name} is stunned!")
     end
   end
 
