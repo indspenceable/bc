@@ -63,8 +63,7 @@ var init = function(player_id, game_id, character_names) {
     gunner: makeCard("2~4", 0, 0, {"Before Activating": "Discard any ammo token from your ammo pool for -1~+1 range this beat.", "After Activating": "Move 1 or 2 spaces."}),
     reload: makeCard("N/A", "N/A", 4, {"After Actvating": "Move directly to any unoccupied space.", "End of Beat": "Recover all ammo tokens."}),
   }
-  var loadCard = function(styleOrBase, cardName, $pair, overrideCardName) {
-    var $card = $pair.find('.' + styleOrBase)
+  var loadCard = function(cardName, $card, overrideCardName) {
     $card.find('.name').text(overrideCardName || capitaliseFirstLetter(cardName))
     $card.find('.effects').empty()
     var card = cardDefinitions[cardName]
@@ -82,8 +81,8 @@ var init = function(player_id, game_id, character_names) {
       }
     }
   }
-  var clearCard = function(styleOrBase, $pair) {
-    loadCard(styleOrBase, 'emptyCard', $pair, "");
+  var clearCard = function($card) {
+    loadCard('emptyCard', $card, "");
   }
 
   var pretty = function(str) {
@@ -153,14 +152,14 @@ var init = function(player_id, game_id, character_names) {
   }
   var fillCards = function(pn, currentBase, currentStyle, bases, styles, tokens, discard1Cards, discard2Cards) {
     if (currentBase) {
-      loadCard('base', currentBase.toLowerCase(), $root(pn).filter('.attack-pair'))
+      loadCard(currentBase.toLowerCase(), $root(pn).filter('.attack-pair').find('.real.base'))
     } else {
-      clearCard('base', $root(pn).filter('.attack-pair'))
+      clearCard($root(pn).filter('.attack-pair').find('.real.base'))
     }
     if (currentStyle) {
-      loadCard('style', currentStyle.toLowerCase(), $root(pn).filter('.attack-pair'))
+      loadCard(currentStyle.toLowerCase(), $root(pn).filter('.attack-pair').find('.real.style'))
     } else {
-      clearCard('style', $root(pn).filter('.attack-pair'))
+      clearCard($root(pn).filter('.attack-pair').find('.real.style'))
     }
     var $bases = $root(pn).find('.js-bases').empty()
     var $styles = $root(pn).find('.js-styles').empty()
@@ -168,19 +167,21 @@ var init = function(player_id, game_id, character_names) {
     var $discard1 = $root(pn).find('.js-discard1').empty()
     var $discard2 = $root(pn).find('.js-discard2').empty()
     for (var index in bases) {
-      $('<div/>').addClass('card').text(bases[index]).appendTo($bases)
+      $('<div/>').addClass('card mini-card base').text(bases[index]).appendTo($bases)
     }
     for (var index in styles) {
-      $('<div/>').addClass('card').text(styles[index]).appendTo($styles)
+      $('<div/>').addClass('card mini-card style').text(styles[index]).appendTo($styles)
     }
     for (var index in tokens) {
       $('<div/>').addClass('token').text(tokens[index]).appendTo($tokens)
     }
     for (var index in discard1Cards) {
-      $('<div/>').addClass('card').text(discard1Cards[index]).appendTo($discard1)
+      var currentClass = (index == 0 ? 'style' : 'base')
+      $('<div/>').addClass('card mini-card ' + currentClass).text(discard1Cards[index]).appendTo($discard1)
     }
     for (var index in discard2Cards) {
-      $('<div/>').addClass('card').text(discard2Cards[index]).appendTo($discard2)
+      var currentClass = (index == 0 ? 'style' : 'base')
+      $('<div/>').addClass('card mini-card ' + currentClass).text(discard2Cards[index]).appendTo($discard2)
     }
   }
 
@@ -257,14 +258,14 @@ var init = function(player_id, game_id, character_names) {
   var base
   var setBase = function(baseName) {
     base = baseName.toLowerCase()
-    loadCard('base', base.toLowerCase(), $root(player_id).filter('.attack-pair'))
+    loadCard(base.toLowerCase(), $root(player_id).filter('.attack-pair').find('.base.real'))
     // This needs to fill in the appropriate image.
     setPair()
   }
   var style
   var setStyle = function(styleName) {
     style = styleName.toLowerCase()
-    loadCard('style', style.toLowerCase(), $root(player_id).filter('.attack-pair'))
+    loadCard(style.toLowerCase(), $root(player_id).filter('.attack-pair').find('.style.real'))
     // This needs to fill in the appropriate image.
     setPair()
   }
@@ -337,6 +338,46 @@ var init = function(player_id, game_id, character_names) {
     $('body').on('click', '.js-submit-attack-pair', function() {
       submitAttackPair()
     })
+
+    // Hover cards to preview them!
+    $('body').on('mouseenter', '.js-mine .base.mini-card', function(){
+      loadCard($(this).text(), $('.js-mine').filter('.attack-pair').find('.preview.base'))
+      $('.js-mine').filter('.attack-pair').find('.real.base').hide()
+      $('.js-mine').filter('.attack-pair').find('.preview.base').show()
+    })
+    $('body').on('mouseleave', '.js-mine .base.mini-card', function(){
+      $('.js-mine').filter('.attack-pair').find('.real.base').show()
+      $('.js-mine').filter('.attack-pair').find('.preview.base').hide()
+    })
+    $('body').on('mouseenter', '.js-mine .style.mini-card', function(){
+      loadCard($(this).text(), $('.js-mine').filter('.attack-pair').find('.preview.style'))
+      $('.js-mine').filter('.attack-pair').find('.real.style').hide()
+      $('.js-mine').filter('.attack-pair').find('.preview.style').show()
+    })
+    $('body').on('mouseleave', '.js-mine .style.mini-card', function(){
+      $('.js-mine').filter('.attack-pair').find('.real.style').show()
+      $('.js-mine').filter('.attack-pair').find('.preview.style').hide()
+    })
+    // Theirs
+    $('body').on('mouseenter', '.js-theirs .base.mini-card', function(){
+      loadCard($(this).text(), $('.js-theirs').filter('.attack-pair').find('.preview.base'))
+      $('.js-theirs').filter('.attack-pair').find('.real.base').hide()
+      $('.js-theirs').filter('.attack-pair').find('.preview.base').show()
+    })
+    $('body').on('mouseleave', '.js-theirs .base.mini-card', function(){
+      $('.js-theirs').filter('.attack-pair').find('.real.base').show()
+      $('.js-theirs').filter('.attack-pair').find('.preview.base').hide()
+    })
+    $('body').on('mouseenter', '.js-theirs .style.mini-card', function(){
+      loadCard($(this).text(), $('.js-theirs').filter('.attack-pair').find('.preview.style'))
+      $('.js-theirs').filter('.attack-pair').find('.real.style').hide()
+      $('.js-theirs').filter('.attack-pair').find('.preview.style').show()
+    })
+    $('body').on('mouseleave', '.js-theirs .style.mini-card', function(){
+      $('.js-theirs').filter('.attack-pair').find('.real.style').show()
+      $('.js-theirs').filter('.attack-pair').find('.preview.style').hide()
+    })
+
     $('.js-answers').on('click', '.btn', function() {
       submitData($(this).text())
       $('.js-answers').hide()
