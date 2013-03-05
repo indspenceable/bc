@@ -450,7 +450,9 @@ class GamePlay
       :current_style => @players[player_id].current_style_name(as_seen_by_id),
       :token_pool => @players[player_id].token_pool,
       :current_effects => @players[player_id].current_effects,
-      :extra_data => @players[player_id].extra_data
+      :extra_data => @players[player_id].extra_data,
+      :discard1 => @players[player_id].discard1.map(&:name),
+      :discard2 => @players[player_id].discard2.map(&:name),
     }
   end
 end

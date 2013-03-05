@@ -1,5 +1,5 @@
 class Character
-  attr_reader :player_id, :player_name, :position, :hand, :life
+  attr_reader :player_id, :player_name, :position, :hand, :life, :discard1, :discard2
   attr_accessor :opponent
   def initialize player_id, player_name, input_manager, events, event_logger
     @player_id = player_id

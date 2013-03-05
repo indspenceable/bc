@@ -151,7 +151,7 @@ var init = function(player_id, game_id, character_names) {
     $('.board').find('.s' + p0).append($("<span/>").addClass("label label-info").html($('<i/>').addClass('icon-user')))
     $('.board').find('.s' + p1).append($("<span/>").addClass("label label-important").html($('<i/>').addClass('icon-user')))
   }
-  var fillCards = function(pn, currentBase, currentStyle, bases, styles, tokens) {
+  var fillCards = function(pn, currentBase, currentStyle, bases, styles, tokens, discard1Cards, discard2Cards) {
     if (currentBase) {
       loadCard('base', currentBase.toLowerCase(), $root(pn).filter('.attack-pair'))
     } else {
@@ -165,6 +165,8 @@ var init = function(player_id, game_id, character_names) {
     var $bases = $root(pn).find('.js-bases').empty()
     var $styles = $root(pn).find('.js-styles').empty()
     var $tokens = $root(pn).find('.js-tokens').empty()
+    var $discard1 = $root(pn).find('.js-discard1').empty()
+    var $discard2 = $root(pn).find('.js-discard2').empty()
     for (var index in bases) {
       $('<div/>').addClass('card').text(bases[index]).appendTo($bases)
     }
@@ -173,6 +175,12 @@ var init = function(player_id, game_id, character_names) {
     }
     for (var index in tokens) {
       $('<div/>').addClass('token').text(tokens[index]).appendTo($tokens)
+    }
+    for (var index in discard1Cards) {
+      $('<div/>').addClass('card').text(discard1Cards[index]).appendTo($discard1)
+    }
+    for (var index in discard2Cards) {
+      $('<div/>').addClass('card').text(discard2Cards[index]).appendTo($discard2)
     }
   }
 
@@ -231,7 +239,9 @@ var init = function(player_id, game_id, character_names) {
         gameState.players[pn].current_style,
         gameState.players[pn].bases,
         gameState.players[pn].styles,
-        gameState.players[pn].token_pool)
+        gameState.players[pn].token_pool,
+        gameState.players[pn].discard1,
+        gameState.players[pn].discard2)
       // Display player life
       $root(pn).filter('.life').text("P" + pn + ": " + gameState.players[pn].life + " Life")
       $root(pn).filter('.js-current-effects').html(gameState.players[pn].current_effects.join("<br/>"))
