@@ -60,7 +60,7 @@ var init = function(player_id, game_id, character_names) {
     crossfire: makeCard("2~3", 0, -2, {"Soak": 2, "On Hit": "Discard any token from your ammo pool for +2 power this beat."}),
     pointblank: makeCard("0~1", 0, 0, {"Stun Guard": 2, "On Damage": "Push your opponent up to 2 spaces"}),
     gunner: makeCard("2~4", 0, 0, {"Before Activating": "Discard any ammo token from your ammo pool for -1~+1 range this beat.", "After Activating": "Move 1 or 2 spaces."}),
-    reload: makeCard("N/A", "N/A", 4, {"After Actvating": "Move directly to any unoccupied space.", "End of Beat": "Recover all ammo tokesn."})
+    reload: makeCard("N/A", "N/A", 4, {"After Actvating": "Move directly to any unoccupied space.", "End of Beat": "Recover all ammo tokens."})
 
   }
   var loadCard = function(styleOrBase, cardName, $pair, overrideCardName) {
