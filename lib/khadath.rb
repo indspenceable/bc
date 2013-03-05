@@ -108,17 +108,17 @@ class Khadath < Character
   end
 
 
-  def bonus_if_on_or_adacent_to_trap
+  def hunters_bonus_if_on_or_adacent_to_trap!
     if they_are_on_or_next_to_trap?
       @hunters_bonus = true
     end
   end
 
   def power
-    super + (@hunters_bonus ? 0 : 2)
+    super + (@hunters_bonus ? 2 : 0)
   end
   def priority
-    super + (@hunters_bonus ? 0 : 2)
+    super + (@hunters_bonus ? 2 : 0)
   end
 
   def trap_blocks_ranged_attacks!
@@ -148,7 +148,7 @@ class Khadath < Character
     end
     # no one is on that location, and its within range)
     @position != dest && @opponent.position != dest &&
-    range && range.include?(Integer(n))
+    range && range.include?(Integer(n)) && dest >=0 && dest <7
   end
   def set_trap_in_range!(n)
     if @position < @opponent.position
@@ -162,8 +162,14 @@ class Khadath < Character
     @dodge_trapped_opponents = true
   end
 
+  def dodge_ranged_attacks?
+    (@position < @trap && @trap < @opponent.position) ||
+    (@position > @trap && @trap > @opponent.position) &&
+    @block_ranged_attacks
+  end
+
   def dodges?
-    super || @dodge_trapped_opponents
+    super || @dodge_trapped_opponents || dodge_ranged_attacks?
   end
 
   def hits_on_and_adjacent_to_trap!
