@@ -114,6 +114,9 @@ class GamePlay
   end
 
   attr_accessor :active_player, :reactive_player
+  def characters
+    @players
+  end
 
   def initialize(player_names, inputs=[])
     @player_names = player_names

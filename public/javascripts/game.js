@@ -148,8 +148,8 @@ var init = function(player_id, game_id, character_names) {
 
   var displayBoard = function(p0, p1) {
     $('.board').find('.space').empty()
-    $('.board').find('.s' + p0).text("0")
-    $('.board').find('.s' + p1).text("1")
+    $('.board').find('.s' + p0).append($("<span/>").addClass("label label-info").html($('<i/>').addClass('icon-user')))
+    $('.board').find('.s' + p1).append($("<span/>").addClass("label label-important").html($('<i/>').addClass('icon-user')))
   }
   var fillCards = function(pn, currentBase, currentStyle, bases, styles, tokens) {
     if (currentBase) {

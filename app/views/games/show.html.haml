@@ -1,3 +1,16 @@
+.row
+  .span6
+    .well
+      = current_game.p0.email
+      - if current_game.play.characters
+        as:
+        .label.label-info= current_game.play.characters[0].name.capitalize
+  .span6
+    .well
+      = current_game.p1.email
+      - if current_game.play.characters
+        as:
+        .label.label-important= current_game.play.characters[1].name.capitalize
 .js-loading
   Loading...
 .js-choose-character{:style => "display: none"}

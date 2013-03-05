@@ -49,6 +49,7 @@ class GamesController < LoggedInController
     }
   end
 
+  helper_method :current_game
   def current_game
     @game ||= Game.find_by_id(params[:id])
   end
