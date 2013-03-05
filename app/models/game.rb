@@ -8,14 +8,15 @@ class Game < ActiveRecord::Base
   belongs_to :p1, :class_name => "User"
 
   before_save :set_active
+  before_create :decide_starting_player
 
   scope :active, where(:active => true)
 
   def play
-    GamePlay.new([p0.email, p1.email], inputs)
+    GamePlay.new(starting_player, [p0.email, p1.email], inputs)
   end
   def input_and_save!(id, action)
-    g = GamePlay.new([p0.email, p1.email], inputs)
+    g = GamePlay.new(starting_player, [p0.email, p1.email], inputs)
     g.input!(id, action)
     self.inputs = g.valid_inputs
     save!
@@ -35,5 +36,10 @@ class Game < ActiveRecord::Base
 
   def set_active
     self.active = play.active?
+  end
+
+  def decide_starting_player
+    # totally random!
+    self.starting_player = rand(2)
   end
 end

@@ -118,7 +118,8 @@ class GamePlay
     @players
   end
 
-  def initialize(player_names, inputs=[])
+  def initialize(starting_player, player_names, inputs=[])
+    @starting_player = starting_player
     @player_names = player_names
     @valid_inputs_thus_far = inputs
     setup_game!(@valid_inputs_thus_far)
@@ -135,7 +136,7 @@ class GamePlay
       0 => 1,
       1 => 5
     }
-    @last_active_player_id = 0
+    @last_active_player_id = @starting_player
     @active = true
     catch :input_required do
       catch :ko do
@@ -390,6 +391,7 @@ class GamePlay
     end
     #some characters care if they are active...
     log_event!("#{active_player.player_name} is the active player (#{@active_player.priority} / #{@reactive_player.priority})")
+    @last_active_player_id = @active_player.player_id
     @active_player.is_active!
     @reactive_player.is_reactive!
   end
