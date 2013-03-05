@@ -377,6 +377,7 @@ var init = function(player_id, game_id, character_names) {
       $('.js-theirs').filter('.attack-pair').find('.real.style').show()
       $('.js-theirs').filter('.attack-pair').find('.preview.style').hide()
     })
+    $('.preview').hide()
 
     $('.js-answers').on('click', '.btn', function() {
       submitData($(this).text())
