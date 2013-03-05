@@ -201,7 +201,7 @@ class Rukyuk < Character
   end
 
   def effect_sources
-    Array(@current_token) + super
+    Array(@current_token) + @bonuses + super
   end
 
   def current_effects
@@ -214,6 +214,7 @@ class Rukyuk < Character
 
   def recycle!
     super
+    @bonuses = []
     @current_token = nil
   end
 
@@ -228,10 +229,6 @@ class Rukyuk < Character
 
   def fill_token_pool!
     @token_pool = self.class.all_token_klasses.map(&:new)
-  end
-
-  def recycle
-    @bonuses = []
   end
 
   private
