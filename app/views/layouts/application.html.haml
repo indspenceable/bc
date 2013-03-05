@@ -24,7 +24,9 @@
             url: '/sessions/login', // This is a URL on your website.
             data: {assertion: assertion},
             success: function(res, status, xhr) { window.onLogin(); },
-            error: function(xhr, status, err) { alert("Login failure: " + err); }
+            error: function(xhr, status, err) {
+              // alert("Login failure: " + err);
+            }
           });
         },
         onlogout: function() {
@@ -36,7 +38,9 @@
             type: 'POST',
             url: '/sessions/logout', // This is a URL on your website.
             success: function(res, status, xhr) { window.onLogout(); },
-            error: function(xhr, status, err) { alert("Logout failure: " + err); }
+            error: function(xhr, status, err) {
+              // alert("Logout failure: " + err);
+            }
           });
         }
       });
