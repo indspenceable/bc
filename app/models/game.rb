@@ -11,6 +11,7 @@ class Game < ActiveRecord::Base
   before_create :decide_starting_player
 
   scope :active, where(:active => true)
+  scope :inactive, where(:active => false)
 
   def play
     GamePlay.new(starting_player, [p0.email, p1.email], inputs)
@@ -36,6 +37,7 @@ class Game < ActiveRecord::Base
 
   def set_active
     self.active = play.active?
+    true
   end
 
   def decide_starting_player

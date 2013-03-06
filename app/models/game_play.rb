@@ -129,6 +129,8 @@ class GamePlay
     @valid_inputs_thus_far
   end
 
+  attr_reader :winner, :loser, :tie
+
   def setup_game!(inputs)
     @input_manager = InputManager.new(inputs)
     @events = []
@@ -164,12 +166,30 @@ class GamePlay
         end
         # if they get here, the game timed out
         @active = false
-        # TODO - set winner
+        @events << "Time up!"
+        winner = loser = nil
+        if @players[0].life > @players[1].life
+          winner = @players[0]
+          loser = @players[1]
+        elsif @players[0].life < @players[1].life
+          winner = @players[1]
+          loser = @players[0]
+        else
+          @tie = true
+          @events << "Tie at #{@players[0].life}!"
+          return
+        end
+        @events << "#{winner.player_name} wins at #{winner.life} to #{loser.life}"
+        @winner = winner.player_name
+        @loser = loser.player_name
         return
       end
       # if they get here, one of the characters got KO'd
       @active = false
-      # TODO set winner
+      winner = @players[0].alive?? 0 : 1
+      @events << "#{@players[winner].player_name} wins!"
+      @winner = @players[winner].player_name
+      @loser = @players[(winner+1)%2].player_name
       return
     end
     # this means there wasn't enough input; thus, the game isn't over.

@@ -172,6 +172,10 @@ class Character
   def receive_damage!(damage)
     log_me!("gets hit for #{damage} damage")
     @life -= damage
+    throw :ko unless alive?
+  end
+  def alive?
+    @life > 0
   end
 
   def exceeds_stun_guard?(amt)
