@@ -1,18 +1,20 @@
 .row
   .span5
-    .well
+    .well.p0header.header
       = current_game.p0.email
       - if current_game.play.characters
         as:
         .label.label-info= current_game.play.characters[0].name.capitalize
+      .p.character-desc
   .span2
     %h3.js-current-beat
   .span5
-    .well
+    .well.p1header.header
       = current_game.p1.email
       - if current_game.play.characters
         as:
         .label.label-important= current_game.play.characters[1].name.capitalize
+      .p.character-desc
 .js-loading
   Loading...
 .js-choose-character{:style => "display: none"}

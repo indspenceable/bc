@@ -22,6 +22,14 @@ var init = function(player_id, game_id, character_names) {
     data.priority = "" + priority
     return data
   }
+
+  var characterUAs = {
+    hikaru: "Hikaru has four elemental tokens each with a different bonus. Each beat, he may ante one token to get its effect, and then it is discarded. He regains tokens by using his styles, but may not regain any that he spent this turn.",
+    cadenza: "Cadenza has 3 iron body tokens. Each beat, he may ante one for stun immunity that beat; additionally, every time he takes damage, he can spend one for (stun guard ∞)",
+    khadath: "Khadath's styles allow him to place his gate trap. Opponents that move on immediately end that movement effect (You can move as you please starting on the trap). At reveal, opponents next to the trap get -1 priority, and opponents standing on top of the trap get -3 priority.",
+    rukyuk: "Rukyuk has 6 ammo tokens, each with a different bonus. Each turn he may ante one of them to get its bonus. If he doesn't ante any, he does not hit this beat."
+  }
+
   var cardDefinitions = {
     emptyCard: makeCard('', '', '', {}),
     dash: makeCard("N/A", "N/A", 9, {"After Activating": "Move 1, 2, or 3 spaces. If you switch sides with an opponent, they cannot hit you this turn."}),
@@ -42,6 +50,7 @@ var init = function(player_id, game_id, character_names) {
     //Cadenza
     battery: makeCard(0, 1, -1, {"passive": "You get +4 priority next beat."}),
     clockwork: makeCard(0, 3, -3, {"Soak": 3}),
+    //soak 1
     hydraulic: makeCard(0, 2, -1, {"Before Activating": "Advance 1 space."}),
     mechanical: makeCard(0, 2, -2, {"End of Beat": "Advance up to 3 spaces."}),
     grapnel: makeCard("2~4", 0, 0, {"On Hit": "Pull opponent up to 3 spaces."}),
@@ -247,6 +256,7 @@ var init = function(player_id, game_id, character_names) {
       // Display player life
       $root(pn).filter('.life').text("P" + pn + ": " + gameState.players[pn].life + " Life")
       $root(pn).filter('.js-current-effects').html(gameState.players[pn].current_effects.join("<br/>"))
+      $('.p' + pn + 'header').find('.character-desc').text(characterUAs[gameState.players[pn].character_name])
       setExtraData(pn, gameState.players[pn].extra_data)
     }
     // Show the event log.
