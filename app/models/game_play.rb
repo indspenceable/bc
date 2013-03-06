@@ -66,13 +66,22 @@ class GamePlay
       }
       answer_inputs!
     end
-    def require_multi_input!(input_string, *validators)
+    def require_multi_input!(input_string, *validators_callback_pairs)
       raise "Didn't answer previous question" if input_required?
+
+      validators = []
+      on_answer_callbacks = []
+      validators_callback_pairs.each do |a,b|
+        validators << a
+        on_answer_callbacks << b
+      end
+
+
       @input_counter+=1
       @answers = {}
       @required_input = {}
       validators.each_with_index do |validator, idx|
-        @required_input[idx] = [input_string, validator]
+        @required_input[idx] = [input_string, validator, on_answer_callbacks[idx]]
       end
       answer_inputs!
     end
@@ -103,10 +112,12 @@ class GamePlay
     end
     def answer!(player_id, string)
       raise "We weren't asking that player for anything." unless @required_input.key?(player_id)
-      _, validator = @required_input[player_id]
+      _, validator, callback = @required_input[player_id]
       raise "Invalid answer \"#{string}\" to #{@required_input[player_id].first}" unless validator.call(string)
+
       @required_input.delete(player_id)
       @answers[player_id] = string.downcase
+      callback.call(@answers[player_id]) if callback
     end
     def input_required?
       @required_input.keys.any?{|k| !@answers.key?(k) }
@@ -322,11 +333,9 @@ class GamePlay
 
   def select_attack_pairs!
     @input_manager.require_multi_input!("attack_pair_select",
-      @players[0].valid_attack_pair_callback,
-      @players[1].valid_attack_pair_callback
+      [@players[0].valid_attack_pair_callback, ->(a) {@players[0].set_attack_pair!(a)}],
+      [@players[1].valid_attack_pair_callback, ->(a) {@players[1].set_attack_pair!(a)}]
     )
-    @players[0].set_attack_pair!(@input_manager.answer(0))
-    @players[1].set_attack_pair!(@input_manager.answer(1))
   end
 
   def ante!
