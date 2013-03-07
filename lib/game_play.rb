@@ -232,21 +232,14 @@ class GamePlay
     # )
     # @players[0].set_initial_discards!(@input_manager.answer(0))
     # @players[1].set_initial_discards!(@input_manager.answer(1))
+    p0a0 = p0a1 = p1a0 = p1a1 = nil
 
-    @input_manager.require_multi_input!("attack_pair_discard_one",
-      @players[0].valid_attack_pair_callback(nil),
-      @players[1].valid_attack_pair_callback(nil),
+    @input_manager.require_multi_input!("attack_pair_discard",
+      [@players[0].valid_attack_pair_callback(nil), ->(a) {p0a0 = a}],
+      [@players[1].valid_attack_pair_callback(nil), ->(a) {p1a0 = a}],
+      [@players[0].valid_attack_pair_callback(p0a0), ->(a) {p0a1 = a}],
+      [@players[1].valid_attack_pair_callback(p1a0), ->(a) {p1a1 = a}],
     )
-    p0a0 = @input_manager.answer(0)
-    p1a0 = @input_manager.answer(1)
-
-    @input_manager.require_multi_input!("attack_pair_discard_two",
-      @players[0].valid_attack_pair_callback(p0a0),
-      @players[1].valid_attack_pair_callback(p1a0),
-    )
-    p0a1 = @input_manager.answer(0)
-    p1a1 = @input_manager.answer(1)
-
     @players[0].set_initial_discards!("#{p0a0};#{p0a1}")
     @players[1].set_initial_discards!("#{p1a0};#{p1a1}")
 

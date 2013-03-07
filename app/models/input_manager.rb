@@ -48,9 +48,11 @@ class InputManager
   private
 
   def answer_inputs!
-    @required_input.keys.each do |player_id|
-      if @input_buffer[player_id].any?
-        answer!(player_id, @input_buffer[player_id].shift)
+    @required_input.each do |player_id, questions|
+      questions.length.times do |q|
+        if @input_buffer[player_id].any?
+          answer!(player_id, @input_buffer[player_id].shift)
+        end
       end
     end
     if input_required?
@@ -63,15 +65,15 @@ class InputManager
   end
   def answer!(player_id, string)
     raise "We weren't asking that player for anything." unless @required_input[player_id].any?
-    answer, validator, callback = @required_input[player_id].pop
+    answer, validator, callback = @required_input[player_id].shift
     raise "Invalid answer \"#{string}\" to #{answer}" unless validator.call(string)
 
-    @required_input.delete(player_id)
     @answers[player_id] = string.downcase
     callback.call(@answers[player_id]) if callback
     @answers[player_id]
   end
   def input_required?
-    @required_input.keys.any?{|k| !@answers.key?(k) }
+    # @required_input.keys.any?{|k| !@answers.key?(k) }
+    @required_input.any?{ |k,v| v.any? }
   end
 end
