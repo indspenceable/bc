@@ -163,6 +163,7 @@ class Khadath < Character
   end
 
   def dodge_ranged_attacks?
+    return false unless @trap
     (@position < @trap && @trap < @opponent.position) ||
     (@position > @trap && @trap > @opponent.position) &&
     @block_ranged_attacks
