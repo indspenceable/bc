@@ -235,13 +235,13 @@ class GamePlay
     p0a0 = p0a1 = p1a0 = p1a1 = nil
 
     @input_manager.require_multi_input!("attack_pair_discard",
-      [@players[0].valid_attack_pair_callback(nil), ->(a) {p0a0 = a}],
-      [@players[1].valid_attack_pair_callback(nil), ->(a) {p1a0 = a}],
-      [@players[0].valid_attack_pair_callback(p0a0), ->(a) {p0a1 = a}],
-      [@players[1].valid_attack_pair_callback(p1a0), ->(a) {p1a1 = a}],
+      [@players[0].valid_attack_pair_callback(nil), ->(a) {p0a0 = a; @players[0].set_initial_discard2(a)}],
+      [@players[1].valid_attack_pair_callback(nil), ->(a) {p1a0 = a; @players[1].set_initial_discard2(a)}],
+      [@players[0].valid_attack_pair_callback(p0a0), ->(a) {p0a1 = a; @players[0].set_initial_discard1(a)}],
+      [@players[1].valid_attack_pair_callback(p1a0), ->(a) {p1a1 = a; @players[1].set_initial_discard1(a)}],
     )
-    @players[0].set_initial_discards!("#{p0a0};#{p0a1}")
-    @players[1].set_initial_discards!("#{p1a0};#{p1a1}")
+    @players[0].set_initial_discards!
+    @players[1].set_initial_discards!
 
     log_event!("Select initial discards", "#{@player_names[0]} discards #{p0a0} and #{p0a1}.", "#{@player_names[1]} discards #{p1a0} and #{p1a1}.")
   end
@@ -397,8 +397,8 @@ class GamePlay
       :token_pool => @players[player_id].token_pool,
       :current_effects => @players[player_id].current_effects,
       :extra_data => @players[player_id].extra_data,
-      :discard1 => @players[player_id].discard1,
-      :discard2 => @players[player_id].discard2,
+      :discard1 => @players[player_id].discard1(as_seen_by_id),
+      :discard2 => @players[player_id].discard2(as_seen_by_id),
       :character_name => @players[player_id].name
     }
   end

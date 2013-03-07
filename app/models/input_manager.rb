@@ -28,7 +28,6 @@ class InputManager
       on_answer_callbacks << b
     end
 
-    @input_counter+=1
     @answers = {}
     @required_input = Hash.new{|h,k| h[k] = []}
     validators.each_with_index do |validator, idx|
@@ -67,7 +66,7 @@ class InputManager
     raise "We weren't asking that player for anything." unless @required_input[player_id].any?
     answer, validator, callback = @required_input[player_id].shift
     raise "Invalid answer \"#{string}\" to #{answer}" unless validator.call(string)
-
+    @input_counter+=1
     @answers[player_id] = string.downcase
     callback.call(@answers[player_id]) if callback
     @answers[player_id]
