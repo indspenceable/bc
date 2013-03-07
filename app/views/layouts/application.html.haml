@@ -52,7 +52,25 @@
           = link_to "Battlecon", landing_path, class: 'brand'
           %ul.nav.pull-right
             - if current_user
-              %li= link_to "Games", games_path
+              %li
+                = link_to games_path do
+                  Games
+                  %span.badge.badge-info#input-count{:style => "display: none"}
+              :javascript
+                var requiredInputCount = function() {
+                  $.get('#{required_input_count_path}', function(count) {
+                    var $i = $('#input-count')
+                    console.log("count",count)
+                    $i.text(count)
+                    if (count > 0){
+                      $i.show()
+                    }else{
+                      $i.hide()
+                    }
+                    setTimeout(requiredInputCount, 5000)
+                  })
+                }
+                $(requiredInputCount)
               %li
                 %a#my-profile= current_user.email
               %li.logged-in

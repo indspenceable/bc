@@ -34,6 +34,12 @@ class GamesController < LoggedInController
     render json: game_state_hash
   end
 
+  def required_input_count
+    #TODO make a column for this.
+    render json: Game.where(active: true).where('p0_id = ? OR p1_id = ?', current_user.id, current_user.id).
+      select{|game| game.play.required_input[game.player_id current_user]}.length
+  end
+
   def update
     #Return any answer for the given input
     current_game.input_and_save!(current_game.player_id(current_user), params['message'])
