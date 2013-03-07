@@ -14,9 +14,8 @@ class InputManager
     raise "Didn't answer previous question" if input_required?
     @input_counter+=1
     @answers = {}
-    @required_input = {
-      player_id => [input_string, validator]
-    }
+    @required_input = Hash.new{|h,k| h[k] = []}
+    @required_input[player_id] << [input_string, validator]
     answer_inputs!
   end
   def require_multi_input!(input_string, *validators_callback_pairs)
@@ -31,15 +30,15 @@ class InputManager
 
     @input_counter+=1
     @answers = {}
-    @required_input = {}
+    @required_input = Hash.new{|h,k| h[k] = []}
     validators.each_with_index do |validator, idx|
-      @required_input[idx] = [input_string, validator, on_answer_callbacks[idx]]
+      @required_input[idx % 2] <<  [input_string, validator, on_answer_callbacks[idx]]
     end
     answer_inputs!
   end
   def required_input
-    Hash[@required_input.map do |k,v|
-      [k, v.first]
+    Hash[@required_input.select{|k,v| v.any?}.map do |k,v|
+      [k, v.first.first]
     end]
   end
   def answer(player_id)
@@ -63,13 +62,14 @@ class InputManager
     @answers
   end
   def answer!(player_id, string)
-    raise "We weren't asking that player for anything." unless @required_input.key?(player_id)
-    _, validator, callback = @required_input[player_id]
-    raise "Invalid answer \"#{string}\" to #{@required_input[player_id].first}" unless validator.call(string)
+    raise "We weren't asking that player for anything." unless @required_input[player_id].any?
+    answer, validator, callback = @required_input[player_id].pop
+    raise "Invalid answer \"#{string}\" to #{answer}" unless validator.call(string)
 
     @required_input.delete(player_id)
     @answers[player_id] = string.downcase
     callback.call(@answers[player_id]) if callback
+    @answers[player_id]
   end
   def input_required?
     @required_input.keys.any?{|k| !@answers.key?(k) }
