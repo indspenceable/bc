@@ -46,84 +46,6 @@ def select_from_methods(selection_name=nil, options)
 end
 
 class GamePlay
-  # Input manager manages input.
-  class InputManager
-    attr_reader :input_counter
-    def initialize(input_buffer)
-      @required_input = {}
-      @input_buffer = Hash.new{|h, k| h[k] = []}
-      input_buffer.each do |player_id, str|
-        @input_buffer[player_id] << str
-      end
-      @input_counter = 0
-    end
-    def require_single_input!(player_id, input_string, validator)
-      raise "Didn't answer previous question" if input_required?
-      @input_counter+=1
-      @answers = {}
-      @required_input = {
-        player_id => [input_string, validator]
-      }
-      answer_inputs!
-    end
-    def require_multi_input!(input_string, *validators_callback_pairs)
-      raise "Didn't answer previous question" if input_required?
-
-      validators = []
-      on_answer_callbacks = []
-      validators_callback_pairs.each do |a,b|
-        validators << a
-        on_answer_callbacks << b
-      end
-
-
-      @input_counter+=1
-      @answers = {}
-      @required_input = {}
-      validators.each_with_index do |validator, idx|
-        @required_input[idx] = [input_string, validator, on_answer_callbacks[idx]]
-      end
-      answer_inputs!
-    end
-    def required_input
-      Hash[@required_input.map do |k,v|
-        [k, v.first]
-      end]
-    end
-    def answer(player_id)
-      @answers[player_id]
-    end
-
-    private
-
-    def answer_inputs!
-      @required_input.keys.each do |player_id|
-        if @input_buffer[player_id].any?
-          answer!(player_id, @input_buffer[player_id].shift)
-        end
-      end
-      if input_required?
-        @input_buffer.each do |k,v|
-          raise "#{k} sent input (#{v}) when it wasn't needed." if v.any?
-        end
-        throw :input_required
-      end
-      @answers
-    end
-    def answer!(player_id, string)
-      raise "We weren't asking that player for anything." unless @required_input.key?(player_id)
-      _, validator, callback = @required_input[player_id]
-      raise "Invalid answer \"#{string}\" to #{@required_input[player_id].first}" unless validator.call(string)
-
-      @required_input.delete(player_id)
-      @answers[player_id] = string.downcase
-      callback.call(@answers[player_id]) if callback
-    end
-    def input_required?
-      @required_input.keys.any?{|k| !@answers.key?(k) }
-    end
-  end
-
   attr_accessor :active_player, :reactive_player
   def characters
     @players
@@ -310,23 +232,16 @@ class GamePlay
     # )
     # @players[0].set_initial_discards!(@input_manager.answer(0))
     # @players[1].set_initial_discards!(@input_manager.answer(1))
+    p0a0 = p0a1 = p1a0 = p1a1 = nil
 
-    @input_manager.require_multi_input!("attack_pair_discard_one",
-      @players[0].valid_attack_pair_callback(nil),
-      @players[1].valid_attack_pair_callback(nil),
+    @input_manager.require_multi_input!("attack_pair_discard",
+      [@players[0].valid_attack_pair_callback(nil), ->(a) {p0a0 = a; @players[0].set_initial_discard2(a)}],
+      [@players[1].valid_attack_pair_callback(nil), ->(a) {p1a0 = a; @players[1].set_initial_discard2(a)}],
+      [@players[0].valid_attack_pair_callback(p0a0), ->(a) {p0a1 = a; @players[0].set_initial_discard1(a)}],
+      [@players[1].valid_attack_pair_callback(p1a0), ->(a) {p1a1 = a; @players[1].set_initial_discard1(a)}],
     )
-    p0a0 = @input_manager.answer(0)
-    p1a0 = @input_manager.answer(1)
-
-    @input_manager.require_multi_input!("attack_pair_discard_two",
-      @players[0].valid_attack_pair_callback(p0a0),
-      @players[1].valid_attack_pair_callback(p1a0),
-    )
-    p0a1 = @input_manager.answer(0)
-    p1a1 = @input_manager.answer(1)
-
-    @players[0].set_initial_discards!("#{p0a0};#{p0a1}")
-    @players[1].set_initial_discards!("#{p1a0};#{p1a1}")
+    @players[0].set_initial_discards!
+    @players[1].set_initial_discards!
 
     log_event!("Select initial discards", "#{@player_names[0]} discards #{p0a0} and #{p0a1}.", "#{@player_names[1]} discards #{p1a0} and #{p1a1}.")
   end
@@ -482,8 +397,8 @@ class GamePlay
       :token_pool => @players[player_id].token_pool,
       :current_effects => @players[player_id].current_effects,
       :extra_data => @players[player_id].extra_data,
-      :discard1 => @players[player_id].discard1,
-      :discard2 => @players[player_id].discard2,
+      :discard1 => @players[player_id].discard1(as_seen_by_id),
+      :discard2 => @players[player_id].discard2(as_seen_by_id),
       :character_name => @players[player_id].name
     }
   end

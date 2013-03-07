@@ -34,22 +34,28 @@ class Character
   def is_reactive!
   end
 
-  def discard1
-    @discard1 ? @discard1.map(&:name) : []
+  def discard1(seen_by)
+    p = (seen_by == @player_id &&@temp_discard1) || @discard1 || []
+    p.map(&:name)
   end
-  def discard2
-    @discard2 ? @discard2.map(&:name) : []
+  def discard2(seen_by)
+    p = (seen_by == @player_id &&@temp_discard2) || @discard2 || []
+    p.map(&:name)
   end
 
   def bases(seen_by=@player_id)
     # if we haven't revealed, but this not another player
     c_hand = (seen_by == @player_id) ? @hand - [@base, @style] : @hand
+    c_hand -= @temp_discard2 if @temp_discard2 && seen_by == @player_id
+    c_hand -= @temp_discard1 if @temp_discard1 && seen_by == @player_id
     c_hand.select do |card|
       card.is_a?(Base)
     end
   end
   def styles(seen_by=@player_id)
     c_hand = (seen_by == @player_id) ? @hand - [@base, @style] : @hand
+    c_hand -= @temp_discard2 if @temp_discard2 && seen_by == @player_id
+    c_hand -= @temp_discard1 if @temp_discard1 && seen_by == @player_id
     c_hand.select do |card|
       card.is_a?(Style)
     end
@@ -223,20 +229,26 @@ class Character
   def opponent_effect_sources
     []
   end
-
-  def set_initial_discards!(choice)
-    choice =~ /([a-z]*)_([a-z]*);([a-z]*)_([a-z]*)/
+  def set_initial_discard2(choice)
+    choice =~ /([a-z]*)_([a-z]*)/
     s1 = styles.find{|s| s.name == $1}
     b1 = bases.find{|b| b.name == $2}
-    s2 = styles.find{|s| s.name == $3}
-    b2 = bases.find{|b| b.name == $4}
-
-    @discard2 = [s1, b1]
-    @discard1 = [s2, b2]
-    @hand.delete(b1)
-    @hand.delete(b2)
-    @hand.delete(s1)
-    @hand.delete(s2)
+    @temp_discard2 = [s1, b1]
+  end
+  def set_initial_discard1(choice)
+    choice =~ /([a-z]*)_([a-z]*)/
+    s1 = styles.find{|s| s.name == $1}
+    b1 = bases.find{|b| b.name == $2}
+    @temp_discard1 = [s1, b1]
+  end
+  def set_initial_discards!
+    @discard2 = @temp_discard2
+    @discard1 = @temp_discard1
+    (@temp_discard1 + @temp_discard2).each do |c|
+      @hand.delete(c)
+    end
+    @temp_discard1 = nil
+    @temp_discard2 = nil
   end
 
   def set_attack_pair!(choice)
@@ -381,15 +393,6 @@ class Character
   # is this the best design? I dunno. It does make it easy for us to identify
   # when theres an error due to invalid input, though.
 
-  # this should probably live in character.
-  def valid_discard_callback
-    ->(text) do
-      text =~ /([a-z]*)_([a-z]*);([a-z]*)_([a-z]*)/
-      s1,b1,s2,b2 = $1, $2, $3, $4
-      bases.map(&:name).include?(b1) && bases.map(&:name).include?(b2) && b1 != b2 &&
-      styles.map(&:name).include?(s1) && styles.map(&:name).include?(s2) && s1 != s2
-    end
-  end
   def valid_attack_pair_callback(previous_answer=nil)
     ->(text) do
       text =~ /([a-z]*)_([a-z]*)/
