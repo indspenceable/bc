@@ -25,7 +25,7 @@
         = badges(character_badges(name))
 .js-in-game{:style => "display: none"}
   .row
-    .js-mine
+    .js-p0
       .span2.funny-well
         %h4.heading Tokens
         .collapsable.js-tokens
@@ -43,7 +43,7 @@
         .funny-well
           %h4.heading Discard 2
           .collapsable.js-discard2
-    .js-theirs
+    .js-p1
       .span2
         .funny-well
           %h4.heading Styles
@@ -63,7 +63,7 @@
         .collapsable.js-tokens
 
   .row
-    .span2.js-mine.funny-well.life
+    .span2.js-p0.funny-well.life
     .board
       .span1.space.s0
       .span1.space.s1
@@ -72,10 +72,10 @@
       .span1.space.s4
       .span1.space.s5
       .span1.space.s6
-    .span2.js-theirs.offset1.funny-well.life
+    .span2.js-p1.offset1.funny-well.life
   .row
     .span3
-      .well.js-current-effects.js-mine
+      .well.js-current-effects.js-p0
     .span6
       .well.event-log
         %h6 Game log
@@ -83,10 +83,10 @@
         %p another event!
         %p event log is great!
     .span3
-      .well.js-current-effects.js-theirs
+      .well.js-current-effects.js-p1
   .row.attack-pairs
     .span6
-      .js-mine.attack-pair.row
+      .js-p0.attack-pair.row
         .span3
           .style.real
             .well
@@ -121,11 +121,11 @@
                 .power
                 .priority
               .effects
-      .row
+      .row.js-p0
         .offset2.span2.js-finalize-attack-pair{:style => "display: none"}
           .btn.js-submit-attack-pair Submit
     .span6
-      .js-theirs.attack-pair.row
+      .js-p1.attack-pair.row
         .span3
           .style.real
             .well
@@ -160,7 +160,9 @@
                 .power
                 .priority
               .effects
-
+      .row.js-p1
+        .offset2.span2.js-finalize-attack-pair{:style => "display: none"}
+          .btn.js-submit-attack-pair Submit
   .js-answers
   .free-form
     .row

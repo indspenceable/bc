@@ -12,7 +12,9 @@ var init = function(player_id, game_id, character_names) {
   var faviconTimeout = 100;
 
   var $root = function(pn) {
-    return (pn == player_id ? $(".js-mine") : $('.js-theirs'))
+    //return (pn == player_id ? $(".js-mine") : $('.js-theirs'))
+    console.log('.js-p' + pn)
+    return $('.js-p' + pn)
   }
 
   var makeCard = function(range, power, priority, _data) {
@@ -282,7 +284,7 @@ var init = function(player_id, game_id, character_names) {
   }
   var setPair = function() {
     if ((style || need=="base") && base) {
-      $('.js-finalize-attack-pair').show()
+      $root(player_id).find('.js-finalize-attack-pair').show()
     }
   }
   var submitAttackPair = function() {
@@ -351,42 +353,42 @@ var init = function(player_id, game_id, character_names) {
     })
 
     // Hover cards to preview them!
-    $('body').on('mouseenter', '.js-mine .base.mini-card', function(){
-      loadCard($(this).text(), $('.js-mine').filter('.attack-pair').find('.preview.base'))
-      $('.js-mine').filter('.attack-pair').find('.real.base').hide()
-      $('.js-mine').filter('.attack-pair').find('.preview.base').show()
+    $('body').on('mouseenter', '.js-p0 .base.mini-card', function(){
+      loadCard($(this).text(), $('.js-p0').filter('.attack-pair').find('.preview.base'))
+      $('.js-p0').filter('.attack-pair').find('.real.base').hide()
+      $('.js-p0').filter('.attack-pair').find('.preview.base').show()
     })
-    $('body').on('mouseleave', '.js-mine .base.mini-card', function(){
-      $('.js-mine').filter('.attack-pair').find('.real.base').show()
-      $('.js-mine').filter('.attack-pair').find('.preview.base').hide()
+    $('body').on('mouseleave', '.js-p0 .base.mini-card', function(){
+      $('.js-p0').filter('.attack-pair').find('.real.base').show()
+      $('.js-p0').filter('.attack-pair').find('.preview.base').hide()
     })
-    $('body').on('mouseenter', '.js-mine .style.mini-card', function(){
-      loadCard($(this).text(), $('.js-mine').filter('.attack-pair').find('.preview.style'))
-      $('.js-mine').filter('.attack-pair').find('.real.style').hide()
-      $('.js-mine').filter('.attack-pair').find('.preview.style').show()
+    $('body').on('mouseenter', '.js-p0 .style.mini-card', function(){
+      loadCard($(this).text(), $('.js-p0').filter('.attack-pair').find('.preview.style'))
+      $('.js-p0').filter('.attack-pair').find('.real.style').hide()
+      $('.js-p0').filter('.attack-pair').find('.preview.style').show()
     })
-    $('body').on('mouseleave', '.js-mine .style.mini-card', function(){
-      $('.js-mine').filter('.attack-pair').find('.real.style').show()
-      $('.js-mine').filter('.attack-pair').find('.preview.style').hide()
+    $('body').on('mouseleave', '.js-p0 .style.mini-card', function(){
+      $('.js-p0').filter('.attack-pair').find('.real.style').show()
+      $('.js-p0').filter('.attack-pair').find('.preview.style').hide()
     })
     // Theirs
-    $('body').on('mouseenter', '.js-theirs .base.mini-card', function(){
-      loadCard($(this).text(), $('.js-theirs').filter('.attack-pair').find('.preview.base'))
-      $('.js-theirs').filter('.attack-pair').find('.real.base').hide()
-      $('.js-theirs').filter('.attack-pair').find('.preview.base').show()
+    $('body').on('mouseenter', '.js-p1 .base.mini-card', function(){
+      loadCard($(this).text(), $('.js-p1').filter('.attack-pair').find('.preview.base'))
+      $('.js-p1').filter('.attack-pair').find('.real.base').hide()
+      $('.js-p1').filter('.attack-pair').find('.preview.base').show()
     })
-    $('body').on('mouseleave', '.js-theirs .base.mini-card', function(){
-      $('.js-theirs').filter('.attack-pair').find('.real.base').show()
-      $('.js-theirs').filter('.attack-pair').find('.preview.base').hide()
+    $('body').on('mouseleave', '.js-p1 .base.mini-card', function(){
+      $('.js-p1').filter('.attack-pair').find('.real.base').show()
+      $('.js-p1').filter('.attack-pair').find('.preview.base').hide()
     })
-    $('body').on('mouseenter', '.js-theirs .style.mini-card', function(){
-      loadCard($(this).text(), $('.js-theirs').filter('.attack-pair').find('.preview.style'))
-      $('.js-theirs').filter('.attack-pair').find('.real.style').hide()
-      $('.js-theirs').filter('.attack-pair').find('.preview.style').show()
+    $('body').on('mouseenter', '.js-p1 .style.mini-card', function(){
+      loadCard($(this).text(), $('.js-p1').filter('.attack-pair').find('.preview.style'))
+      $('.js-p1').filter('.attack-pair').find('.real.style').hide()
+      $('.js-p1').filter('.attack-pair').find('.preview.style').show()
     })
-    $('body').on('mouseleave', '.js-theirs .style.mini-card', function(){
-      $('.js-theirs').filter('.attack-pair').find('.real.style').show()
-      $('.js-theirs').filter('.attack-pair').find('.preview.style').hide()
+    $('body').on('mouseleave', '.js-p1 .style.mini-card', function(){
+      $('.js-p1').filter('.attack-pair').find('.real.style').show()
+      $('.js-p1').filter('.attack-pair').find('.preview.style').hide()
     })
     $('.preview').hide()
 
