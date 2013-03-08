@@ -217,9 +217,12 @@ class Character
   end
   def recycle!
     @stunned = false
-    @hand += @discard2
-    @discard2 = @discard1
-    @discard1 = [@style, @base]
+    # Don't cycle cards on turns we play finishers.
+    unless @played_finisher
+      @hand += @discard2
+      @discard2 = @discard1
+      @discard1 = [@style, @base]
+    end
     @dodge = false
     @base = @style = nil
     @played_finisher = false
