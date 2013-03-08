@@ -145,6 +145,39 @@ class FlashShell < Token
   end
 end
 
+class ForceGrenade < Finisher
+  def initialize
+    super("forcegrenade", 1..2, 4, 4)
+  end
+
+  flag :no_ammo_benefit
+  flag :hit_without_ammo
+
+  def on_hit!
+    {
+      "force_grenade_push" => select_from_methods(push: [0,1,2,3,4,5,6])
+    }
+  end
+  def after_activating!
+    {
+      "force_grenade_retreat" => select_from_methods(retreat: [0,1,2,3,4,5,6])
+    }
+  end
+end
+
+class FullyAutomatic < Finisher
+  def initialize
+    super("fullyautomatic", 3..6, 2, 6)
+  end
+  flag :no_ammo_benefit
+
+  def on_hit!
+    {
+      "repeat_attack" => select_from_methods(repeat_attack: Rukyuk.token_names)
+    }
+  end
+end
+
 class Rukyuk < Character
   def initialize *args
     super
@@ -158,6 +191,10 @@ class Rukyuk < Character
     ]
     fill_token_pool!
     @bonuses = []
+  end
+
+  def finishers
+    [FullyAutomatic.new, ForceGrenade.new]
   end
 
   def self.character_name
@@ -190,6 +227,9 @@ class Rukyuk < Character
   def extra_power?(choice)
     ante?(choice)
   end
+  def repeat_attack?(choice)
+    ante?(choice)
+  end
 
   def extra_range!(choice)
     @token_pool.delete_if{ |token| token.name == choice }
@@ -200,8 +240,16 @@ class Rukyuk < Character
     @bonuses << ExplosiveShell.new
   end
 
+  def repeat_attack!(choice)
+    @token_pool.delete_if{ |token| token.name == choice }
+    execute_attack!
+  end
+
   def effect_sources
-    Array(@current_token) + @bonuses + super
+    sources = super
+    sources +=  Array(@current_token) unless flag?(:no_ammo_benefit)
+    sources += @bonuses
+    sources
   end
 
   def current_effects
