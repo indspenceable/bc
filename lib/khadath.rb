@@ -198,9 +198,9 @@ class Khadath < Character
   end
 
   def in_range?
-    if flag :hits_on_and_adjacent_to_trap
+    if flag? :hits_on_and_adjacent_to_trap
       they_are_on_or_next_to_trap?
-    elsif flag :hits_on_trap
+    elsif flag? :hits_on_trap
       @trap == opponent.position
     else
       super

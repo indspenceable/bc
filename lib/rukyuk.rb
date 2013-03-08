@@ -201,16 +201,13 @@ class Rukyuk < Character
     'rukyuk'
   end
 
-  def can_ante?
-    @token_pool.any?
-  end
-
   def ante_options
     (@current_token ? [] : @token_pool.map(&:name)) + super
   end
 
   def ante!(choice)
     return if choice == "pass"
+    return if super(choice)
     log_me!("antes #{@token_pool.find{ |token| token.name == choice }.name_and_effect}")
     @current_token = @token_pool.find{ |token| token.name == choice }
     @token_pool.delete_if{ |token| token.name == choice }
@@ -218,6 +215,7 @@ class Rukyuk < Character
 
   def ante?(choice)
     return true if choice == "pass"
+    return true if super(choice)
     @token_pool.any?{ |token| (token.name == choice) }
   end
 
@@ -232,22 +230,26 @@ class Rukyuk < Character
   end
 
   def extra_range!(choice)
+    return if choice == "pass"
     @token_pool.delete_if{ |token| token.name == choice }
     @bonuses << Longshot.new
   end
   def extra_power!(choice)
+    return if choice == "pass"
     @token_pool.delete_if{ |token| token.name == choice }
     @bonuses << ExplosiveShell.new
   end
 
   def repeat_attack!(choice)
+    return if choice == "pass"
     @token_pool.delete_if{ |token| token.name == choice }
     execute_attack!
   end
 
   def effect_sources
     sources = super
-    sources +=  Array(@current_token) unless flag?(:no_ammo_benefit)
+    # We can't call flag? here... boo.
+    sources += Array(@current_token) unless sources.any?{|s| s.flag?(:no_ammo_benefit)}
     sources += @bonuses
     sources
   end

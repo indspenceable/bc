@@ -100,8 +100,8 @@ class Character
 
   # order doens't matter on reveal.
   def reveal!
-    @hand.delete(@base)
-    @hand.delete(@style)
+    @hand.delete(@base) if @base
+    @hand.delete(@style) if @style
     @revealed = true
 
     effect_sources.each do |source|
@@ -407,6 +407,7 @@ class Character
       @base = nil
       @played_finisher = true
       @special_action_available = false
+      true
     end
   end
 

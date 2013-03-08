@@ -124,9 +124,9 @@ class Water < Token
   end
 end
 
-class WrathOfElements
+class WrathOfElements < Finisher
   def initialize
-    super("wrathofelements", 7, 6)
+    super("wrathofelements", 1, 7, 6)
   end
   def reveal!(me)
     ['earth', 'fire', 'wind', 'water'].each do |token|
