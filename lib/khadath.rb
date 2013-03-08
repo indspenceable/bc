@@ -5,7 +5,7 @@ class Hunters < Style
   def initialize
     super("hunters", 0, 1, 0)
   end
-  def reveal(me)
+  def reveal!(me)
     me.hunters_bonus_if_on_or_adacent_to_trap!
   end
 end
@@ -85,6 +85,12 @@ class TrapPenalty < Token
   end
 end
 
+class HuntersBonus < Token
+  def initialize
+    super("hunters_bonus", 0, 2, 2)
+  end
+end
+
 class Khadath < Character
   def self.character_name
     "khadath"
@@ -110,15 +116,12 @@ class Khadath < Character
 
   def hunters_bonus_if_on_or_adacent_to_trap!
     if they_are_on_or_next_to_trap?
-      @hunters_bonus = true
+      @hunters_bonus = HuntersBonus.new
     end
   end
 
-  def power
-    super + (@hunters_bonus ? 2 : 0)
-  end
-  def priority
-    super + (@hunters_bonus ? 2 : 0)
+  def effect_sources
+    super + Array(@hunters_bonus)
   end
 
   def trap_blocks_ranged_attacks!
@@ -191,11 +194,11 @@ class Khadath < Character
 
   def recycle!
     super
-    @hunters_bonus = false
-    @block_ranged_attacks = false
-    @dodge_trapped_opponents = false
-    @no_moving_trap_this_beat = false
-    @hits_on_and_adjacent_to_trap = false
+    @hunters_bonus = nil
+    @block_ranged_attacks = nil
+    @dodge_trapped_opponents = nil
+    @no_moving_trap_this_beat = nil
+    @hits_on_and_adjacent_to_trap = nil
   end
 
   def blocked_spaces
