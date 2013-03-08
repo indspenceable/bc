@@ -72,8 +72,10 @@ class Snare < Base
   end
   def passive!(me)
     me.no_moving_trap_this_beat!
-    me.hits_on_and_adjacent_to_trap!
   end
+
+  flag :hits_on_and_adjacent_to_trap
+
   def stun_immunity?
     true
   end
@@ -89,6 +91,17 @@ class HuntersBonus < Token
   def initialize
     super("hunters_bonus", 0, 2, 2)
   end
+end
+
+class DimensionalExile < Finisher
+  def initialize
+    super("dimensionalexile", nil, 25, 0)
+  end
+  def stun_immunity?
+    true
+  end
+
+  flag :hits_on_trap
 end
 
 class Khadath < Character
@@ -107,6 +120,10 @@ class Khadath < Character
     ]
 
     @trap = nil
+  end
+
+  def finishers
+    [DimensionalExile.new, DimensionalExile.new]
   end
 
   def they_are_on_or_next_to_trap?
@@ -176,17 +193,15 @@ class Khadath < Character
     super || (@dodge_trapped_opponents && @opponent.position == @trap) || dodge_ranged_attacks?
   end
 
-  def hits_on_and_adjacent_to_trap!
-    @hits_on_and_adjacent_to_trap = true
-  end
-
   def no_moving_trap_this_beat!
     @no_moving_trap_this_beat = true
   end
 
   def in_range?
-    if @hits_on_and_adjacent_to_trap
+    if flag :hits_on_and_adjacent_to_trap
       they_are_on_or_next_to_trap?
+    elsif flag :hits_on_trap
+      @trap == opponent.position
     else
       super
     end
