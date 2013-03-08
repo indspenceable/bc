@@ -218,7 +218,6 @@ class Character
   def recycle!
     @stunned = false
     @hand += @discard2
-    @hand += @clashed_bases
     @discard2 = @discard1
     @discard1 = [@style, @base]
     @dodge = false
