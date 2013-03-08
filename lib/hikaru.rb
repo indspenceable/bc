@@ -124,6 +124,15 @@ class Water < Token
   end
 end
 
+class AdvancingBonus < Token
+  def initialize
+    super("advancingbonus", 0, 1, 0)
+  end
+  def to_s
+    "+1 Damage"
+  end
+end
+
 class Hikaru < Character
   def self.character_name
     "hikaru"
@@ -151,6 +160,8 @@ class Hikaru < Character
     @token_discard = []
     # tokens used this beat
     @current_tokens = []
+    #bonuses
+    @bonus = []
   end
 
   def effect_sources
@@ -158,13 +169,12 @@ class Hikaru < Character
   end
 
   def reveal!
-    @advancing_bonus = false
     super
   end
 
   # can we generalize this pattern?
   def advancing_bonus!
-    @advancing_bonus = true
+    @bonus << AdvancingBonus.new
   end
 
   def take_hit!(damage)
@@ -184,13 +194,14 @@ class Hikaru < Character
   end
 
   def current_effects
-    super + @current_tokens.map(&:name_and_effect)
+    super + @current_tokens.map(&:name_and_effect) + @bonus.map(&:to_s)
   end
 
   def recycle!
     super
     @token_discard += @current_tokens
     @current_tokens = []
+    @bonus = []
   end
 
   def can_ante?
