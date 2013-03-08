@@ -72,6 +72,23 @@ class Press < Base
   end
 end
 
+class RocketPress < Finisher
+  def initialize
+    super("rocketpress", 1, 8, 0)
+  end
+  def soak
+    3
+  end
+  def stun_immunity?
+    true
+  end
+  def before_activating!
+    {
+      "advance" => select_from_methods(advance: [2,3,4,5,6])
+    }
+  end
+end
+
 class Cadenza < Character
   def initialize *args
     super
@@ -89,6 +106,11 @@ class Cadenza < Character
   def self.character_name
     'cadenza'
   end
+
+  def finishers
+    [RocketPress.new] * 2
+  end
+
   def charge_battery!
     @battery_charge = true
   end
