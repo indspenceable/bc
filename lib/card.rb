@@ -47,3 +47,8 @@ end
 class Style < Card;end
 class Base < Card;end
 class Token < Card;end
+class Finisher < Card
+  def priority
+    @priority + 0.2
+  end
+end
