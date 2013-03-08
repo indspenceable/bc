@@ -368,21 +368,7 @@ class GamePlay
 
   def activate!(current, opponent)
     unless current.stunned?
-      current.before_activating!
-      # are they in range?
-      if current.in_range?
-
-        current.on_hit!
-        damage_dealt = opponent.take_hit!(current.power)
-        log_event!("#{current.player_name} hits #{opponent.player_name} for
-          #{damage_dealt} damage!")
-        if damage_dealt > 0
-          current.on_damage!
-        end
-      else
-        log_event!("#{current.player_name} misses!")
-      end
-      current.after_activating!
+      current_player.execute_attack!
     else log_event!("#{current.player_name} is stunned!")
     end
   end

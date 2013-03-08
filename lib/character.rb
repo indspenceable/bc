@@ -425,6 +425,21 @@ class Character
   def ignore_stun_guard?
     effect_sources.any?{|source| source.ignore_stun_guard? }
   end
+
+  def execute_attack!
+    before_activating!
+    # are they in range?
+    if in_range?
+      on_hit!
+      damage_dealt = opponent.take_hit!(power)
+      log_me!("hits #{opponent.player_name} for #{damage_dealt} damage!")
+      on_damage! if damage_dealt > 0
+    else
+      log_me!("misses!")
+    end
+    after_activating!
+  end
+
   # input callbacks. These check the validity of input that the player does.
   # is this the best design? I dunno. It does make it easy for us to identify
   # when theres an error due to invalid input, though.
