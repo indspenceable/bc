@@ -48,9 +48,7 @@ class Sweeping < Style
     super('sweeping', 0, -1, 3)
   end
   # TODO - sweeping extra hit
-  def passive!(me)
-    me.extra_damage_this_beat!
-  end
+  flag :sweeping_extra_damage
 end
 
 class Advancing < Style
@@ -160,7 +158,6 @@ class Hikaru < Character
   end
 
   def reveal!
-    @sweeping = false
     @advancing_bonus = false
     super
   end
@@ -169,12 +166,9 @@ class Hikaru < Character
   def advancing_bonus!
     @advancing_bonus = true
   end
-  def extra_damage_this_beat!
-    @sweeping = true
-  end
 
   def take_hit!(damage)
-    if @sweeping
+    if flag?(:sweeping_extra_damage)
       super(damage+2)
     else
       super(damage)
