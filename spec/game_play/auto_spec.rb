@@ -9,7 +9,7 @@ def answer_input(g, pn)
   elsif g.required_input[pn] == "select_base_clash"
     select_base(g,pn)
   elsif g.required_input[pn] == "select_finisher"
-    g.input!(pn, "0")
+    g.input!(pn, rand(2).to_s)
   else
     raise "Unknown input #{g.required_input[pn]}"
   end
@@ -39,7 +39,7 @@ describe GamePlay do
   GamePlay.character_names.each do |c1|
     GamePlay.character_names.each do |c2|
       it "doesn't raise errors when you give valid input in a #{c1} #{c2} game." do
-        10.times do |i|
+        30.times do |i|
           g = GamePlay.new(i%2, ['p0', 'p1'])
 
           g.input!(0, c1)
