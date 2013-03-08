@@ -20,6 +20,7 @@ class Character
     ]
 
     @life = 20
+    @special_action_available = true
   end
 
   def name
@@ -360,7 +361,9 @@ class Character
   end
 
   def ante_options
-    ["pass"]
+    opts = ["pass"]
+    opts << ["finisher"] if can_play_finisher?
+    opts
   end
 
   def token_pool
@@ -386,11 +389,22 @@ class Character
     {}
   end
 
+  def can_play_finisher?
+    life <=7 && @special_action_available
+  end
+
   def ante?(choice)
     return true if choice == "pass"
+    return true if choice == "finisher" && can_play_finisher?
     false
   end
   def ante!(choice)
+    if choice == "finisher"
+      @style = nil
+      @base = nil
+      @played_finisher = true
+      @special_action_available = false
+    end
   end
 
   def played_finisher?
