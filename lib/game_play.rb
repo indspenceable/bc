@@ -290,6 +290,17 @@ class GamePlay
 
   def handle_clashes!
     while @players[0].priority == @players[1].priority
+      # If finishers tie
+      if @players.all(&:played_finisher?) &&
+        # cancel them
+        @players.each(&:cancel_finisher!)
+        select_attack_pairs!
+        #reveal attack pairs.
+        reveal!
+        #check priorities again.
+        next
+      end
+
       log_event!("Clash at #{@players[0].priority} priority")
       @players.each do |p|
         p.clash!

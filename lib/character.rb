@@ -222,6 +222,7 @@ class Character
     @discard1 = [@style, @base]
     @dodge = false
     @base = @style = nil
+    @played_finisher = false
   end
 
   def effect_sources
@@ -390,6 +391,14 @@ class Character
     false
   end
   def ante!(choice)
+  end
+
+  def played_finisher?
+    @played_finisher
+  end
+
+  def cancel_finisher!
+    @played_finisher = false
   end
 
   def ignore_soak?
