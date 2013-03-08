@@ -170,7 +170,7 @@ class Khadath < Character
   end
 
   def dodges?
-    super || @dodge_trapped_opponents || dodge_ranged_attacks?
+    super || (@dodge_trapped_opponents && @opponent.position == @trap) || dodge_ranged_attacks?
   end
 
   def hits_on_and_adjacent_to_trap!
