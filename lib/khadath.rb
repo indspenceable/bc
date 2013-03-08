@@ -189,7 +189,7 @@ class Khadath < Character
     end
   end
 
-  def recycle
+  def recycle!
     super
     @hunters_bonus = false
     @block_ranged_attacks = false
