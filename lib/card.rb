@@ -7,6 +7,18 @@ class Card
     @range = range
   end
 
+  def self.flag name
+    @flags ||= []
+    @flags << name
+  end
+  def self.flag? name
+    @flags ||= []
+    @flags.include? name
+  end
+  def flag? name
+    self.class.flag? name
+  end
+
   # override methods if needed
   %w(reveal start_of_beat, before_activating on_hit on_damage after_activating
     end_of_beat).each do |meth|

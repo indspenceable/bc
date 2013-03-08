@@ -29,9 +29,15 @@ class Character
   def reveal_attack_pair!
     "#{@style.name.capitalize} #{@base.name.capitalize}"
   end
+
   def is_active!
   end
+
   def is_reactive!
+  end
+
+  def flag? n
+    effect_sources.any?{|s| s.flag? n}
   end
 
   def discard1(seen_by)
