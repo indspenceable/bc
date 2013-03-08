@@ -18,20 +18,22 @@ class InputManager
     @required_input[player_id] << [input_string, validator]
     answer_inputs!
   end
-  def require_multi_input!(input_string, *validators_callback_pairs)
+  def require_multi_input!(*args)
     raise "Didn't answer previous question" if input_required?
-
-    validators = []
-    on_answer_callbacks = []
-    validators_callback_pairs.each do |a,b|
-      validators << a
-      on_answer_callbacks << b
-    end
-
-    @answers = {}
     @required_input = Hash.new{|h,k| h[k] = []}
-    validators.each_with_index do |validator, idx|
-      @required_input[idx % 2] <<  [input_string, validator, on_answer_callbacks[idx]]
+    @answers = {}
+    args.each_slice(3) do |input_string, *validators_callback_pairs|
+    # (input_string, *validators_callback_pairs)
+      validators = []
+      on_answer_callbacks = []
+      validators_callback_pairs.each do |a,b|
+        validators << a
+        on_answer_callbacks << b
+      end
+
+      validators.each_with_index do |validator, idx|
+        @required_input[idx % 2] <<  [input_string, validator, on_answer_callbacks[idx]]
+      end
     end
     answer_inputs!
   end

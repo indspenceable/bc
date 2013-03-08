@@ -257,6 +257,10 @@ class Character
     @temp_discard2 = nil
   end
 
+  def select_finisher!(i)
+    @finisher = finishers[i]
+  end
+
   def set_attack_pair!(choice)
     @revealed = false
     choice =~ /([a-z]*)_([a-z]*)/

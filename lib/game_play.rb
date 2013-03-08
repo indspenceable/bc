@@ -76,7 +76,7 @@ class GamePlay
     catch :input_required do
       catch :ko do
         select_characters!
-        select_discards!
+        select_discards_and_finishers!
         15.times do |round_number|
           @round_number = round_number + 1 # 1 based
           select_attack_pairs!
@@ -220,30 +220,23 @@ class GamePlay
     @players[0].opponent = @players[1]
     @players[1].opponent = @players[0]
   end
-  def select_discards!
-    # TODO This should allow players to discard both sets of cards at once
-
-    # # select_discards
-    # @input_manager.require_multi_input!("select_discards",
-    #   # these should shell out to characters individual methods, for roberts
-    #   # sake.
-    #   @players[0].valid_discard_callback,
-    #   @players[1].valid_discard_callback
-    # )
-    # @players[0].set_initial_discards!(@input_manager.answer(0))
-    # @players[1].set_initial_discards!(@input_manager.answer(1))
-    p0a0 = p0a1 = p1a0 = p1a1 = nil
-
-    @input_manager.require_multi_input!("attack_pair_discard",
-      [@players[0].valid_attack_pair_callback(nil), ->(a) {p0a0 = a; @players[0].set_initial_discard2(a)}],
-      [@players[1].valid_attack_pair_callback(nil), ->(a) {p1a0 = a; @players[1].set_initial_discard2(a)}],
-      [@players[0].valid_attack_pair_callback(p0a0), ->(a) {p0a1 = a; @players[0].set_initial_discard1(a)}],
-      [@players[1].valid_attack_pair_callback(p1a0), ->(a) {p1a1 = a; @players[1].set_initial_discard1(a)}],
+  def select_discards_and_finishers!
+    p0a0 = p1a0 = nil
+    @input_manager.require_multi_input!(
+      "attack_pair_discard_one",
+      [@players[0].valid_attack_pair_callback(nil),  ->(a) {p0a0 = a; @players[0].set_initial_discard2(a)}],
+      [@players[1].valid_attack_pair_callback(nil),  ->(a) {p1a0 = a; @players[1].set_initial_discard2(a)}],
+      "attack_pair_discard_two",
+      [@players[0].valid_attack_pair_callback(p0a0), ->(a) {@players[0].set_initial_discard1(a)}],
+      [@players[1].valid_attack_pair_callback(p1a0), ->(a) {@players[1].set_initial_discard1(a)}],
+      "select_finisher",
+      [                 ->(i){i == "0" || i == "1"}, ->(a) {@players[0].select_finisher!(Integer(a))}],
+      [                 ->(i){i == "0" || i == "1"}, ->(a) {@players[1].select_finisher!(Integer(a))}]
     )
     @players[0].set_initial_discards!
     @players[1].set_initial_discards!
 
-    log_event!("Select initial discards", "#{@player_names[0]} discards #{p0a0} and #{p0a1}.", "#{@player_names[1]} discards #{p1a0} and #{p1a1}.")
+    # log_event!("Select initial discards", "#{@player_names[0]} discards #{p0a0} and #{p0a1}.", "#{@player_names[1]} discards #{p1a0} and #{p1a1}.")
   end
 
   def select_attack_pairs!

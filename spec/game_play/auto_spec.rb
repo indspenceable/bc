@@ -8,6 +8,8 @@ def answer_input(g, pn)
     select_from(g,pn)
   elsif g.required_input[pn] == "select_base_clash"
     select_base(g,pn)
+  elsif g.required_input[pn] == "select_finisher"
+    g.input!(pn, "0")
   else
     raise "Unknown input #{g.required_input[pn]}"
   end
