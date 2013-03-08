@@ -124,6 +124,17 @@ class Water < Token
   end
 end
 
+class WrathOfElements
+  def initialize
+    super("wrathofelements", 7, 6)
+  end
+  def reveal!(me)
+    ['earth', 'fire', 'wind', 'water'].each do |token|
+      me.ante!(token) if me.ante?(token)
+    end
+  end
+end
+
 class Hikaru < Character
   def self.character_name
     "hikaru"
@@ -151,6 +162,10 @@ class Hikaru < Character
     @token_discard = []
     # tokens used this beat
     @current_tokens = []
+  end
+
+  def finishers
+    [WrathOfElements.new, WrathOfElements.new]
   end
 
   def effect_sources
