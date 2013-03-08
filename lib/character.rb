@@ -232,6 +232,7 @@ class Character
     sources = []
     sources << @style if @style
     sources << @base if @base
+    sources << @finisher if @played_finisher
     sources += @opponent.opponent_effect_sources
     sources
   end

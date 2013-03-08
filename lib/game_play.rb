@@ -288,8 +288,15 @@ class GamePlay
     @players.each(&:passive_abilities!)
   end
 
+  def priority_accounting_for_tiebreakers(pl)
+    p = pl.priority
+    p += 0.1 if pl.flag? :win_ties
+    p += 0.3 if p.played_finisher?
+    p
+  end
+
   def handle_clashes!
-    while @players[0].priority == @players[1].priority
+    while priority_accounting_for_tiebreakers(players[0]) == priority_accounting_for_tiebreakers(@players[1])
       # If finishers tie
       if @players.all(&:played_finisher?) &&
         # cancel them
