@@ -213,7 +213,6 @@ class Khadath < Character
     @block_ranged_attacks = nil
     @dodge_trapped_opponents = nil
     @no_moving_trap_this_beat = nil
-    @hits_on_and_adjacent_to_trap = nil
   end
 
   def blocked_spaces
