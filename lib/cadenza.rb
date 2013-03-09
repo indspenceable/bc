@@ -103,7 +103,7 @@ class FeedbackField < Finisher
 end
 
 #TODO this should be implemented as "Generic Bonus"... Or We don't even need to subclass it?
-def FeedbackFieldBonus < Token
+class FeedbackFieldBonus < Token
   def initialize(pwr)
     super("feedbackfieldpowerbonus", 0, pwr, 0)
   end
