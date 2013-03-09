@@ -114,6 +114,11 @@ class Character
     @hand.delete(@base) if @base
     @hand.delete(@style) if @style
     @revealed = true
+    if @played_finisher
+      log_me!("reveals #{@finisher.name}")
+    else
+      log_me!("reveals #{@style.name} #{@base.name}")
+    end
 
     effect_sources.each do |source|
       if source.respond_to?(:reveal!)
@@ -277,6 +282,9 @@ class Character
     end
     @temp_discard1 = nil
     @temp_discard2 = nil
+    log_me!("discards #{@discard2.map(&:name).join(' ')} to discard 2.")
+    log_me!("discards #{@discard1.map(&:name).join(' ')} to discard 1.")
+    log_me!("selects #{@finisher.name} for their finisher.")
   end
 
   def select_finisher!(n)
@@ -420,6 +428,7 @@ class Character
   end
   def ante!(choice)
     if choice == "finisher"
+      log_me!("ante's their finisher: #{@finisher.name}.")
       @style = nil
       @base = nil
       @played_finisher = true

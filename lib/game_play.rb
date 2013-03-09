@@ -280,7 +280,6 @@ class GamePlay
 
   def reveal!
     @players.each(&:reveal!)
-    log_event!("Reveal", "#{@player_names[0]} plays #{@players[0].reveal_attack_pair_string}", "#{@player_names[1]} plays #{@players[1].reveal_attack_pair_string}")
   end
 
   def passive_abilities!
