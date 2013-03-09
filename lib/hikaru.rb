@@ -33,6 +33,9 @@ class Trance < Style
   def initialize
     super('trance', 0..1, 0, 0)
   end
+
+  flag :no_token_bonus
+
   def reveal!(me)
     me.return_tokens_to_pool!
   end
@@ -135,6 +138,25 @@ class WrathOfElements < Finisher
   end
 end
 
+class FourWinds < Finisher
+  def initialize
+    super("fourwinds", 1, 2, 5)
+  end
+
+  flag :no_token_bonus
+
+  def before_activating!
+    {
+      "advance" => select_from_methods(advance: [0,1])
+    }
+  end
+  def on_hit!
+    {
+      "repeat" => ->(me, inputs) { me.regain_token_and_repeat! }
+    }
+  end
+end
+
 class Hikaru < Character
   def self.character_name
     "hikaru"
@@ -169,7 +191,8 @@ class Hikaru < Character
   end
 
   def effect_sources
-    super + @current_tokens
+    sources = super
+    sources << @current_tokens unless sources.any?{|s| s.flag? :no_token_bonus }
   end
 
   def reveal!
@@ -249,6 +272,13 @@ class Hikaru < Character
     # return if token == "pass"
     @token_pool += @token_discard.reject{ |token| token.name != choice }
     @token_discard.delete_if{ |discarded_token| discarded_token.name == choice }
+  end
+
+  def regain_token_and_repeat!
+    if @token_pool.any?
+      @token_pool << @token_discard.pop
+      execute_attack!
+    end
   end
 
   def return_tokens_to_pool!
