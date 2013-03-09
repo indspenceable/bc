@@ -192,7 +192,8 @@ class Hikaru < Character
 
   def effect_sources
     sources = super
-    sources << @current_tokens unless sources.any?{|s| s.flag? :no_token_bonus }
+    sources += @current_tokens unless sources.any?{|s| s.flag? :no_token_bonus }
+    sources
   end
 
   def reveal!
