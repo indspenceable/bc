@@ -128,7 +128,7 @@ class Cadenza < Character
   end
 
   def finishers
-    [RocketPress.new] * 2
+    [RocketPress.new, FeedbackField.new]
   end
 
   def charge_battery!

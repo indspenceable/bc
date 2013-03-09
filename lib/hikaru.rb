@@ -187,7 +187,7 @@ class Hikaru < Character
   end
 
   def finishers
-    [WrathOfElements.new, WrathOfElements.new]
+    [WrathOfElements.new, FourWinds.new]
   end
 
   def effect_sources
@@ -278,7 +278,7 @@ class Hikaru < Character
   end
 
   def regain_token_and_repeat!
-    if @token_pool.any?
+    if @token_discard.any?
       @token_pool << @token_discard.pop
       execute_attack!
     end
