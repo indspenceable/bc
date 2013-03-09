@@ -60,7 +60,7 @@ var init = function(player_id, game_id, character_names) {
 
     // Khadath
     hunters: makeCard(0, 1, 0, {"reveal": "+2 Power +2 Priority if opponent is on or next to your trap."}),
-    teleport: makeCard("0~2", 1, -4, {"passive": "Ranged attakcs don't hit you if your trap is between you and your opponnent.", "End of Beat": "Move to any unoccupied space. Move your trap to any unoccupied space."}),
+    teleport: makeCard("0~2", 1, -4, {"passive": "Ranged attacks don't hit you if your trap is between you and your opponnent.", "End of Beat": "Move to any unoccupied space. Move your trap to any unoccupied space."}),
     blight: makeCard("0~2", 0, 0, {"Start of Beat": "Place your trap anywhere in your range."}),
     evacuation: makeCard("0~1", 0, 0, {"Start of Beat": "Place your trap in your current location, then retreat 1 space."}),
     lure: makeCard("0~5", -1, -1, {"On Hit": "Pull your opponent any number of spaces."}),
