@@ -21,6 +21,10 @@ class Character
 
     @life = 20
     @special_action_available = true
+
+    #TODO make this work with press.
+    @damage_taken_this_beat = 0
+    @damage_soaked_this_beat = 0
   end
 
   def name
@@ -175,8 +179,11 @@ class Character
   end
 
   def take_hit!(damage)
-    actual_damage = damage - (opponent.ignore_soak?? 0 : soak)
-    actual_damage = 0 if actual_damage < 0
+    effective_soak = (opponent.ignore_soak?? 0 : soak)
+    effective_soak = damage if effective_soak > damage
+    actual_damage = damage - effective_soak
+    @damage_soaked_this_beat += effective_soak
+
     receive_damage!(actual_damage)
     stunned! if exceeds_stun_guard?(actual_damage)
     actual_damage
@@ -188,6 +195,7 @@ class Character
 
   def receive_damage!(damage)
     log_me!("gets hit for #{damage} damage")
+    @damage_taken_this_beat += damage
     @life -= damage
     throw :ko unless alive?
   end
@@ -227,6 +235,8 @@ class Character
       @discard2 = @discard1
       @discard1 = [@style, @base]
     end
+    @damage_taken_this_beat = 0
+    @damage_soaked_this_beat = 0
     @dodge = false
     @base = @style = nil
     @played_finisher = false

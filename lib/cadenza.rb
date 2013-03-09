@@ -67,9 +67,8 @@ class Press < Base
   def stun_guard
     6
   end
-  def passive!(me)
-    me.reveal_press!
-  end
+
+  flag :bonus_power_per_damage_taken
 end
 
 class RocketPress < Finisher
@@ -89,6 +88,27 @@ class RocketPress < Finisher
   end
 end
 
+class FeedbackField < Finisher
+  def initialize
+    super("feedbackfield", 1..2, 1, 0)
+  end
+  def soak
+    5
+  end
+  def on_hit!
+    {
+      "feedback_bonus_power" => ->(me, inputs) { me.bonus_power_for_feedback_field! }
+    }
+  end
+end
+
+#TODO this should be implemented as "Generic Bonus"... Or We don't even need to subclass it?
+def FeedbackFieldBonus < Token
+  def initialize(pwr)
+    super("feedbackfieldpowerbonus", 0, pwr, 0)
+  end
+end
+
 class Cadenza < Character
   def initialize *args
     super
@@ -101,7 +121,7 @@ class Cadenza < Character
       Hydraulic.new,
     ]
     @token_count = 3
-    @press_charge_ammount = 0
+    @bonuses = []
   end
   def self.character_name
     'cadenza'
@@ -113,9 +133,6 @@ class Cadenza < Character
 
   def charge_battery!
     @battery_charge = true
-  end
-  def reveal_press!
-    @press_charge_up = true
   end
 
   def receive_damage!(damage)
@@ -146,9 +163,10 @@ class Cadenza < Character
   end
 
   def power
-    if @press_charge_up
-      log_me!("gets #{@press_charge_ammount} bonus damage from press!")
-      @press_charge_ammount + super
+    #this should be an On hit effect... really.
+    if flag? :bonus_power_per_damage_taken
+      log_me!("gets #{@damage_taken_this_beat} bonus damage from press!")
+      @damage_taken_this_beat + super
     else
       super
     end
@@ -179,9 +197,10 @@ class Cadenza < Character
   def current_effects
     ary = []
     ary << "Battery (+4 Priority)" if @battery_bonus
-    ary << "Press (+#{@press_charge_ammount} damage)" if @press_charge_up
+    ary << "Press (+#{@damage_taken_this_beat} damage)" if flag? :bonus_power_per_damage_taken
     ary << "Stun Guard (Iron Body)" if @iron_body_stun_guard
     ary << "Stun Immunity (Iron Body)" if @iron_body_stun_immunity
+    # Need to mark the bonus for feedback field
     ary + super
   end
 
@@ -190,11 +209,13 @@ class Cadenza < Character
     @battery_charge = nil
     log_me!("gets +4 priority from battery.") if @battery_bonus
 
-    @press_charge_up = nil
-    @press_charge_ammount = 0
-
     @iron_body_stun_guard = false
     @iron_body_stun_immunity = false
+    @bonuses = []
     super
+  end
+
+  def bonus_power_for_feedback_field!
+    @bonuses << FeedbackFieldBonus.new(@damage_soaked_this_beat * 2)
   end
 end
