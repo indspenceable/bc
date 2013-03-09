@@ -27,8 +27,12 @@ class Character
     self.class.character_name
   end
 
-  def reveal_attack_pair!
-    "#{@style.name.capitalize} #{@base.name.capitalize}"
+  def reveal_attack_pair_string
+    if @played_finisher
+      "#{@finisher.name.capitalize}"
+    else
+      "#{@style.name.capitalize} #{@base.name.capitalize}"
+    end
   end
 
   def is_active!
@@ -262,8 +266,8 @@ class Character
     @temp_discard2 = nil
   end
 
-  def select_finisher!(i)
-    @finisher = finishers[i]
+  def select_finisher!(n)
+    @finisher = finishers.find{|f| f.name == n}
   end
 
   def set_attack_pair!(choice)
@@ -365,7 +369,7 @@ class Character
 
   def ante_options
     opts = ["pass"]
-    opts << ["finisher"] if can_play_finisher?
+    opts << "finisher" if can_play_finisher?
     opts
   end
 

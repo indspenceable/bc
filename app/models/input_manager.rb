@@ -22,17 +22,9 @@ class InputManager
     raise "Didn't answer previous question" if input_required?
     @required_input = Hash.new{|h,k| h[k] = []}
     @answers = {}
-    args.each_slice(3) do |input_string, *validators_callback_pairs|
-    # (input_string, *validators_callback_pairs)
-      validators = []
-      on_answer_callbacks = []
-      validators_callback_pairs.each do |a,b|
-        validators << a
-        on_answer_callbacks << b
-      end
-
-      validators.each_with_index do |validator, idx|
-        @required_input[idx % 2] <<  [input_string, validator, on_answer_callbacks[idx]]
+    args.each_slice(2) do |str_validator_callback_pair|
+      str_validator_callback_pair.each_with_index do |str_validator_callback, index|
+        @required_input[index] << str_validator_callback
       end
     end
     answer_inputs!

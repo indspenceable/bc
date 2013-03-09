@@ -189,9 +189,9 @@ class GamePlay
   # phases of the game
   def select_characters!
     #character selection
-    @input_manager.require_multi_input!("select_character",
-      ->(text) { GamePlay.character_names.include?(text) },
-      ->(text) { GamePlay.character_names.include?(text) }
+    @input_manager.require_multi_input!(
+      ["select_character", ->(text) { GamePlay.character_names.include?(text) }],
+      ["select_character", ->(text) { GamePlay.character_names.include?(text) }],
     )
 
     log_event!("#{@player_names[0]} chooses: #{@input_manager.answer(0)}")
@@ -222,16 +222,15 @@ class GamePlay
   end
   def select_discards_and_finishers!
     p0a0 = p1a0 = nil
+    finisher_names = @players.map{|p| p.finishers.map(&:name)}
+    finisher_options = finisher_names.map{|f| f.map{|n| "<#{n}>"}.join('')}
     @input_manager.require_multi_input!(
-      "attack_pair_discard_one",
-      [@players[0].valid_attack_pair_callback(nil),  ->(a) {p0a0 = a; @players[0].set_initial_discard2(a)}],
-      [@players[1].valid_attack_pair_callback(nil),  ->(a) {p1a0 = a; @players[1].set_initial_discard2(a)}],
-      "attack_pair_discard_two",
-      [@players[0].valid_attack_pair_callback(p0a0), ->(a) {@players[0].set_initial_discard1(a)}],
-      [@players[1].valid_attack_pair_callback(p1a0), ->(a) {@players[1].set_initial_discard1(a)}],
-      "select_finisher",
-      [                 ->(i){i == "0" || i == "1"}, ->(a) {@players[0].select_finisher!(Integer(a))}],
-      [                 ->(i){i == "0" || i == "1"}, ->(a) {@players[1].select_finisher!(Integer(a))}]
+      ["attack_pair_discard_one", @players[0].valid_attack_pair_callback(nil),  ->(a) {p0a0 = a; @players[0].set_initial_discard2(a)}],
+      ["attack_pair_discard_one", @players[1].valid_attack_pair_callback(nil),  ->(a) {p1a0 = a; @players[1].set_initial_discard2(a)}],
+      ["attack_pair_discard_two", @players[0].valid_attack_pair_callback(p0a0), ->(a) {@players[0].set_initial_discard1(a)}],
+      ["attack_pair_discard_two", @players[1].valid_attack_pair_callback(p1a0), ->(a) {@players[1].set_initial_discard1(a)}],
+      ["select_from:#{finisher_options[0]}", ->(i){finisher_names[0].include?(i)}, ->(a) {@players[0].select_finisher!(a)}],
+      ["select_from:#{finisher_options[1]}", ->(i){finisher_names[1].include?(i)}, ->(a) {@players[1].select_finisher!(a)}],
     )
     @players[0].set_initial_discards!
     @players[1].set_initial_discards!
@@ -240,9 +239,9 @@ class GamePlay
   end
 
   def select_attack_pairs!
-    @input_manager.require_multi_input!("attack_pair_select",
-      [@players[0].valid_attack_pair_callback, ->(a) {@players[0].set_attack_pair!(a)}],
-      [@players[1].valid_attack_pair_callback, ->(a) {@players[1].set_attack_pair!(a)}]
+    @input_manager.require_multi_input!(
+      ["attack_pair_select", @players[0].valid_attack_pair_callback, ->(a) {@players[0].set_attack_pair!(a)}],
+      ["attack_pair_select", @players[1].valid_attack_pair_callback, ->(a) {@players[1].set_attack_pair!(a)}]
     )
   end
 
@@ -281,7 +280,7 @@ class GamePlay
 
   def reveal!
     @players.each(&:reveal!)
-    log_event!("Reveal", "#{@player_names[0]} plays #{@players[0].reveal_attack_pair!}", "#{@player_names[1]} plays #{@players[1].reveal_attack_pair!}")
+    log_event!("Reveal", "#{@player_names[0]} plays #{@players[0].reveal_attack_pair_string}", "#{@player_names[1]} plays #{@players[1].reveal_attack_pair_string}")
   end
 
   def passive_abilities!
@@ -313,9 +312,9 @@ class GamePlay
         p.clash!
       end
       return :no_cards if (@players[0].no_bases? || @players[1].no_bases?)
-      @input_manager.require_multi_input!("select_base_clash",
-        @players[0].base_options_callback,
-        @players[1].base_options_callback
+      @input_manager.require_multi_input!(
+        ["select_base_clash", @players[0].base_options_callback],
+        ["select_base_clash", @players[1].base_options_callback]
       )
       @players[0].select_new_base!(@input_manager.answer(0))
       @players[1].select_new_base!(@input_manager.answer(1))
