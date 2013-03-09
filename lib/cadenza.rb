@@ -131,6 +131,10 @@ class Cadenza < Character
     [RocketPress.new, FeedbackField.new]
   end
 
+  def effect_sources
+    super + @bonuses
+  end
+
   def charge_battery!
     @battery_charge = true
   end
