@@ -13,7 +13,6 @@ var init = function(player_id, game_id, character_names) {
 
   var $root = function(pn) {
     //return (pn == player_id ? $(".js-mine") : $('.js-theirs'))
-    console.log('.js-p' + pn)
     return $('.js-p' + pn)
   }
 
@@ -309,7 +308,6 @@ var init = function(player_id, game_id, character_names) {
 
   // Ajax methods
   var ping = function() {
-    console.log('ping.')
     $.get('/games/' + game_id + '.json', {
     }, function(data) {
       setUI(data)
