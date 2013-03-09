@@ -60,7 +60,6 @@
                 var requiredInputCount = function() {
                   $.get('#{required_input_count_path}', function(count) {
                     var $i = $('#input-count')
-                    console.log("count",count)
                     $i.text(count)
                     if (count > 0){
                       $i.show()

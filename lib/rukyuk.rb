@@ -145,6 +145,39 @@ class FlashShell < Token
   end
 end
 
+class ForceGrenade < Finisher
+  def initialize
+    super("forcegrenade", 1..2, 4, 4)
+  end
+
+  flag :no_ammo_benefit
+  flag :hit_without_ammo
+
+  def on_hit!
+    {
+      "force_grenade_push" => select_from_methods(push: [0,1,2,3,4,5,6])
+    }
+  end
+  def after_activating!
+    {
+      "force_grenade_retreat" => select_from_methods(retreat: [0,1,2,3,4,5,6])
+    }
+  end
+end
+
+class FullyAutomatic < Finisher
+  def initialize
+    super("fullyautomatic", 3..6, 2, 6)
+  end
+  flag :no_ammo_benefit
+
+  def on_hit!
+    {
+      "repeat_attack" => select_from_methods(repeat_attack: Rukyuk.token_names)
+    }
+  end
+end
+
 class Rukyuk < Character
   def initialize *args
     super
@@ -160,12 +193,12 @@ class Rukyuk < Character
     @bonuses = []
   end
 
-  def self.character_name
-    'rukyuk'
+  def finishers
+    [FullyAutomatic.new, ForceGrenade.new]
   end
 
-  def can_ante?
-    @token_pool.any?
+  def self.character_name
+    'rukyuk'
   end
 
   def ante_options
@@ -174,6 +207,7 @@ class Rukyuk < Character
 
   def ante!(choice)
     return if choice == "pass"
+    return if super(choice)
     log_me!("antes #{@token_pool.find{ |token| token.name == choice }.name_and_effect}")
     @current_token = @token_pool.find{ |token| token.name == choice }
     @token_pool.delete_if{ |token| token.name == choice }
@@ -181,6 +215,7 @@ class Rukyuk < Character
 
   def ante?(choice)
     return true if choice == "pass"
+    return true if super(choice)
     @token_pool.any?{ |token| (token.name == choice) }
   end
 
@@ -190,18 +225,33 @@ class Rukyuk < Character
   def extra_power?(choice)
     ante?(choice)
   end
+  def repeat_attack?(choice)
+    ante?(choice)
+  end
 
   def extra_range!(choice)
+    return if choice == "pass"
     @token_pool.delete_if{ |token| token.name == choice }
     @bonuses << Longshot.new
   end
   def extra_power!(choice)
+    return if choice == "pass"
     @token_pool.delete_if{ |token| token.name == choice }
     @bonuses << ExplosiveShell.new
   end
 
+  def repeat_attack!(choice)
+    return if choice == "pass"
+    @token_pool.delete_if{ |token| token.name == choice }
+    execute_attack!
+  end
+
   def effect_sources
-    Array(@current_token) + @bonuses + super
+    sources = super
+    # We can't call flag? here... boo.
+    sources += Array(@current_token) unless sources.any?{|s| s.flag?(:no_ammo_benefit)}
+    sources += @bonuses
+    sources
   end
 
   def current_effects
