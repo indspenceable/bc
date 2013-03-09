@@ -40,20 +40,20 @@
 .name {
   text-align: center;
 }
-.style .rpp {
+.style .rpp, .special-action .rpp {
   text-align: right;
 }
 
 /* Range, power, priority */
-.style .range:before {
+.style .range:before, .special-action .range:before{
   content: "Range: ";
   font-weight: bold;
 }
-.style .priority:before {
+.style .priority:before, .special-action .priority:before{
   content: "Priority: ";
   font-weight: bold;
 }
-.style .power:before {
+.style .power:before, .special-action .power:before{
   content: "Power: ";
   font-weight: bold;
 }

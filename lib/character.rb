@@ -1,5 +1,5 @@
 class Character
-  attr_reader :player_id, :player_name, :position, :hand, :life
+  attr_reader :player_id, :player_name, :position, :hand, :life, :finisher
   attr_accessor :opponent
   def initialize player_id, player_name, input_manager, events, event_logger
     @player_id = player_id
@@ -20,14 +20,23 @@ class Character
     ]
 
     @life = 20
+    @special_action_available = true
+
+    #TODO make this work with press.
+    @damage_taken_this_beat = 0
+    @damage_soaked_this_beat = 0
   end
 
   def name
     self.class.character_name
   end
 
-  def reveal_attack_pair!
-    "#{@style.name.capitalize} #{@base.name.capitalize}"
+  def reveal_attack_pair_string
+    if @played_finisher
+      "#{@finisher.name.capitalize}"
+    else
+      "#{@style.name.capitalize} #{@base.name.capitalize}"
+    end
   end
 
   def is_active!
@@ -77,6 +86,9 @@ class Character
     # return its name
     (seen_by == @player_id || @revealed) && @style && @style.name
   end
+  def special_action_name(seen_by=@player_id)
+    (seen_by == @player_id || @revealed) && @played_finisher && finisher.name
+  end
   def clash!
     @clashed_bases << @base
     @base = nil
@@ -99,8 +111,8 @@ class Character
 
   # order doens't matter on reveal.
   def reveal!
-    @hand.delete(@base)
-    @hand.delete(@style)
+    @hand.delete(@base) if @base
+    @hand.delete(@style) if @style
     @revealed = true
 
     effect_sources.each do |source|
@@ -170,8 +182,11 @@ class Character
   end
 
   def take_hit!(damage)
-    actual_damage = damage - (opponent.ignore_soak?? 0 : soak)
-    actual_damage = 0 if actual_damage < 0
+    effective_soak = (opponent.ignore_soak?? 0 : soak)
+    effective_soak = damage if effective_soak > damage
+    actual_damage = damage - effective_soak
+    @damage_soaked_this_beat += effective_soak
+
     receive_damage!(actual_damage)
     stunned! if exceeds_stun_guard?(actual_damage)
     actual_damage
@@ -183,6 +198,7 @@ class Character
 
   def receive_damage!(damage)
     log_me!("gets hit for #{damage} damage")
+    @damage_taken_this_beat += damage
     @life -= damage
     throw :ko unless alive?
   end
@@ -216,18 +232,24 @@ class Character
   end
   def recycle!
     @stunned = false
-    @hand += @discard2
-    @hand += @clashed_bases
-    @discard2 = @discard1
-    @discard1 = [@style, @base]
+    # Don't cycle cards on turns we play finishers.
+    unless @played_finisher
+      @hand += @discard2
+      @discard2 = @discard1
+      @discard1 = [@style, @base]
+    end
+    @damage_taken_this_beat = 0
+    @damage_soaked_this_beat = 0
     @dodge = false
     @base = @style = nil
+    @played_finisher = false
   end
 
   def effect_sources
     sources = []
     sources << @style if @style
     sources << @base if @base
+    sources << @finisher if @played_finisher
     sources += @opponent.opponent_effect_sources
     sources
   end
@@ -255,6 +277,10 @@ class Character
     end
     @temp_discard1 = nil
     @temp_discard2 = nil
+  end
+
+  def select_finisher!(n)
+    @finisher = finishers.find{|f| f.name == n}
   end
 
   def set_attack_pair!(choice)
@@ -355,7 +381,9 @@ class Character
   end
 
   def ante_options
-    ["pass"]
+    opts = ["pass"]
+    opts << "finisher" if can_play_finisher?
+    opts
   end
 
   def token_pool
@@ -381,11 +409,31 @@ class Character
     {}
   end
 
+  def can_play_finisher?
+    life <= 7 && @special_action_available
+  end
+
   def ante?(choice)
     return true if choice == "pass"
+    return true if choice == "finisher" && can_play_finisher?
     false
   end
   def ante!(choice)
+    if choice == "finisher"
+      @style = nil
+      @base = nil
+      @played_finisher = true
+      @special_action_available = false
+      true
+    end
+  end
+
+  def played_finisher?
+    @played_finisher
+  end
+
+  def cancel_finisher!
+    @played_finisher = false
   end
 
   def ignore_soak?
@@ -395,6 +443,21 @@ class Character
   def ignore_stun_guard?
     effect_sources.any?{|source| source.ignore_stun_guard? }
   end
+
+  def execute_attack!
+    before_activating!
+    # are they in range?
+    if in_range?
+      on_hit!
+      damage_dealt = opponent.take_hit!(power)
+      log_me!("hits #{opponent.player_name} for #{damage_dealt} damage!")
+      on_damage! if damage_dealt > 0
+    else
+      log_me!("misses!")
+    end
+    after_activating!
+  end
+
   # input callbacks. These check the validity of input that the player does.
   # is this the best design? I dunno. It does make it easy for us to identify
   # when theres an error due to invalid input, though.

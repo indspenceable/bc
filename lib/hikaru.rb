@@ -33,6 +33,9 @@ class Trance < Style
   def initialize
     super('trance', 0..1, 0, 0)
   end
+
+  flag :no_token_bonus
+
   def reveal!(me)
     me.return_tokens_to_pool!
   end
@@ -124,6 +127,36 @@ class Water < Token
   end
 end
 
+class WrathOfElements < Finisher
+  def initialize
+    super("wrathofelements", 1, 7, 6)
+  end
+  def reveal!(me)
+    ['earth', 'fire', 'wind', 'water'].each do |token|
+      me.ante!(token) if me.ante?(token)
+    end
+  end
+end
+
+class FourWinds < Finisher
+  def initialize
+    super("fourwinds", 1, 2, 5)
+  end
+
+  flag :no_token_bonus
+
+  def before_activating!
+    {
+      "advance" => select_from_methods(advance: [0,1])
+    }
+  end
+  def on_hit!
+    {
+      "repeat" => ->(me, inputs) { me.regain_token_and_repeat! }
+    }
+  end
+end
+
 class Hikaru < Character
   def self.character_name
     "hikaru"
@@ -153,8 +186,14 @@ class Hikaru < Character
     @current_tokens = []
   end
 
+  def finishers
+    [WrathOfElements.new, FourWinds.new]
+  end
+
   def effect_sources
-    super + @current_tokens
+    sources = super
+    sources += @current_tokens unless sources.any?{|s| s.flag? :no_token_bonus }
+    sources
   end
 
   def reveal!
@@ -209,6 +248,7 @@ class Hikaru < Character
       log_me!("passes.")
       return
     end
+    return if super
     log_me!("antes #{@token_pool.find{ |token| token.name == choice }.name_and_effect}")
     @current_tokens += @token_pool.reject{ |token| token.name != choice }
     @token_pool.delete_if{ |token| token.name == choice }
@@ -216,6 +256,7 @@ class Hikaru < Character
 
   def ante?(choice)
     return true if choice == "pass"
+    return true if super
     @token_pool.any?{ |token| (token.name == choice) }
   end
 
@@ -234,6 +275,13 @@ class Hikaru < Character
     # return if token == "pass"
     @token_pool += @token_discard.reject{ |token| token.name != choice }
     @token_discard.delete_if{ |discarded_token| discarded_token.name == choice }
+  end
+
+  def regain_token_and_repeat!
+    if @token_discard.any?
+      @token_pool << @token_discard.pop
+      execute_attack!
+    end
   end
 
   def return_tokens_to_pool!
