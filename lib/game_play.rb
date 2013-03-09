@@ -390,6 +390,7 @@ class GamePlay
       :styles => @players[player_id].styles(as_seen_by_id).map(&:name),
       :current_base => @players[player_id].current_base_name(as_seen_by_id),
       :current_style => @players[player_id].current_style_name(as_seen_by_id),
+      :special_action => @players[player_id].special_action_name(as_seen_by_id),
       :token_pool => @players[player_id].token_pool,
       :current_effects => @players[player_id].current_effects,
       :extra_data => @players[player_id].extra_data,

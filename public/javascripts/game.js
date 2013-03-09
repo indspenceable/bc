@@ -161,7 +161,7 @@ var init = function(player_id, game_id, character_names) {
     $('.board').find('.s' + p0).append($("<span/>").addClass("label label-info").html($('<i/>').addClass('icon-user')))
     $('.board').find('.s' + p1).append($("<span/>").addClass("label label-important").html($('<i/>').addClass('icon-user')))
   }
-  var fillCards = function(pn, currentBase, currentStyle, bases, styles, tokens, discard1Cards, discard2Cards) {
+  var fillCards = function(pn, currentBase, currentStyle, specialAction, bases, styles, tokens, discard1Cards, discard2Cards) {
     if (currentBase) {
       loadCard(currentBase.toLowerCase(), $root(pn).filter('.attack-pair').find('.real.base'))
     } else {
@@ -171,6 +171,14 @@ var init = function(player_id, game_id, character_names) {
       loadCard(currentStyle.toLowerCase(), $root(pn).filter('.attack-pair').find('.real.style'))
     } else {
       clearCard($root(pn).filter('.attack-pair').find('.real.style'))
+    }
+    if (specialAction) {
+      $root(pn).filter('.attack-pair').hide();
+      $root(pn).filter('.special-action').show()
+      loadCard(specialAction.toLowerCase(), $root(pn).filter('.special-action').find('.special-action-card'))
+    } else {
+      $root(pn).filter('.attack-pair').show();
+      $root(pn).filter('.special-action').hide()
     }
     var $bases = $root(pn).find('.js-bases').empty()
     var $styles = $root(pn).find('.js-styles').empty()
@@ -250,6 +258,7 @@ var init = function(player_id, game_id, character_names) {
       fillCards(pn,
         gameState.players[pn].current_base,
         gameState.players[pn].current_style,
+        gameState.players[pn].special_action,
         gameState.players[pn].bases,
         gameState.players[pn].styles,
         gameState.players[pn].token_pool,

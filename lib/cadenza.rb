@@ -185,10 +185,12 @@ class Cadenza < Character
 
   def ante?(action)
     return true if action == "pass"
-    return @token_count > 0
+    return true if super
+    return @token_count > 0 && !@iron_body_stun_immunity
   end
   def ante!(action)
     return if action == "pass"
+    return if super
     log_me!("antes an iron body token.")
     @token_count -= 1
     @iron_body_stun_immunity = true

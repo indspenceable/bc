@@ -1,5 +1,5 @@
 class Character
-  attr_reader :player_id, :player_name, :position, :hand, :life
+  attr_reader :player_id, :player_name, :position, :hand, :life, :finisher
   attr_accessor :opponent
   def initialize player_id, player_name, input_manager, events, event_logger
     @player_id = player_id
@@ -85,6 +85,9 @@ class Character
     # either its the current player, or we've revealed, and theres a style, then
     # return its name
     (seen_by == @player_id || @revealed) && @style && @style.name
+  end
+  def special_action_name(seen_by=@player_id)
+    (seen_by == @player_id || @revealed) && @played_finisher && finisher.name
   end
   def clash!
     @clashed_bases << @base
@@ -407,7 +410,7 @@ class Character
   end
 
   def can_play_finisher?
-    life <=7 && @special_action_available
+    life <= 7 && @special_action_available
   end
 
   def ante?(choice)
