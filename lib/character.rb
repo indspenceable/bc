@@ -486,6 +486,7 @@ class Character
       on_hit!
       damage_dealt = opponent.take_hit!(power)
       log_me!("hits #{opponent.player_name} for #{damage_dealt} damage!")
+      @damage_dealt_by_this_attack = damage_dealt
       on_damage! if damage_dealt > 0
     else
       log_me!("misses!")

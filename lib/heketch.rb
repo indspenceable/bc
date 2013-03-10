@@ -28,6 +28,11 @@ class Rasping < Style
   end
 
   #TODO this needs the other effect!
+  def on_damage!
+    {
+      "heal" => ->(me, inputs) { me.heal_half_damage! }
+    }
+  end
 end
 
 class Merciless < Style
@@ -299,5 +304,11 @@ class Heketch < Character
 
   def unlimited_dark_force_tokens!
     @unlimited_dark_force = true
+  end
+
+  def heal_half_damage!
+    life_to_gain = (@damage_dealt_by_this_attack - (@damage_dealt_by_this_attack/2))
+    log_me!("Gained #{life_to_gain}")
+    @life += life_to_gain
   end
 end
