@@ -58,6 +58,8 @@ describe GamePlay do
           end
 
           while g.active?
+            [nil, 0, 1].each{|i| g.game_state(i)}
+
             req = g.required_input
             if req[0]
               answer_input(g, 0)
