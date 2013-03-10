@@ -96,24 +96,8 @@
                 .power
                 .priority
               .effects
-          .style.preview
-            .well
-              .name
-              .rpp
-                .range
-                .power
-                .priority
-              .effects
         .span3
           .base.real
-            .well
-              .name
-              .rpp
-                .range
-                .power
-                .priority
-              .effects
-          .base.preview
             .well
               .name
               .rpp
@@ -144,24 +128,8 @@
                 .power
                 .priority
               .effects
-          .style.preview
-            .well
-              .name
-              .rpp
-                .range
-                .power
-                .priority
-              .effects
         .span3
           .base.real
-            .well
-              .name
-              .rpp
-                .range
-                .power
-                .priority
-              .effects
-          .base.preview
             .well
               .name
               .rpp
@@ -187,6 +155,14 @@
       .span4.offset4
         %form
           %input{:type => "text", :style => "width: 100%"}
+#template-card{:style => "display: none"}
+  .preview
+    .rpp
+      .range
+      .power
+      .priority
+    .effects
+
 %script{:src => "/javascripts/game.js"}
 :javascript
   Game.init("#{@player_id}", "#{params[:id]}")
