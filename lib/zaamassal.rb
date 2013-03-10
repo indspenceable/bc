@@ -151,9 +151,46 @@ class ResilienceSoak < Card
   end
 end
 
-class Butts < Finisher
+class OpenTheGate < Finisher
   def initialize
-    super("butts", 0, 0, 0)
+    super("openthegate", 1..2, 3, 7)
+  end
+  def on_hit!
+    {
+      "stun_and_paradigm" => ->(me, inputs) {
+        me.opponent.stunned!
+        me.assume_three_paradigms!
+      }
+    }
+  end
+end
+
+class PlanarDivider < Finisher
+  def initialize
+    super("planardivider", 1, 2, 5)
+  end
+  def before_activating!
+    {
+      "move_anywhere" => ->(me, inputs) { me.teleport_to_unoccupied_space! }
+    }
+  end
+  def on_hit!
+    {
+      "move_opponent" => ->(me, inputs) {
+        select_from_methods(teleport_opponent_to: [0,1,2,3,4,5,6]).call(me,inputs)
+        me.gain_power_for_distance!
+        select_from_methods(assume_paradigm: %w(pain distortion resilience haste fluidity)).call(me, inputs)
+      }
+    }
+  end
+end
+
+class PlanarDividerPowerBonus < Token
+  def initialize p
+    super("planardividerpowerbonus", 0, p, 0)
+  end
+  def name_and_effect
+    "Planar Divider power bonus"
   end
 end
 
@@ -178,7 +215,7 @@ class Zaamassal < Character
   end
 
   def finishers
-    [Butts.new]
+    [OpenTheGate.new, PlanarDivider.new]
   end
 
   def effect_sources
@@ -236,18 +273,39 @@ class Zaamassal < Character
     @paradigms = [] if @stunned
   end
 
-  def assume_paradigm?(choice)
-    return true
+  def assume_three_paradigms!
+    @paradigms = []
+    3.times do
+      select_from_methods(assume_paradigm_multi: %w(pain distortion resilience haste fluidity)).call(self, @input_manager)
+    end
   end
-  def assume_paradigm!(choice)
-    return if choice == 'pass'
+
+  def paradigm_name_to_instance(n)
     paradigm_map = {
       'pain' => Pain.new,
       'distortion' => Pain.new,
       'resilience' => Resilience.new,
       'haste' => Haste.new,
       'fluidity' => Fluidity.new,
-    }
-    @paradigms = [paradigm_map[choice]]
+    }[n]
+  end
+
+  def gain_power_for_distance!
+    @bonuses << PlanarDividerPowerBonus.new(distance)
+  end
+
+  def assume_paradigm?(choice)
+    return true
+  end
+  def assume_paradigm!(choice)
+    return if choice == 'pass'
+    @paradigms = [paradigm_name_to_instance(choice)]
+  end
+
+  def assume_paradigm_multi?(choice)
+    !@paradigms.any?{|p| p.name == choice }
+  end
+  def assume_paradigm_multi!(choice)
+    @paradigms << paradigm_name_to_instance(choice)
   end
 end

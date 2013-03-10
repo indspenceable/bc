@@ -1,6 +1,6 @@
 class Character
-  attr_reader :player_id, :player_name, :position, :hand, :life, :finisher
-  attr_accessor :opponent
+  attr_reader :player_id, :player_name, :hand, :life, :finisher
+  attr_accessor :opponent, :position
   def initialize player_id, player_name, input_manager, events, event_logger
     @player_id = player_id
     @player_name = player_name
@@ -352,6 +352,15 @@ class Character
   end
   def teleport_to_unoccupied_space!
     select_from_methods(teleport_to: [0,1,2,3,4,5,6]).call(self, @input_manager)
+  end
+
+  def teleport_opponent_to?(n)
+    (position != Integer(n)) &&
+    (n >= 0) &&
+    (n <= 6)
+  end
+  def teleport_opponent_to!(n)
+    opponent.position = Integer(n)
   end
 
   def advance!(n_s,log_event=true)

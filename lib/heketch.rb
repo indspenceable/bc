@@ -120,12 +120,21 @@ class LivingNightmare < Finisher
   end
 end
 
-class DarkForceAnteBonus
+class DarkForceAnteBonus < Token
   def initialize
-    super("Dark force power bonus", 0, 3, 0)
+    super("darkforceantebonus", 0, 0, 3)
   end
   def name_and_effect
     "Dark Force (+3 priority)"
+  end
+end
+
+class DarkForcePowerBonus < Token
+  def initialize
+    super("darkforcepowerbonus", 0, 3, 0)
+  end
+  def name_and_effect
+    "+3 Power"
   end
 end
 
@@ -227,7 +236,7 @@ class Heketch < Character
 
   def extra_power_at_range_one!(choice)
     return if choice == "no"
-    @bonuses << Token.new("Dark force power bonus", 0, 3, 0)
+    @bonuses << DarkForcePowerBonus.new#Token.new("Dark force power bonus", 0, 3, 0)
     @dark_force = false
   end
 
