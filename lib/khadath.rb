@@ -47,7 +47,7 @@ class Evacuation < Style
   end
   def start_of_beat!
     {
-      "evacuation_place_trap_and_retrat" => ->(me,inpts){
+      "place_trap_and_retrat" => ->(me,inpts){
         me.set_trap!(me.position)
         select_from_methods(retreat: [1]).call(me,inpts)
       }
@@ -61,7 +61,7 @@ class Lure < Style
   end
   def on_hit!
     {
-      "lure_pull" => select_from_methods(pull: [0,1,2,3,4,5])
+      "pull" => select_from_methods(pull: [0,1,2,3,4,5])
     }
   end
 end

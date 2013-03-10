@@ -12,7 +12,7 @@ class Critical < Style
 
   def on_hit!
     {
-      "critical_power" => select_from_methods(extra_power_at_range_one: %w(yes no))
+      "extra_power" => select_from_methods(extra_power_at_range_one: %w(yes no))
     }
   end
 end
@@ -23,7 +23,7 @@ class Rasping < Style
   end
   def on_hit!
     {
-      "rasping_power" => select_from_methods(extra_power_at_range_one: %w(yes no))
+      "extra_power" => select_from_methods(extra_power_at_range_one: %w(yes no))
     }
   end
 end
@@ -36,7 +36,7 @@ class Merciless < Style
 
   def after_activating!
     {
-      "merciless_dodge" => ->(me, inputs) { me.dodge_if_dark_force! }
+      "dodge" => ->(me, inputs) { me.dodge_if_dark_force! }
     }
   end
 end
@@ -48,13 +48,13 @@ class Psycho < Style
 
   def start_of_beat!
     {
-      "psycho_advance" => ->(me, inputs) { me.advance_until_adjacent! }
+      "advance" => ->(me, inputs) { me.advance_until_adjacent! }
     }
   end
 
   def end_of_beat!
     {
-      "pyscho_repeat_attack" => select_from_methods(spend_token_to_repeat: %w(yes no))
+      "repeat_attack" => select_from_methods(spend_token_to_repeat: %w(yes no))
     }
   end
 end
@@ -72,7 +72,7 @@ class Assassin < Style
 
   def on_damage!
     {
-      "stop_movement" => select_from_methods(spend_token_to_stop_movement: %w(yes no))
+      "stop_movement_next_beat" => select_from_methods(spend_token_to_stop_movement: %w(yes no))
     }
   end
 end
@@ -102,7 +102,7 @@ class MillionKnives < Finisher
 
   def on_hit!
     {
-      "million_knives" => ->(me,input) { me.advance_and_repeat! }
+      "advance_and_repeat" => ->(me,input) { me.advance_and_repeat! }
     }
   end
 end
@@ -113,7 +113,7 @@ class LivingNightmare < Finisher
   end
   def on_hit!
     {
-      "living_nightmare" => ->(me,input) { me.unlimited_dark_force_tokens! }
+      "gain_unlimited_tokens" => ->(me,input) { me.unlimited_dark_force_tokens! }
     }
   end
 end

@@ -149,7 +149,7 @@ class Character
           if source.respond_to?(trigger)
             trigger_effects = source.send(trigger)
             trigger_effects.each do |k,v|
-              effect_name = "#{source.name}#{k}"
+              effect_name = "#{source.name}_#{k}"
               actions_to_do[effect_name]=v unless completed_actions.include?(effect_name)
             end
           end

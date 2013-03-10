@@ -6,7 +6,7 @@ class Grasp < Base
   end
   def on_hit!
     {
-      "grasp_move_opponent" => select_from_methods(pull: [1], push: [1])
+      "move_opponent" => select_from_methods(pull: [1], push: [1])
     }
   end
 end
@@ -16,7 +16,8 @@ class Drive < Base
     super("drive", 1, 3, 4)
   end
   def before_activating!
-    {'drive_advance' => select_from_methods(advance: [1, 2])
+    {
+      'advance' => select_from_methods(advance: [1, 2])
     }
   end
 end
@@ -45,7 +46,7 @@ class Burst < Base
   end
   def start_of_beat!
     {
-      "burst_move_back" => select_from_methods(retreat: [1, 2])
+      "retreat" => select_from_methods(retreat: [1, 2])
     }
   end
 end
@@ -55,7 +56,7 @@ class Dash < Base
   end
   def after_activating!
     {
-      "dash_move" => ->(me, inpt) {
+      "move" => ->(me, inpt) {
         direction = me.position - me.opponent.position
         select_from_methods(retreat: [1, 2, 3], advance: [1, 2, 3]).call(me, inpt)
         if (me.position - me.opponent.position) * direction < 0

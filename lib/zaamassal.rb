@@ -71,7 +71,7 @@ class ParadigmShift < Base
   end
   def before_activating!
     {
-      "select_paraidgm" => select_from_methods(assume_paradigm: %w(pain distortion resilience haste fluidity))
+      "select_paradigm" => select_from_methods(assume_paradigm: %w(pain distortion resilience haste fluidity))
     }
   end
 end
@@ -85,7 +85,7 @@ class Pain < Paradigm
 
   def on_damage!
     {
-      "pain_life_loss" => ->(me, input) { me.opponent.lose_life!(2) }
+      "life_loss" => ->(me, input) { me.opponent.lose_life!(2) }
     }
   end
 end
