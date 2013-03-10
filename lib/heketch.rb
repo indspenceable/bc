@@ -118,6 +118,26 @@ class LivingNightmare < Finisher
   end
 end
 
+class DarkForceAnteBonus
+  def initialize
+    super("Dark force power bonus", 0, 3, 0)
+  end
+  def name_and_effect
+    "Dark Force (+3 priority)"
+  end
+end
+
+class RegainDarkForce < Token
+  def initialize
+    super("regaindarkforce", 0, 0, 0)
+  end
+  def end_of_beat!
+    {
+      "regain" => ->(me,inputs) { me.regain_dark_force! }
+    }
+  end
+end
+
 class Heketch < Character
   def self.character_name
     "heketch"
@@ -150,6 +170,7 @@ class Heketch < Character
   def effect_sources
     sources = super
     sources += @bonuses
+    sources << RegainDarkForce.new if distance > 2
     sources
   end
 
@@ -248,8 +269,12 @@ class Heketch < Character
 
   def advance_until_adjacent!
     if distance > 1
-      advance!(distance-1)
+      advance!(distance)
     end
+  end
+
+  def regain_dark_force!
+    @dark_force = true
   end
 
   def advance_and_repeat!
