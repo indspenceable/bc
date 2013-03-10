@@ -99,6 +99,23 @@ class MillionKnives < Finisher
   def initialize
     super("millionknives", 1..4, 3, 7)
   end
+
+  def on_hit!
+    {
+      "million_knives" => ->(me,input) { me.advance_and_repeat! }
+    }
+  end
+end
+
+class LivingNightmare < Finisher
+  def initialize
+    super("livingnightmare", 1, 3, 2)
+  end
+  def on_hit!
+    {
+      "living_nightmare" => ->(me,input) { me.unlimited_dark_force_tokens! }
+    }
+  end
 end
 
 class Heketch < Character
@@ -121,9 +138,13 @@ class Heketch < Character
     @bonuses = []
   end
 
+  def has_dark_force?
+    @dark_force || @unlimited_dark_force
+  end
+
   def finishers
     #[MillionKnives.new, LivingNightmare.new]
-    [MillionKnives.new]
+    [MillionKnives.new, LivingNightmare.new]
   end
 
   def effect_sources
@@ -138,12 +159,12 @@ class Heketch < Character
 
   def ante_options
     opts = super
-    opts << "dark_force" if @dark_force
+    opts << "dark_force" if has_dark_force?
     opts
   end
   def token_pool
     pool = []
-    pool << "Dark Force (Teleport, +3 Priority)" if @dark_force
+    pool << "Dark Force (Teleport, +3 Priority)" if has_dark_force?
     pool
   end
 
@@ -165,7 +186,7 @@ class Heketch < Character
   end
 
   def valid_answer_for_dark_force?(choice)
-    return true if choice == "yes" && @dark_force
+    return true if choice == "yes" && has_dark_force?
     return true if choice == "no"
   end
 
@@ -205,7 +226,7 @@ class Heketch < Character
   end
 
   def dodge_if_dark_force!
-    @merciless_dodge = @dark_force
+    @merciless_dodge = has_dark_force?
   end
 
   def blocked_spaces
@@ -229,5 +250,17 @@ class Heketch < Character
     if distance > 1
       advance!(distance-1)
     end
+  end
+
+  def advance_and_repeat!
+    starting_position = @position
+    advance!(1)
+    if @position != starting_position && distance > 1
+      execute_attack!
+    end
+  end
+
+  def unlimited_dark_force_tokens!
+    @unlimited_dark_force = true
   end
 end
