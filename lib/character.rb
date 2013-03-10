@@ -141,20 +141,29 @@ class Character
       #TODO - this is wrong. this should be recalculated after each iteration, keeping track of
       #whats been done so far this turn. This way, stuff like zaam's paradigm switches
       # will work correctly.
-      actions_to_do = {}
-      effect_sources.each do |source|
-        if source.respond_to?(trigger)
-          actions_to_do.merge!(source.send(trigger))
+
+      completed_actions = []
+      while true
+        actions_to_do = {}
+        effect_sources.each do |source|
+          if source.respond_to?(trigger)
+            trigger_effects = source.send(trigger)
+            trigger_effects.each do |k,v|
+              effect_name = "#{source.name}#{k}"
+              actions_to_do[effect_name]=v unless completed_actions.include?(effect_name)
+            end
+          end
         end
-      end
-      while actions_to_do.any?
         if actions_to_do.count > 1
           @input_manager.require_single_input!(player_id, "select_from:#{actions_to_do.keys.map{|x| "<#{x}>"}}",
             ->(text) { actions_to_do.key?(text) })
-
-          actions_to_do.delete(@input_manager.answer(player_id)).call(self, @input_manager)
-        else
+          current_action =@input_manager.answer(player_id)
+          actions_to_do[current_action].call(self, @input_manager)
+          completed_actions << current_action
+        elsif actions_to_do.count == 1
           actions_to_do.values.pop.call(self, @input_manager)
+          return
+        else
           return
         end
       end
