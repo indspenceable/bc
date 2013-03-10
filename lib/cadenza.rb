@@ -7,7 +7,7 @@ class Battery < Style
   end
   def end_of_beat!
     {
-      "battery_charge" => ->(me, inpt) {
+      "charge" => ->(me, inpt) {
         me.charge_battery!
       }
     }
@@ -32,7 +32,7 @@ class Hydraulic < Style
   end
   def before_activating!
     {
-      "hydraulic_advance" => select_from_methods(advance: [1])
+      "advance" => select_from_methods(advance: [1])
     }
   end
 end
@@ -44,7 +44,7 @@ class Mechanical < Style
 
   def end_of_beat!
     {
-      "mechanical_advance" => select_from_methods(advance: [0,1,2,3])
+      "advance" => select_from_methods(advance: [0,1,2,3])
     }
   end
 end
@@ -55,7 +55,7 @@ class Grapnel < Style
 
   def on_hit!
     {
-      "grapnel_pull" => select_from_methods(pull: [0,1,2,3])
+      "pull" => select_from_methods(pull: [0,1,2,3])
     }
   end
 end

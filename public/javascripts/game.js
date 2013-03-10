@@ -83,6 +83,22 @@ var init = function(player_id, game_id, character_names) {
     // Finishers
     fullyautomatic: makeCard("3~6", 2, 6, {"Do not apply the effects of ammo tokens to this attack.": undefined, "On Hit":"You may discard an ammo token to execute this attack again."}),
     forcegrenade: makeCard("1~2", 4, 4, {"Do not apply the effects of ammo tokens to this attack. This attack hits even if an ammo token was not anted.": undefined, "On Hit": "Push the opponent any number of spaces.", "After Activating": "Retreat any number of spaces."}),
+
+    // Reggie
+    critical: makeCard(0, -1, 1, {"This attack ignores stun guard.": undefined, "On Hit, Range 1": "Spend a dark force token to get +3 power."}),
+    rasping: makeCard('0~1', -1, 1, {"On Hit, Range 1": "Spend a dark force token to get +3 power."}),
+    merciless: makeCard('0~1', -1, 1, {"If your opponent passes you this beat, they lose 2 life and can't move any more this beat.": undefined, "After Activating": "If you have a dark force token, do not get hit by attacks for the rest of this beat."}),
+    psycho: makeCard(0, 0, 1, {"Start of Beat": "Advance until you are adjacent to your opponent.", "End of Beat, Range 1": "Spend a dark force token to repeat this attack."}),
+    assassin: makeCard(0, 0, 0, {"On Hit": "Retreat any number of spaces.", "On Damage, Range 1": "You may spend a dark force token. If you do, the opponent cannot move next beat."}),
+    knives: makeCard("1~2",4,5, {"This attack does not stun at range one.": undefined, "This attack wins priority ties without clashing.": undefined}),
+
+    // Zaam
+    malicious: makeCard(0, 1, -1, {"Stun Guard": 2, "After Activating": "You may assume the paradigm of pain."}),
+    warped: makeCard("0~2", 0, 0, {"Start of Beat": "Retreat 1 Space.", "After Activating": "You may assume the paradigm of distortion."}),
+    sturdy: makeCard(0, 1, -1, {"Stun Immunity": 2, "Ignore all movement effects applied to you this beat.": undefined, "After Activating": "You may assume the paradigm of resilience."}),
+    urgent: makeCard("0~1", -1, 2, {"Start of Beat": "Advance up to one space.", "After Activating": "You may assume the paradigm of haste."}),
+    sinuous: makeCard(0, 0, 1, {"Stun Guard": 2, "After Activating": "You may assume the paradigm of fluidity."}),
+    paradigmshift: makeCard("2~3", 3, 3, {"Before Activating": "Assume the paradigm of your choice."})
   }
   var loadCard = function(cardName, $card, overrideCardName) {
     $card.find('.name').text(overrideCardName || capitaliseFirstLetter(cardName))
@@ -101,6 +117,7 @@ var init = function(player_id, game_id, character_names) {
         )
       }
     }
+    return $card;
   }
   var clearCard = function($card) {
     loadCard('emptyCard', $card, "");
@@ -195,22 +212,43 @@ var init = function(player_id, game_id, character_names) {
     var $tokens = $root(pn).find('.js-tokens').empty()
     var $discard1 = $root(pn).find('.js-discard1').empty()
     var $discard2 = $root(pn).find('.js-discard2').empty()
+
+    var $template = $('#template-card')
     for (var index in bases) {
-      $('<div/>').addClass('card mini-card base').text(bases[index]).appendTo($bases)
+      $('<div/>').addClass('card mini-card base').text(bases[index]).popover({
+        html: true,
+        trigger: 'hover',
+        title: bases[index],
+        content: loadCard(bases[index], $template.clone()).html()
+        }).appendTo($bases)
     }
     for (var index in styles) {
-      $('<div/>').addClass('card mini-card style').text(styles[index]).appendTo($styles)
+      $('<div/>').addClass('card mini-card style').text(styles[index]).popover({
+        html: true,
+        trigger: 'hover',
+        title: styles[index],
+        content: loadCard(styles[index], $template.clone()).html()
+        }).appendTo($styles)
     }
     for (var index in tokens) {
       $('<div/>').addClass('token').text(tokens[index]).appendTo($tokens)
     }
     for (var index in discard1Cards) {
-      var currentClass = (index == 0 ? 'style' : 'base')
-      $('<div/>').addClass('card mini-card ' + currentClass).text(discard1Cards[index]).appendTo($discard1)
+      $('<div/>').addClass('card mini-card').text(discard1Cards[index]).popover({
+        html: true,
+        trigger: 'hover',
+        title: discard1Cards[index],
+        content: loadCard(bases[index], $template.clone()).html()
+        }).appendTo($discard1)
     }
     for (var index in discard2Cards) {
       var currentClass = (index == 0 ? 'style' : 'base')
-      $('<div/>').addClass('card mini-card ' + currentClass).text(discard2Cards[index]).appendTo($discard2)
+      $('<div/>').addClass('card mini-card').text(discard2Cards[index]).popover({
+        html: true,
+        trigger: 'hover',
+        title: discard2Cards[index],
+        content: loadCard(bases[index], $template.clone()).html()
+        }).appendTo($discard2)
     }
   }
 
@@ -369,46 +407,6 @@ var init = function(player_id, game_id, character_names) {
     $('body').on('click', '.js-submit-attack-pair', function() {
       submitAttackPair()
     })
-
-    // Hover cards to preview them!
-    $('body').on('mouseenter', '.js-p0 .base.mini-card', function(){
-      loadCard($(this).text(), $('.js-p0').filter('.attack-pair').find('.preview.base'))
-      $('.js-p0').filter('.attack-pair').find('.real.base').hide()
-      $('.js-p0').filter('.attack-pair').find('.preview.base').show()
-    })
-    $('body').on('mouseleave', '.js-p0 .base.mini-card', function(){
-      $('.js-p0').filter('.attack-pair').find('.real.base').show()
-      $('.js-p0').filter('.attack-pair').find('.preview.base').hide()
-    })
-    $('body').on('mouseenter', '.js-p0 .style.mini-card', function(){
-      loadCard($(this).text(), $('.js-p0').filter('.attack-pair').find('.preview.style'))
-      $('.js-p0').filter('.attack-pair').find('.real.style').hide()
-      $('.js-p0').filter('.attack-pair').find('.preview.style').show()
-    })
-    $('body').on('mouseleave', '.js-p0 .style.mini-card', function(){
-      $('.js-p0').filter('.attack-pair').find('.real.style').show()
-      $('.js-p0').filter('.attack-pair').find('.preview.style').hide()
-    })
-    // Theirs
-    $('body').on('mouseenter', '.js-p1 .base.mini-card', function(){
-      loadCard($(this).text(), $('.js-p1').filter('.attack-pair').find('.preview.base'))
-      $('.js-p1').filter('.attack-pair').find('.real.base').hide()
-      $('.js-p1').filter('.attack-pair').find('.preview.base').show()
-    })
-    $('body').on('mouseleave', '.js-p1 .base.mini-card', function(){
-      $('.js-p1').filter('.attack-pair').find('.real.base').show()
-      $('.js-p1').filter('.attack-pair').find('.preview.base').hide()
-    })
-    $('body').on('mouseenter', '.js-p1 .style.mini-card', function(){
-      loadCard($(this).text(), $('.js-p1').filter('.attack-pair').find('.preview.style'))
-      $('.js-p1').filter('.attack-pair').find('.real.style').hide()
-      $('.js-p1').filter('.attack-pair').find('.preview.style').show()
-    })
-    $('body').on('mouseleave', '.js-p1 .style.mini-card', function(){
-      $('.js-p1').filter('.attack-pair').find('.real.style').show()
-      $('.js-p1').filter('.attack-pair').find('.preview.style').hide()
-    })
-    $('.preview').hide()
 
     $('.js-answers').on('click', '.btn', function() {
       submitData($(this).text())

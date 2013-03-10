@@ -7,7 +7,7 @@ class Geomantic < Style
   end
   def start_of_beat!
     {
-      "geomantic_ante_token" => select_from_methods(
+      "ante_extra_token" => select_from_methods(
         # the question should be helpful to the UI
         # in this case, we'll probably have a case in the UI for ante
         # but we don't yet :)
@@ -24,7 +24,7 @@ class Focused < Style
   end
   def on_hit!
     {
-      "focused_recover_token" => ->(me, inputs) {me.recover_token!}
+      "recover_token" => ->(me, inputs) {me.recover_token!}
     }
   end
 end
@@ -41,7 +41,7 @@ class Trance < Style
   end
   def end_of_beat!
     {
-      "trance_recover_token" => ->(me, inputs) {me.recover_token!}
+      "recover_token" => ->(me, inputs) {me.recover_token!}
     }
   end
 end
@@ -61,7 +61,7 @@ class Advancing < Style
   def start_of_beat!
     #TODO - this doesn't check that you passed your opponent...
     {
-      'advancing_advance' => ->(me, inpt) {
+      'advance' => ->(me, inpt) {
         direction = me.position - me.opponent.position
         select_from_methods(advance: [1]).call(me,inpt)
         if (me.position - me.opponent.position)*(direction) < 0
@@ -78,12 +78,12 @@ class PalmStrike < Base
   def start_of_beat!
     #TODO - this doesn't check that you passed your opponent...
     {
-      'palmstrike_advance' => select_from_methods(advance: [1])
+      'advance' => select_from_methods(advance: [1])
     }
   end
   def on_damage!
     {
-      "palmstrike_recover_token" => ->(me, inputs) {me.recover_token!}
+      "recover_token" => ->(me, inputs) {me.recover_token!}
     }
   end
 end

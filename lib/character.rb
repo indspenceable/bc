@@ -1,6 +1,7 @@
 class Character
-  attr_reader :player_id, :player_name, :position, :hand, :life, :finisher, :damage_dealt_this_beat
-  attr_accessor :opponent
+  attr_reader :player_id, :player_name, :hand, :life, :finisher, :damage_dealt_this_beat
+  attr_accessor :opponent, :position
+
   def initialize player_id, player_name, input_manager, events, event_logger
     @player_id = player_id
     @player_name = player_name
@@ -148,20 +149,29 @@ class Character
       #TODO - this is wrong. this should be recalculated after each iteration, keeping track of
       #whats been done so far this turn. This way, stuff like zaam's paradigm switches
       # will work correctly.
-      actions_to_do = {}
-      effect_sources.each do |source|
-        if source.respond_to?(trigger)
-          actions_to_do.merge!(source.send(trigger))
+
+      completed_actions = []
+      while true
+        actions_to_do = {}
+        effect_sources.each do |source|
+          if source.respond_to?(trigger)
+            trigger_effects = source.send(trigger)
+            trigger_effects.each do |k,v|
+              effect_name = "#{source.name}_#{k}"
+              actions_to_do[effect_name]=v unless completed_actions.include?(effect_name)
+            end
+          end
         end
-      end
-      while actions_to_do.any?
         if actions_to_do.count > 1
           @input_manager.require_single_input!(player_id, "select_from:#{actions_to_do.keys.map{|x| "<#{x}>"}}",
             ->(text) { actions_to_do.key?(text) })
-
-          actions_to_do.delete(@input_manager.answer(player_id)).call(self, @input_manager)
-        else
+          current_action =@input_manager.answer(player_id)
+          actions_to_do[current_action].call(self, @input_manager)
+          completed_actions << current_action
+        elsif actions_to_do.count == 1
           actions_to_do.values.pop.call(self, @input_manager)
+          return
+        else
           return
         end
       end
@@ -228,7 +238,12 @@ class Character
     @life += amount
   end
 
+  def can_stun?
+    true
+  end
+
   def exceeds_stun_guard?(amt)
+    return false unless opponent.can_stun?
     amt > stun_guard || (amt > 0 && opponent.ignore_stun_guard?)
   end
 
@@ -346,13 +361,25 @@ class Character
   end
 
   def teleport_to?(n)
-    opponent.position != Integer(n)
+    (opponent.position != Integer(n)) &&
+    (n >= 0) &&
+    (n <= 6) &&
+    (!@opponent.blocked_spaces.include?(n))
   end
   def teleport_to!(n)
     @position = Integer(n)
   end
   def teleport_to_unoccupied_space!
     select_from_methods(teleport_to: [0,1,2,3,4,5,6]).call(self, @input_manager)
+  end
+
+  def teleport_opponent_to?(n)
+    (position != Integer(n)) &&
+    (n >= 0) &&
+    (n <= 6)
+  end
+  def teleport_opponent_to!(n)
+    opponent.position = Integer(n)
   end
 
   def advance!(n_s,log_event=true)

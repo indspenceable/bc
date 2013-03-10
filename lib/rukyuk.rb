@@ -10,7 +10,7 @@ class PointBlank < Style
   end
   def on_damage!
     {
-      "point_blank_push" => select_from_methods(push: [0,1,2])
+      "push" => select_from_methods(push: [0,1,2])
     }
   end
 end
@@ -21,12 +21,12 @@ class Gunner < Style
   end
   def before_activating!
     {
-      "gunner_extra_range" => select_from_methods(extra_range: Rukyuk.token_names)
+      "extra_range" => select_from_methods(extra_range: Rukyuk.token_names)
     }
   end
   def after_activating!
     {
-      "gunner_movement" => select_from_methods(advance: [1,2], retreat: [1,2])
+      "movement" => select_from_methods(advance: [1,2], retreat: [1,2])
     }
   end
 end
@@ -40,7 +40,7 @@ class Crossfire < Style
   end
   def on_hit!
     {
-      "crossfire_on_hit" => select_from_methods(extra_power: Rukyuk.token_names)
+      "extra_damage" => select_from_methods(extra_power: Rukyuk.token_names)
     }
   end
 end
@@ -51,7 +51,7 @@ class Sniper < Style
   end
   def after_activating!
     {
-      "sniper_movement" => select_from_methods(advance: [1,2,3], retreat: [1,2,3])
+      "movement" => select_from_methods(advance: [1,2,3], retreat: [1,2,3])
     }
   end
 end
@@ -71,7 +71,7 @@ class Reload < Base
   end
   def after_activating!
     {
-      "reload_movement" => ->(me, inputs) {
+      "teleport" => ->(me, inputs) {
         me.teleport_to_unoccupied_space!
       }
     }
@@ -115,7 +115,7 @@ class ImpactShell < Token
   end
   def on_hit!
     {
-      "push_shell_push" => select_from_methods(push: [2])
+      "push" => select_from_methods(push: [2])
     }
   end
   def name_and_effect
@@ -155,12 +155,12 @@ class ForceGrenade < Finisher
 
   def on_hit!
     {
-      "force_grenade_push" => select_from_methods(push: [0,1,2,3,4,5,6])
+      "push" => select_from_methods(push: [0,1,2,3,4,5,6])
     }
   end
   def after_activating!
     {
-      "force_grenade_retreat" => select_from_methods(retreat: [0,1,2,3,4,5,6])
+      "retreat" => select_from_methods(retreat: [0,1,2,3,4,5,6])
     }
   end
 end
