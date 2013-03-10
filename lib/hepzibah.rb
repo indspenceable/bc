@@ -7,6 +7,15 @@ class Anathema < Style
 	end
 	def reveal!(me)
 		# +1 power, +1 pri per token anted (up to 3)
+		{
+			"anathema_bonus" => ->(me, inputs) {
+				if (me.current_tokens.count >= 3)
+					me.anathema_bonus = 3
+				else
+					me.anathema_bonus = (me.current_tokens.count)
+				end
+			}
+		}
 	end
 end
 
@@ -16,8 +25,10 @@ class Darkheart < Style
 	end
 	def on_hit!
 		{
-			gain_life!(2)
-			#the opponent must discard a token if he has any
+			"darkheart_gain_life" => ->(me, inputs) {me.gain_life!(2)},
+			"darkheart_discard_token" => ->(me, inputs) {
+				select_from_methods(discard_token: me.opponent.token_names).call(me.opponent, inputs)
+			}
 		}
 	end
 end
@@ -28,12 +39,20 @@ class Pactbond < Style
 	end
 	def reveal!(me)
 		{
-			#gain 1 life per token anted (2 max)
+			"pactbond_gain_life" => ->(me, inputs) {
+				if (me.current_tokens.count >= 2)
+					me.gain_life!(2)
+				else
+					me.gain_life!(me.current_tokens.count)
+				end
+			}
 		}
 	end
 	def end_of_beat!
 		{
-			#choose a token to ante for free next round
+			"pactbond_free_token" => ->(me, inputs) {
+				select_from_methods(free_token: %w(almighty endless immortality inevitable corruption)).call(me, inputs)
+			}
 		}
 	end
 end
@@ -45,17 +64,25 @@ class Necrotizing < Style
 	def on_hit!
 		{
 			#spend life points to gain power (max 3)
+			"necrotizing_power" => ->(me, inputs) {
+				select_from_methods(necrotizing_power: 0..3).call(me, inputs)
+			}
 		}
 	end
 end
 
 class Accursed < Style
-	def intialize
+	def initialize
 		super("accursed", 0..1, -1, 0)
 	end
 	def reveal!(me)
 		{
 			#gain stun immunity if anted 3 or more tokens
+			"accursed_stun_immunity" => ->(me, inputs) {
+				if (me.current_tokens.count >= 3)
+					me.accursed_stun_immunity = true
+				end
+			}
 		}
 	end
 end
@@ -67,6 +94,16 @@ class Bloodlight < Base
 	def on_damage!
 		{
 			# gain life per damage dealt, up to the number of tokens anted this turn
+			"bloodlight_health_recovery" => ->(me, inputs) {
+				if me.damage_dealt_this_beat <= me.current_tokens.count
+					life_recovered = (me.damage_dealt_this_beat)
+				else
+					life_recovered = (me.current_tokens.count)
+				end
+				if life_recovered > 0
+					gain_life!(life_recovered)
+				end
+			}
 		}
 	end
 end
@@ -127,11 +164,32 @@ class Altazziar < Finisher
 		super("altazziar", 1, 6, 2)
 	end
 	def start_of_beat
-		lose_life!(@life - 1)
+		{
+			"altazziar_lose_life" => ->(me, inputs) {
+				me.lose_life!(@life - 1)
+			}
+			# TODO add the doubling effect of tokens
+		}
 	end
+end
+
+class SealThePact < Finisher
+	def initialize
+		super("seal the pact", nil, nil, 0)
+	end
+	def soak
+		2
+	end
+	def after_activating
+		{
+			"sealthepact_ante_opponent_life" => ->(me, inputs) {me.ante_opponent_life = true}
+		}
+	end
+end
 
 
 class Hepzibah < Character
+	attr_accessor :ante_opponent_life, :current_tokens, :pactbond_free_token
 	def self.character_name
 		"hepzibah"
 	end
@@ -157,6 +215,22 @@ class Hepzibah < Character
 		]
 		# tokens used this beat
 		@current_tokens = []
+		@ante_opponent_life = false
+		@used_opponent_life = false
+		@pactbond_free_token = nil
+		@necrotizing_power = 0
+		@anathema_bonus = 0
+		@accursed_stun_immunity = false
+	end
+
+	def finishers
+		[Altazziar.new, SealThePact.new]
+	end
+
+	# used to reset the free token each round
+	def reveal!
+		super
+		@pactbond_free_token = nil
 	end
 
 	def effect_sources
@@ -167,13 +241,71 @@ class Hepzibah < Character
 		((@life > 1) ? @token_pool.map(&:name) : []) + super
 	end
 
+	def ante?(choice)
+		return true if super
+		return true if @pactbond_free_token == choice
+		return true if life > 1
+		false
+	end
+
 	def ante!(choice)
 		if choice == "pass"
 			log_me!("passes.")
 			return
 		end
+		print "#{choice}"
 		log_me!("antes #{@token_pool.find{ |token| token.name == choice }.name_and_effect}")
+		if choice == @pactbond_free_token
+			return
+		elsif (@ante_opponent_life && !@used_opponent_life)
+			opponent.lose_life!(1)
+			@used_opponent_life = true
+		else
+			lose_life!(1)
+		end
+		
 		@current_tokens += @token_pool.reject{ |token| token.name != choice }
 		lose_life!(1)
 		@token_pool.delete_if{ |token| token.name == choice }
 	end
+
+	def free_token?(choice)
+		%w(almighty endless immortality inevitable corruption).any?{|token_name| choice == token_name}
+	end
+
+	def free_token!(choice)
+		@pactbond_free_token = choice
+	end
+
+	def necrotizing_power?(choice)
+		((life - Integer(choice)) > 0) && (Integer(choice) <= 3)
+	end
+
+	def necrotizing_power!(choice)
+		log_me!("loses #{choice} life to gain #{choice} power")
+		@necrotizing_power = Integer(choice)
+		lose_life!(Integer(choice))
+	end
+
+	def power
+		@necrotizing_power + @anathema_bonus + super
+	end
+
+	def priority
+		@anathema_bonus + super
+	end
+
+	def stun_immunity?
+		@accursed_stun_immunity || super
+	end
+
+	def recycle!
+		super
+		@used_opponent_life = false
+		@necrotizing_power = 0
+		@anathema_bonus = 0
+		@accursed_stun_immunity = false
+		@token_pool += @current_tokens
+		@current_tokens = []
+	end
+end

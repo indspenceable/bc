@@ -1,5 +1,5 @@
 class Character
-  attr_reader :player_id, :player_name, :position, :hand, :life, :finisher
+  attr_reader :player_id, :player_name, :position, :hand, :life, :finisher, :damage_dealt_this_beat
   attr_accessor :opponent
   def initialize player_id, player_name, input_manager, events, event_logger
     @player_id = player_id
@@ -9,6 +9,8 @@ class Character
     @event_logger = event_logger
     @position = player_id == 0 ? 1 : 5
     @clashed_bases = []
+    @token_pool = []
+    @token_discard = []
 
     @hand = [
       Grasp.new,
@@ -24,6 +26,7 @@ class Character
 
     #TODO make this work with press.
     @damage_taken_this_beat = 0
+    @damage_dealt_this_beat = 0
     @damage_soaked_this_beat = 0
   end
 
@@ -213,7 +216,7 @@ class Character
 
   def lose_life!(amount)
     log_me!("loses #{amount} life")
-    @life -= amount
+    @life -= Integer(amount)
   end
 
   def gain_life!(amount)
@@ -254,6 +257,7 @@ class Character
       @discard1 = [@style, @base]
     end
     @damage_taken_this_beat = 0
+    @damage_dealt_this_beat = 0
     @damage_soaked_this_beat = 0
     @dodge = false
     @base = @style = nil
@@ -408,6 +412,16 @@ class Character
     []
   end
 
+  # This must be overwritten if your character does not use a @token_discard
+  def discard_token!(choice)
+    @token_discard += @token_pool.reject{ |token| token.name != choice }
+    @token_pool.delete_if{ |token| token.name == choice }
+  end
+
+  def discard_token?
+    @token_pool.any?{|token| token.name == choice}
+  end
+
   def current_effects
     @opponent.current_opponent_effects
   end
@@ -438,7 +452,7 @@ class Character
   end
   def ante!(choice)
     if choice == "finisher"
-      log_me!("ante's their finisher: #{@finisher.name}.")
+      log_me!("antes their finisher: #{@finisher.name}.")
       @style = nil
       @base = nil
       @played_finisher = true
