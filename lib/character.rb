@@ -484,6 +484,10 @@ class Character
     after_activating!
   end
 
+  def lose_life!(n)
+    @life -= n
+  end
+
   # input callbacks. These check the validity of input that the player does.
   # is this the best design? I dunno. It does make it easy for us to identify
   # when theres an error due to invalid input, though.
