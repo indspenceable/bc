@@ -45,15 +45,15 @@
 }
 
 /* Range, power, priority */
-.style .range:before, .special-action .range:before{
+.style .range:before, .special-action .range:before, .preview .range:before{
   content: "Range: ";
   font-weight: bold;
 }
-.style .priority:before, .special-action .priority:before{
+.style .priority:before, .special-action .priority:before, .preview .priority:before{
   content: "Priority: ";
   font-weight: bold;
 }
-.style .power:before, .special-action .power:before{
+.style .power:before, .special-action .power:before, .preview .power:before{
   content: "Power: ";
   font-weight: bold;
 }

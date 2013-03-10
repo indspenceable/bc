@@ -96,14 +96,6 @@
                 .power
                 .priority
               .effects
-          .style.preview
-            .well
-              .name
-              .rpp
-                .range
-                .power
-                .priority
-              .effects
         .span3
           .base.real
             .well
@@ -113,15 +105,7 @@
                 .power
                 .priority
               .effects
-          .base.preview
-            .well
-              .name
-              .rpp
-                .range
-                .power
-                .priority
-              .effects
-      .js-p0.special-action.row
+      .js-p0.special-action.row{:style => "display:none"}
         .span6.special-action-card
           .well
             .name
@@ -144,14 +128,6 @@
                 .power
                 .priority
               .effects
-          .style.preview
-            .well
-              .name
-              .rpp
-                .range
-                .power
-                .priority
-              .effects
         .span3
           .base.real
             .well
@@ -161,15 +137,7 @@
                 .power
                 .priority
               .effects
-          .base.preview
-            .well
-              .name
-              .rpp
-                .range
-                .power
-                .priority
-              .effects
-      .js-p1.special-action.row
+      .js-p1.special-action.row{:style => "display:none"}
         .span6.special-action-card
           .well
             .name
@@ -187,6 +155,14 @@
       .span4.offset4
         %form
           %input{:type => "text", :style => "width: 100%"}
+#template-card{:style => "display: none"}
+  .preview
+    .rpp
+      .range
+      .power
+      .priority
+    .effects
+
 %script{:src => "/javascripts/game.js"}
 :javascript
   Game.init("#{@player_id}", "#{params[:id]}")

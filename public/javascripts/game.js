@@ -117,6 +117,7 @@ var init = function(player_id, game_id, character_names) {
         )
       }
     }
+    return $card;
   }
   var clearCard = function($card) {
     loadCard('emptyCard', $card, "");
@@ -211,22 +212,43 @@ var init = function(player_id, game_id, character_names) {
     var $tokens = $root(pn).find('.js-tokens').empty()
     var $discard1 = $root(pn).find('.js-discard1').empty()
     var $discard2 = $root(pn).find('.js-discard2').empty()
+
+    var $template = $('#template-card')
     for (var index in bases) {
-      $('<div/>').addClass('card mini-card base').text(bases[index]).appendTo($bases)
+      $('<div/>').addClass('card mini-card base').text(bases[index]).popover({
+        html: true,
+        trigger: 'hover',
+        title: bases[index],
+        content: loadCard(bases[index], $template.clone()).html()
+        }).appendTo($bases)
     }
     for (var index in styles) {
-      $('<div/>').addClass('card mini-card style').text(styles[index]).appendTo($styles)
+      $('<div/>').addClass('card mini-card style').text(styles[index]).popover({
+        html: true,
+        trigger: 'hover',
+        title: styles[index],
+        content: loadCard(styles[index], $template.clone()).html()
+        }).appendTo($styles)
     }
     for (var index in tokens) {
       $('<div/>').addClass('token').text(tokens[index]).appendTo($tokens)
     }
     for (var index in discard1Cards) {
-      var currentClass = (index == 0 ? 'style' : 'base')
-      $('<div/>').addClass('card mini-card ' + currentClass).text(discard1Cards[index]).appendTo($discard1)
+      $('<div/>').addClass('card mini-card').text(discard1Cards[index]).popover({
+        html: true,
+        trigger: 'hover',
+        title: discard1Cards[index],
+        content: loadCard(bases[index], $template.clone()).html()
+        }).appendTo($discard1)
     }
     for (var index in discard2Cards) {
       var currentClass = (index == 0 ? 'style' : 'base')
-      $('<div/>').addClass('card mini-card ' + currentClass).text(discard2Cards[index]).appendTo($discard2)
+      $('<div/>').addClass('card mini-card').text(discard2Cards[index]).popover({
+        html: true,
+        trigger: 'hover',
+        title: discard2Cards[index],
+        content: loadCard(bases[index], $template.clone()).html()
+        }).appendTo($discard2)
     }
   }
 
@@ -385,46 +407,6 @@ var init = function(player_id, game_id, character_names) {
     $('body').on('click', '.js-submit-attack-pair', function() {
       submitAttackPair()
     })
-
-    // Hover cards to preview them!
-    $('body').on('mouseenter', '.js-p0 .base.mini-card', function(){
-      loadCard($(this).text(), $('.js-p0').filter('.attack-pair').find('.preview.base'))
-      $('.js-p0').filter('.attack-pair').find('.real.base').hide()
-      $('.js-p0').filter('.attack-pair').find('.preview.base').show()
-    })
-    $('body').on('mouseleave', '.js-p0 .base.mini-card', function(){
-      $('.js-p0').filter('.attack-pair').find('.real.base').show()
-      $('.js-p0').filter('.attack-pair').find('.preview.base').hide()
-    })
-    $('body').on('mouseenter', '.js-p0 .style.mini-card', function(){
-      loadCard($(this).text(), $('.js-p0').filter('.attack-pair').find('.preview.style'))
-      $('.js-p0').filter('.attack-pair').find('.real.style').hide()
-      $('.js-p0').filter('.attack-pair').find('.preview.style').show()
-    })
-    $('body').on('mouseleave', '.js-p0 .style.mini-card', function(){
-      $('.js-p0').filter('.attack-pair').find('.real.style').show()
-      $('.js-p0').filter('.attack-pair').find('.preview.style').hide()
-    })
-    // Theirs
-    $('body').on('mouseenter', '.js-p1 .base.mini-card', function(){
-      loadCard($(this).text(), $('.js-p1').filter('.attack-pair').find('.preview.base'))
-      $('.js-p1').filter('.attack-pair').find('.real.base').hide()
-      $('.js-p1').filter('.attack-pair').find('.preview.base').show()
-    })
-    $('body').on('mouseleave', '.js-p1 .base.mini-card', function(){
-      $('.js-p1').filter('.attack-pair').find('.real.base').show()
-      $('.js-p1').filter('.attack-pair').find('.preview.base').hide()
-    })
-    $('body').on('mouseenter', '.js-p1 .style.mini-card', function(){
-      loadCard($(this).text(), $('.js-p1').filter('.attack-pair').find('.preview.style'))
-      $('.js-p1').filter('.attack-pair').find('.real.style').hide()
-      $('.js-p1').filter('.attack-pair').find('.preview.style').show()
-    })
-    $('body').on('mouseleave', '.js-p1 .style.mini-card', function(){
-      $('.js-p1').filter('.attack-pair').find('.real.style').show()
-      $('.js-p1').filter('.attack-pair').find('.preview.style').hide()
-    })
-    $('.preview').hide()
 
     $('.js-answers').on('click', '.btn', function() {
       submitData($(this).text())
