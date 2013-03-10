@@ -63,7 +63,7 @@ end
 
 class Assassin < Style
   def initialize
-    super("assasin", 0, 0, 0)
+    super("assassin", 0, 0, 0)
   end
 
   def on_hit!
