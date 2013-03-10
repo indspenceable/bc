@@ -26,6 +26,8 @@ class Rasping < Style
       "extra_power" => select_from_methods(extra_power_at_range_one: %w(yes no))
     }
   end
+
+  #TODO this needs the other effect!
 end
 
 class Merciless < Style

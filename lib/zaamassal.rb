@@ -24,7 +24,7 @@ end
 
 class Warped < ZaamassalStyle
   def initialize
-    super('warped', 0..1, 0, 0, 'distortion')
+    super('warped', 0..2, 0, 0, 'distortion')
   end
   def start_of_beat!
     {
@@ -40,6 +40,8 @@ class Sturdy < ZaamassalStyle
   def stun_immunity?
     true
   end
+
+  # Todo - make this work.
   flag :ignore_movement
 end
 
