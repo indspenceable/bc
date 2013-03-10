@@ -227,7 +227,7 @@ var init = function(player_id, game_id, character_names) {
         html: true,
         trigger: 'hover',
         title: styles[index],
-        content: loadCard(bases[index], $template.clone()).html()
+        content: loadCard(styles[index], $template.clone()).html()
         }).appendTo($styles)
     }
     for (var index in tokens) {
