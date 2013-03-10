@@ -211,7 +211,12 @@ class Character
     @life > 0
   end
 
+  def can_stun?
+    true
+  end
+
   def exceeds_stun_guard?(amt)
+    return false unless opponent.can_stun?
     amt > stun_guard || (amt > 0 && opponent.ignore_stun_guard?)
   end
 
@@ -328,7 +333,10 @@ class Character
   end
 
   def teleport_to?(n)
-    opponent.position != Integer(n)
+    (opponent.position != Integer(n)) &&
+    (n >= 0) &&
+    (n <= 6) &&
+    (!@opponent.blocked_spaces.include?(n))
   end
   def teleport_to!(n)
     @position = Integer(n)

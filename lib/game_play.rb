@@ -2,6 +2,7 @@ require "hikaru"
 require "cadenza"
 require 'khadath'
 require 'rukyuk'
+require 'heketch'
 
 # given a hash from methods to possible aruments prompt the user to select a
 # valid combination.
@@ -372,7 +373,7 @@ class GamePlay
   end
 
   def self.character_list
-    [Hikaru, Cadenza, Khadath, Rukyuk]
+    [Hikaru, Cadenza, Khadath, Rukyuk, Heketch]
   end
   def self.character_names
     character_list.map(&:character_name)
