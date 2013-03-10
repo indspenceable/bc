@@ -34,6 +34,10 @@ class Character
     self.class.character_name
   end
 
+  def token_names
+    @token_pool.map(&:name).uniq
+  end
+
   def reveal_attack_pair_string
     if @played_finisher
       "#{@finisher.name.capitalize}"
@@ -418,7 +422,7 @@ class Character
     @token_pool.delete_if{ |token| token.name == choice }
   end
 
-  def discard_token?
+  def discard_token?(choice)
     @token_pool.any?{|token| token.name == choice}
   end
 

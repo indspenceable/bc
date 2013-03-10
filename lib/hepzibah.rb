@@ -253,7 +253,7 @@ class Hepzibah < Character
 			log_me!("passes.")
 			return
 		end
-		print "#{choice}"
+		return if super
 		log_me!("antes #{@token_pool.find{ |token| token.name == choice }.name_and_effect}")
 		if choice == @pactbond_free_token
 			return
@@ -263,7 +263,7 @@ class Hepzibah < Character
 		else
 			lose_life!(1)
 		end
-		
+
 		@current_tokens += @token_pool.reject{ |token| token.name != choice }
 		lose_life!(1)
 		@token_pool.delete_if{ |token| token.name == choice }
