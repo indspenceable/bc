@@ -211,6 +211,16 @@ class Character
     @life > 0
   end
 
+  def lose_life!(amount)
+    log_me!("loses #{amount} life")
+    @life -= amount
+  end
+
+  def gain_life!(amount)
+    log_me!("gains #{amount} life")
+    @life += amount
+  end
+
   def exceeds_stun_guard?(amt)
     amt > stun_guard || (amt > 0 && opponent.ignore_stun_guard?)
   end
