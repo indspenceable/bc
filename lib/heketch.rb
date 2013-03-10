@@ -79,7 +79,7 @@ end
 
 class Knives < Base
   def initialize
-    super("knives", 0, 4, 5)
+    super("knives", 1..2, 4, 5)
   end
 
   flag :wins_ties
@@ -274,6 +274,7 @@ class Heketch < Character
   end
 
   def regain_dark_force!
+    log_me!("regains a dark force token...")
     @dark_force = true
   end
 
