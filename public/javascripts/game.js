@@ -260,6 +260,7 @@ var init = function(player_id, game_id, character_names) {
 
   var needInputAlready = true
   var chime = new Audio("/audio/chime.wav")
+  var windowActive = window.isActive
 
   var setUI = function(data) {
     // short circuit unless more events have happened, or
@@ -282,7 +283,7 @@ var init = function(player_id, game_id, character_names) {
     setup_inputs(requiredInput)
 
     if (requiredInput) {
-      if (! needInputAlready ) {
+      if (!needInputAlready && !windowActive) {
         chime.play()
       }
       needInputAlready = true
@@ -424,10 +425,11 @@ var init = function(player_id, game_id, character_names) {
       $('.js-choose-character').hide()
     })
 
+    $(window).focus(function() {windowActive=true})
+    $(window).blur(function() {windowActive=false})
+
     ping()
   })
 }
-
-var chime = new Audio("/audio/chime.wav")
 
 var Game = {init: init}
