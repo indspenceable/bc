@@ -145,13 +145,15 @@ var init = function(player_id, game_id, chimeEnabled) {
     $('.free-form').show()
   }
   var setAnswers = function(question) {
-    var $answers = $('.js-answers')
-    $answers.empty()
+    var $btnGroup = $('<div/>').addClass('btn-group')
     var matches = question.match(/<[^>]*>/g)
     for (var i in matches) {
       var currentMatch = matches[i].substring(1, matches[i].length-1)
-      $('<a/>').addClass('btn').text(currentMatch).appendTo($answers)
+      $('<a/>').addClass('btn').text(currentMatch).appendTo($btnGroup)
     }
+    var $answers = $('.js-answers')
+    $answers.empty()
+    $answers.append($btnGroup)
     $answers.show()
   }
 
