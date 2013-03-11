@@ -3,7 +3,7 @@ function capitaliseFirstLetter(string)
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-var init = function(player_id, game_id, character_names) {
+var init = function(player_id, game_id, chimeEnabled) {
   var cachedInputNumber = -1;
   var cachedRequiredInput;
 
@@ -127,11 +127,6 @@ var init = function(player_id, game_id, character_names) {
     return ({
       'select_character': "Please select a character:"
     }[str] || str)
-  }
-  var options_for_question = function(question) {
-    if (question == "select_character") {
-      return character_names
-    } else return false;
   }
 
   var chooseCharacter = function() {
@@ -283,7 +278,7 @@ var init = function(player_id, game_id, character_names) {
     setup_inputs(requiredInput)
 
     if (requiredInput) {
-      if (!needInputAlready && !windowActive) {
+      if (!needInputAlready && !windowActive && chimeEnabled) {
         chime.play()
       }
       needInputAlready = true

@@ -71,7 +71,7 @@
                 }
                 $(requiredInputCount)
               %li
-                %a#my-profile= current_user.email
+                = link_to(current_user.email, current_user, class: '#my-profile')
               %li.logged-in
                 %a#personaLogout{href: '#'} Logout
                 :javascript
@@ -95,4 +95,7 @@
                   window.onLogin = function() {
                     window.location.reload();
                   }
+      -flash.each do |k,v|
+        .alert{class: flash_to_alert[k] || "oops#{k}"}
+          = v
       = yield
