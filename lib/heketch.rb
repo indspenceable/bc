@@ -267,12 +267,13 @@ class Heketch < Character
   end
 
   def blocked_spaces
-    return (0..6).to_a if @stop_all_opponent_movement
+    return (0..6).to_a if (@stop_all_opponent_movement || @merciless_stop_movement)
     []
   end
 
   def recycle!
     @merciless_dodge = false
+    @merciless_stop_movement
     @bonuse = []
     @stop_all_opponent_movement = @stop_all_opponent_movement_next_turn
     @stop_all_opponent_movement_next_turn = false
@@ -286,6 +287,13 @@ class Heketch < Character
   def advance_until_adjacent!
     if distance > 1
       advance!(distance)
+    end
+  end
+
+  def pass_by!
+    if flag? :damage_on_move_past
+      opponent.lose_life!(2)
+      @merciless_stop_movement = true
     end
   end
 

@@ -58,6 +58,10 @@ class Character
     p.map(&:name)
   end
 
+  # this is called when your opponent passes by you.
+  def pass_by!
+  end
+
   def bases(seen_by=@player_id)
     # if we haven't revealed, but this not another player
     c_hand = (seen_by == @player_id) ? @hand - [@base, @style] : @hand
@@ -366,14 +370,16 @@ class Character
   def advance!(n_s,log_event=true)
     n = Integer(n_s)
     if position > @opponent.position
-      if n >= @position - @opponent.position
+      if n >= distance
         @position -= n+1
+        opponent.pass_by!
       else
         @position -= n
       end
     else
-      if n >= @opponent.position - @position
+      if n >= distance
         @position += n+1
+        opponent.pass_by!
       else
         @position += n
       end
