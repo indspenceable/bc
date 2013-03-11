@@ -168,7 +168,6 @@ var init = function(player_id, game_id, character_names) {
 
   var setup_inputs = function(question) {
     resetInputs();
-    console.log("question is: ", question)
     if (/^attack_pair/.test(question)) {
       selectAttackPair()
     } else if (/^select_base/.test(question)) {
@@ -259,6 +258,9 @@ var init = function(player_id, game_id, character_names) {
     }
   }
 
+  var needInputAlready = true
+  var chime = new Audio("/audio/chime.wav")
+
   var setUI = function(data) {
     // short circuit unless more events have happened, or
     // there is a new question.
@@ -280,8 +282,13 @@ var init = function(player_id, game_id, character_names) {
     setup_inputs(requiredInput)
 
     if (requiredInput) {
+      if (! needInputAlready ) {
+        chime.play()
+      }
+      needInputAlready = true
       setFaviconToAlert();
     } else {
+      needInputAlready = false
       setFaviconToDefault();
     }
 
@@ -420,5 +427,7 @@ var init = function(player_id, game_id, character_names) {
     ping()
   })
 }
+
+var chime = new Audio("/audio/chime.wav")
 
 var Game = {init: init}
