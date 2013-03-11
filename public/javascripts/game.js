@@ -3,7 +3,7 @@ function capitaliseFirstLetter(string)
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-var init = function(player_id, game_id, character_names) {
+var init = function(player_id, game_id, chimeEnabled) {
   var cachedInputNumber = -1;
   var cachedRequiredInput;
 
@@ -96,7 +96,7 @@ var init = function(player_id, game_id, character_names) {
     malicious: makeCard(0, 1, -1, {"Stun Guard": 2, "After Activating": "You may assume the paradigm of pain."}),
     warped: makeCard("0~2", 0, 0, {"Start of Beat": "Retreat 1 Space.", "After Activating": "You may assume the paradigm of distortion."}),
     sturdy: makeCard(0, 1, -1, {"Stun Immunity": 2, "Ignore all movement effects applied to you this beat.": undefined, "After Activating": "You may assume the paradigm of resilience."}),
-    urgent: makeCard("0~1", -1, 2, {"Start of Beat": "Advance up to one space.", "After Activating": "You may assume the paradigm of haste."}),
+    urgent: makeCard("0~1", -1, 2, {"Before Activating": "Advance up to one space.", "After Activating": "You may assume the paradigm of haste."}),
     sinuous: makeCard(0, 0, 1, {"Stun Guard": 2, "After Activating": "You may assume the paradigm of fluidity."}),
     paradigmshift: makeCard("2~3", 3, 3, {"Before Activating": "Assume the paradigm of your choice."})
   }
@@ -127,11 +127,6 @@ var init = function(player_id, game_id, character_names) {
     return ({
       'select_character': "Please select a character:"
     }[str] || str)
-  }
-  var options_for_question = function(question) {
-    if (question == "select_character") {
-      return character_names
-    } else return false;
   }
 
   var chooseCharacter = function() {
@@ -168,7 +163,6 @@ var init = function(player_id, game_id, character_names) {
 
   var setup_inputs = function(question) {
     resetInputs();
-    console.log("question is: ", question)
     if (/^attack_pair/.test(question)) {
       selectAttackPair()
     } else if (/^select_base/.test(question)) {
@@ -259,6 +253,10 @@ var init = function(player_id, game_id, character_names) {
     }
   }
 
+  var needInputAlready = true
+  var chime = new Audio("/audio/chime.wav")
+  var windowActive = window.isActive
+
   var setUI = function(data) {
     // short circuit unless more events have happened, or
     // there is a new question.
@@ -280,8 +278,13 @@ var init = function(player_id, game_id, character_names) {
     setup_inputs(requiredInput)
 
     if (requiredInput) {
+      if (!needInputAlready && !windowActive && chimeEnabled) {
+        chime.play()
+      }
+      needInputAlready = true
       setFaviconToAlert();
     } else {
+      needInputAlready = false
       setFaviconToDefault();
     }
 
@@ -416,6 +419,9 @@ var init = function(player_id, game_id, character_names) {
       submitData($(this).attr('charactername'))
       $('.js-choose-character').hide()
     })
+
+    $(window).focus(function() {windowActive=true})
+    $(window).blur(function() {windowActive=false})
 
     ping()
   })

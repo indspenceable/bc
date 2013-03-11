@@ -165,4 +165,4 @@
 
 %script{:src => "/javascripts/game.js"}
 :javascript
-  Game.init("#{@player_id}", "#{params[:id]}")
+  Game.init("#{@player_id}", "#{params[:id]}", #{current_user.chime_enabled? ? "true" : "false"})

@@ -11,11 +11,14 @@ class GamesController < LoggedInController
     game = Game.active_between(current_user, opponent)
     unless game
       # We need to create a game
-      game = Game.create(
+      game = Game.create!(
         :p0_id => current_user.id,
         :p1_id => opponent.id,
         :active => true,
         :inputs => [])
+
+      # Deliver an email
+      UserMailer.challenge(current_user, opponent, game).deliver if opponent.email_notifications_enabled?
     end
     redirect_to game_path(game)
   end

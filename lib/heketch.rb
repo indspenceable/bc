@@ -28,6 +28,11 @@ class Rasping < Style
   end
 
   #TODO this needs the other effect!
+  def on_damage!
+    {
+      "heal" => ->(me, inputs) { me.heal_half_damage! }
+    }
+  end
 end
 
 class Merciless < Style
@@ -262,12 +267,13 @@ class Heketch < Character
   end
 
   def blocked_spaces
-    return (0..6).to_a if @stop_all_opponent_movement
+    return (0..6).to_a if (@stop_all_opponent_movement || @merciless_stop_movement)
     []
   end
 
   def recycle!
     @merciless_dodge = false
+    @merciless_stop_movement
     @bonuse = []
     @stop_all_opponent_movement = @stop_all_opponent_movement_next_turn
     @stop_all_opponent_movement_next_turn = false
@@ -280,7 +286,14 @@ class Heketch < Character
 
   def advance_until_adjacent!
     if distance > 1
-      advance!(distance)
+      advance!(distance-1)
+    end
+  end
+
+  def pass_by!
+    if flag? :damage_on_move_past
+      opponent.lose_life!(2)
+      @merciless_stop_movement = true
     end
   end
 
@@ -299,5 +312,11 @@ class Heketch < Character
 
   def unlimited_dark_force_tokens!
     @unlimited_dark_force = true
+  end
+
+  def heal_half_damage!
+    life_to_gain = (@damage_dealt_by_this_attack - (@damage_dealt_by_this_attack/2))
+    log_me!("Gained #{life_to_gain}")
+    @life += life_to_gain
   end
 end
