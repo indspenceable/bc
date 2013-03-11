@@ -286,7 +286,7 @@ class Heketch < Character
 
   def advance_until_adjacent!
     if distance > 1
-      advance!(distance)
+      advance!(distance-1)
     end
   end
 
