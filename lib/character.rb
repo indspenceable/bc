@@ -31,6 +31,10 @@ class Character
     self.class.character_name
   end
 
+  def finisher_name
+    @finisher ? @finisher.name : nil
+  end
+
   def reveal_attack_pair_string
     if @played_finisher
       "#{@finisher.name.capitalize}"
@@ -91,7 +95,9 @@ class Character
     (seen_by == @player_id || @revealed) && @style && @style.name
   end
   def special_action_name(seen_by=@player_id)
-    (seen_by == @player_id || @revealed) && @played_finisher && finisher.name
+    #always show the finisher, if they've played it.
+    return finisher.name if @played_finisher
+    # (seen_by == @player_id || @revealed) && @played_finisher && finisher.name
   end
   def clash!
     @clashed_bases << @base

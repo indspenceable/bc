@@ -397,7 +397,8 @@ class GamePlay
       :extra_data => @players[player_id].extra_data,
       :discard1 => @players[player_id].discard1(as_seen_by_id),
       :discard2 => @players[player_id].discard2(as_seen_by_id),
-      :character_name => @players[player_id].name
+      :character_name => @players[player_id].name,
+      :finisher_name => @players[player_id].finisher_name,
     }
   end
 end

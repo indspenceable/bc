@@ -103,6 +103,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     sinuous: makeCard(0, 0, 1, {"Stun Guard": 2, "After Activating": "You may assume the paradigm of fluidity."}),
     paradigmshift: makeCard("2~3", 3, 3, {"Before Activating": "Assume the paradigm of your choice."})
   }
+
   var loadCard = function(cardName, $card, overrideCardName) {
     $card.find('.name').text(overrideCardName || capitaliseFirstLetter(cardName))
     $card.find('.effects').empty()
@@ -262,6 +263,22 @@ var init = function(player_id, game_id, chimeEnabled) {
     }
   }
 
+  var setHeader = function(pn, character, finisher) {
+    $root(pn).find('.character-name').text(capitaliseFirstLetter(character)).popover({
+      title: capitaliseFirstLetter(character),
+      content: characterUAs[character],
+      trigger: 'hover',
+      placement: 'bottom'
+    })
+    $root(pn).find('.finisher').text(capitaliseFirstLetter(finisher)).popover({
+      title: capitaliseFirstLetter(finisher),
+      html: true,
+      trigger: 'hover',
+      placement: 'bottom',
+      content: loadCard(finisher, $('#template-card').clone()).html()
+    })
+  }
+
   var setExtraData = function(pn, data) {
     if (data.trap) {
       var color = (pn == 0 ? 'info' : 'important')
@@ -310,7 +327,6 @@ var init = function(player_id, game_id, chimeEnabled) {
     }
     needAlert = requiredInput
 
-
     // Updates related to the gamestate
     var gameState = data['gameState']
     if (!gameState.players) { return }
@@ -322,6 +338,9 @@ var init = function(player_id, game_id, chimeEnabled) {
     displayBoard(gameState.players[0].location, gameState.players[1].location)
     // show the players hands
     for (var pn = 0; pn <= 1; pn++) {
+      setHeader(pn,
+        gameState.players[pn].character_name,
+        gameState.players[pn].finisher_name)
       fillCards(pn,
         gameState.players[pn].current_base,
         gameState.players[pn].current_style,
