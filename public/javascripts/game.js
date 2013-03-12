@@ -28,7 +28,9 @@ var init = function(player_id, game_id, chimeEnabled) {
     hikaru: "Hikaru has four elemental tokens each with a different bonus. Each beat, he may ante one token to get its effect, and then it is discarded. He regains tokens by using his styles, but may not regain any that he spent this turn.",
     cadenza: "Cadenza has 3 iron body tokens. Each beat, he may ante one for stun immunity that beat; additionally, every time he takes damage, he can spend one for (stun guard ∞)",
     khadath: "Khadath's styles allow him to place his gate trap. Opponents that move on immediately end that movement effect (You can move as you please starting on the trap). At reveal, opponents next to the trap get -1 priority, and opponents standing on top of the trap get -3 priority.",
-    rukyuk: "Rukyuk has 6 ammo tokens, each with a different bonus. Each turn he may ante one of them to get its bonus. If he doesn't ante any, he does not hit this beat."
+    rukyuk: "Rukyuk has 6 ammo tokens, each with a different bonus. Each turn he may ante one of them to get its bonus. If he doesn't ante any, he does not hit this beat.",
+    heketch: "Hekecth starts the duel with a dark force token. He can ante this to immediately teleport adjacent to the opponent, and gain 3 priority. His styles also allow him to spend his token for other benefits. At End of Beat, Heketch regains his token if there are at least 2 spaces between him and his opponent. He may never have more than one dark force token.",
+    zaamassal: "Zaamassal has 5 paradigms he can assume, according to his styles and unique base. Each paradigm has it's own benefits. Every time he assumes a paradigm, he loses his current paradigm. If Zaamassal gets stunned, he loses his current paradigm."
   }
 
   var cardDefinitions = {
