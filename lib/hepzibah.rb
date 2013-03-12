@@ -265,7 +265,6 @@ class Hepzibah < Character
 		end
 
 		@current_tokens += @token_pool.reject{ |token| token.name != choice }
-		lose_life!(1)
 		@token_pool.delete_if{ |token| token.name == choice }
 	end
 
