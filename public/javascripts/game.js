@@ -106,7 +106,15 @@ var init = function(player_id, game_id, chimeEnabled) {
     paradigmshift: makeCard("2~3", 3, 3, {"Before Activating": "Assume the paradigm of your choice."}),
 
     openthegate: makeCard("1~2", 3, 7, {"On Hit": "Opponent is stunend. Zaamassal may assume 3 paradigms."}),
-    planardivider: makeCard(1, 2, 5, {"Before Activating": "Move to any unoccupied space.", "On Hit": "Move the opponent to any unoccupied space. +1 Power for each space between you and the opponent. Assume any paradigm."})
+    planardivider: makeCard(1, 2, 5, {"Before Activating": "Move to any unoccupied space.", "On Hit": "Move the opponent to any unoccupied space. +1 Power for each space between you and the opponent. Assume any paradigm."}),
+
+    //Hepz
+    anathema: makeCard(0, -1, -1, {"+1 power, +1 priority for each token you anted this beat (max: 3).": undefined}),
+    darkheart: makeCard(0, 0, -1, {"On Hit": "Gain 2 life. The opponent must discard a token, if they have any."}),
+    pactbond: makeCard(0, 0, -1, {"Reveal": "Gain life equal to the number of tokens you anted this beat (max: 2).", "End of Beat": "Choose a token to ante for free next turn."}),
+    necrotizing: makeCard("0~2", -1, 0, {"On Hit": "Spend up to 3 life to gain +1 power per life spent."}),
+    accursed: makeCard("0~1", -1, 0, {"Stun immunity if you anted 3 or more tokens this beat.": undefined}),
+    bloodlight: makeCard("1~3", 2, 3, {"On Hit": "Gain life equal to damage dealt (max: number of tokens you anted)."}),
   }
 
   var loadCard = function(cardName, $card, overrideCardName) {
