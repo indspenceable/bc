@@ -26,6 +26,9 @@ class Warped < ZaamassalStyle
   def initialize
     super('warped', 0..2, 0, 0, 'distortion')
   end
+
+  flag :distortion
+
   def start_of_beat!
     {
       "retreat" => select_from_methods(retreat: [1])
