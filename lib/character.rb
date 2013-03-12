@@ -1,12 +1,11 @@
 class Character
   attr_reader :player_id, :player_name, :hand, :life, :finisher
   attr_accessor :opponent, :position
-  def initialize player_id, player_name, input_manager, events, event_logger
+  def initialize player_id, player_name, input_manager, events
     @player_id = player_id
     @player_name = player_name
     @input_manager = input_manager
     @events = events
-    @event_logger = event_logger
     @position = player_id == 0 ? 1 : 5
     @clashed_bases = []
 
@@ -217,7 +216,7 @@ class Character
   end
 
   def log_me!(msg)
-    @event_logger.call("#{player_name} #{msg}")
+    @events.log!("#{player_name} #{msg}")
   end
 
   def receive_damage!(damage)
@@ -390,7 +389,7 @@ class Character
         @position += n
       end
     end
-    @event_logger.call("#{player_name} advances #{n_s} to space #{@position}") if log_event
+    log_me!("advances #{n_s} to space #{@position}") if log_event
   end
 
   def retreat!(n_s,log_event=true)
@@ -401,7 +400,7 @@ class Character
       @position += n
     end
     #TODO - this looks like a bug.
-    @event_logger.call("#{player_name} retreats #{n_s} to space #{@position + 1}") if log_event
+    log_me!("retreats #{n_s} to space #{@position + 1}") if log_event
   end
 
   def pull?(n)
@@ -414,11 +413,11 @@ class Character
 
   def push!(n)
     @opponent.retreat!(n, false)
-    @event_logger.call("#{opponent.player_name} gets pushed #{n} to space #{@opponent.position}")
+    opponent.log_me!("gets pushed #{n} to space #{@opponent.position}")
   end
   def pull!(n)
     opponent.advance!(n, false)
-    @event_logger.call("#{opponent.player_name} gets pulled #{n} to space #{@opponent.position}")
+    opponent.log_me!("gets pulled #{n} to space #{@opponent.position}")
   end
 
 
