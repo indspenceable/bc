@@ -75,59 +75,67 @@ class GamePlay
     }
     @last_active_player_id = @starting_player
     @active = true
-    catch :input_required do
-      catch :ko do
-        select_characters!
-        select_discards_and_finishers!
-        15.times do |round_number|
-          @round_number = round_number + 1 # 1 based
-          select_attack_pairs!
-          ante!
-          reveal!
-          # if either player runs out of cards, go to the next turn
-          if handle_clashes! == :no_cards
-            @events.log!("A player ran out of cards. Turn is cycling.")
-            regain_cards!
-            next
-          end
-          regain_bases!
-          determine_active_player!
-          passive_abilities!
-          start_of_beat!
-          activate!(@active_player, @reactive_player)
-          activate!(@reactive_player, @active_player)
-          end_of_beat!
-          recycle!
-        end
-        # if they get here, the game timed out
-        @active = false
-        @events.log! "Time up!"
-        winner = loser = nil
-        if @players[0].life > @players[1].life
-          winner = @players[0]
-          loser = @players[1]
-        elsif @players[0].life < @players[1].life
-          winner = @players[1]
-          loser = @players[0]
-        else
-          @tie = true
-          @events.log! "Tie at #{@players[0].life}!"
-          return
-        end
-        @events.log! "#{winner.player_name} wins at #{winner.life} to #{loser.life}"
-        @winner = winner.player_name
-        @loser = loser.player_name
-        return
-      end
-      # if they get here, one of the characters got KO'd
-      @active = false
-      winner = @players[0].alive?? 0 : 1
-      @events.log! "#{@players[winner].player_name} wins!"
-      @winner = @players[winner].player_name
-      @loser = @players[(winner+1)%2].player_name
+    cause, winner = catch :halt do
+      play_15_turns!
+      return resolve_timeout!
+    end
+    if cause == :ko || cause == :concede
+      resolve_game!(winner)
+    end
+  end
+
+  def resolve_timeout!
+    @active = false
+    @events.log! "Time up!"
+    winner = loser = nil
+    if @players[0].life > @players[1].life
+      winner = @players[0]
+      loser = @players[1]
+    elsif @players[0].life < @players[1].life
+      winner = @players[1]
+      loser = @players[0]
+    else
+      @tie = true
+      @events.log! "Tie at #{@players[0].life}!"
       return
     end
-    # this means there wasn't enough input; thus, the game isn't over.
+    @events.log! "#{winner.player_name} wins at #{winner.life} to #{loser.life}"
+    @winner = winner.player_name
+    @loser = loser.player_name
+    return
+  end
+
+  def resolve_game!(winner)
+    @active = false
+    @events.log! "#{@players[winner].player_name} wins!"
+    @winner = @players[winner].player_name
+    @loser = @players[(winner+1)%2].player_name
+    return
+  end
+
+  def play_15_turns!
+    select_characters!
+    select_discards_and_finishers!
+    15.times do |round_number|
+      @round_number = round_number + 1 # 1 based
+      select_attack_pairs!
+      ante!
+      reveal!
+      # if either player runs out of cards, go to the next turn
+      if handle_clashes! == :no_cards
+        @events.log!("A player ran out of cards. Turn is cycling.")
+        regain_cards!
+        next
+      end
+      regain_bases!
+      determine_active_player!
+      passive_abilities!
+      start_of_beat!
+      activate!(@active_player, @reactive_player)
+      activate!(@reactive_player, @active_player)
+      end_of_beat!
+      recycle!
+    end
   end
 
   def input!(player_id, str)

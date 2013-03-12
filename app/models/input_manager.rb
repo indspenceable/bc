@@ -52,7 +52,7 @@ class InputManager
       @input_buffer.each do |k,v|
         raise "#{k} sent input (#{v}) when it wasn't needed." if v.any?
       end
-      throw :input_required
+      throw :halt, :input_required
     end
     @answers
   end

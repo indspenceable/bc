@@ -223,7 +223,7 @@ class Character
     log_me!("gets hit for #{damage} damage")
     @damage_taken_this_beat += damage
     @life -= damage
-    throw :ko unless alive?
+    throw :halt, [:ko, opponent.player_id] unless alive?
   end
   def alive?
     @life > 0
