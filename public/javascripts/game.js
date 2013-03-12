@@ -103,7 +103,10 @@ var init = function(player_id, game_id, chimeEnabled) {
     sturdy: makeCard(0, 1, -1, {"Stun Immunity": 2, "Ignore all movement effects applied to you this beat.": undefined, "After Activating": "You may assume the paradigm of resilience."}),
     urgent: makeCard("0~1", -1, 2, {"Before Activating": "Advance up to one space.", "After Activating": "You may assume the paradigm of haste."}),
     sinuous: makeCard(0, 0, 1, {"Stun Guard": 2, "After Activating": "You may assume the paradigm of fluidity."}),
-    paradigmshift: makeCard("2~3", 3, 3, {"Before Activating": "Assume the paradigm of your choice."})
+    paradigmshift: makeCard("2~3", 3, 3, {"Before Activating": "Assume the paradigm of your choice."}),
+
+    openthegate: makeCard("1~2", 3, 7, {"On Hit": "Opponent is stunend. Zaamassal may assume 3 paradigms."}),
+    planardivider: makeCard(1, 2, 5, {"Before Activating": "Move to any unoccupied space.", "On Hit": "Move the opponent to any unoccupied space. +1 Power for each space between you and the opponent. Assume any paradigm."})
   }
 
   var loadCard = function(cardName, $card, overrideCardName) {
