@@ -106,7 +106,7 @@ class Distortion < Paradigm
   flag :distortion
 
   def name_and_effect
-    "Paradigm of Pain: (Range 3~4 is always in your range. Attacks at range 3~4 don't hit you.)"
+    "Paradigm of Distortion: (Range 3~4 is always in your range. Attacks at range 3~4 don't hit you.)"
   end
 end
 
@@ -145,7 +145,7 @@ class Resilience < Paradigm
   end
 
   def name_and_effect
-    "Paradigm of Pain: (Start of Beat: Gain Soak 2. After Activating: Lose all Soak)"
+    "Paradigm of Resilience: (Start of Beat: Gain Soak 2. After Activating: Lose all Soak)"
   end
 end
 
@@ -157,7 +157,7 @@ class Haste < Paradigm
   flag :stop_movement_if_adjacent
 
   def name_and_effect
-    "Paradigm of Pain: (You win priority ties. Adjacent opponents can't move.)"
+    "Paradigm of Haste: (You win priority ties. Adjacent opponents can't move.)"
   end
 end
 
@@ -325,6 +325,7 @@ class Zaamassal < Character
   end
   def assume_paradigm!(choice)
     return if choice == 'pass'
+    log_me!("assumes the paradigm of: #{choice}.")
     @paradigms = [paradigm_name_to_instance(choice)]
   end
 
@@ -332,6 +333,7 @@ class Zaamassal < Character
     !@paradigms.any?{|p| p.name == choice }
   end
   def assume_paradigm_multi!(choice)
+    log_me!("assumes the paradigm of: #{choice}.")
     @paradigms << paradigm_name_to_instance(choice)
   end
 end
