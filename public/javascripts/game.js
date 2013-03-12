@@ -234,7 +234,7 @@ var init = function(player_id, game_id, chimeEnabled) {
         html: true,
         trigger: 'hover',
         title: discard1Cards[index],
-        content: loadCard(bases[index], $template.clone()).html()
+        content: loadCard(discard1Cards[index], $template.clone()).html()
         }).appendTo($discard1)
     }
     for (var index in discard2Cards) {
@@ -243,7 +243,7 @@ var init = function(player_id, game_id, chimeEnabled) {
         html: true,
         trigger: 'hover',
         title: discard2Cards[index],
-        content: loadCard(bases[index], $template.clone()).html()
+        content: loadCard(discard2Cards[index], $template.clone()).html()
         }).appendTo($discard2)
     }
   }
