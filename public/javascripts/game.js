@@ -92,6 +92,9 @@ var init = function(player_id, game_id, chimeEnabled) {
     assassin: makeCard(0, 0, 0, {"On Hit": "Retreat any number of spaces.", "On Damage, Range 1": "You may spend a dark force token. If you do, the opponent cannot move next beat."}),
     knives: makeCard("1~2",4,5, {"This attack does not stun at range one.": undefined, "This attack wins priority ties without clashing.": undefined}),
 
+    millionknives: makeCard("1~4", 3, 7, {"On Hit": "Advance one space. If you moved, and you are not adjacent to the opponent, then repeat this attack."}),
+    livingnightmare: makeCard(1, 3, 2, {"On Hit": "The opponent is stunned. For the rest of the duel, Heketch has unlimited dark force tokens."}),
+
     // Zaam
     malicious: makeCard(0, 1, -1, {"Stun Guard": 2, "After Activating": "You may assume the paradigm of pain."}),
     warped: makeCard("0~2", 0, 0, {"Start of Beat": "Retreat 1 Space.", "After Activating": "You may assume the paradigm of distortion."}),
@@ -147,9 +150,20 @@ var init = function(player_id, game_id, chimeEnabled) {
   var setAnswers = function(question) {
     var $btnGroup = $('<div/>').addClass('btn-group')
     var matches = question.match(/<[^>]*>/g)
+    var $template = $('#template-card')
     for (var i in matches) {
       var currentMatch = matches[i].substring(1, matches[i].length-1)
-      $('<a/>').addClass('btn').text(currentMatch).appendTo($btnGroup)
+      var currentAnswer = $('<a/>').addClass('btn').text(currentMatch)
+      if (cardDefinitions[currentMatch]) {
+        currentAnswer.popover({
+          html: true,
+          trigger: 'hover',
+          title: currentMatch,
+          placement: 'top',
+          content: loadCard(currentMatch, $template.clone()).html()
+        })
+      }
+      currentAnswer.appendTo($btnGroup)
     }
     var $answers = $('.js-answers')
     $answers.empty()
