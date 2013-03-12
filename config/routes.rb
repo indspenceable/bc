@@ -4,7 +4,9 @@ Battlecon::Application.routes.draw do
   post "sessions/logout", as: "logout"
   get '/games/challenge', :as => 'challenge'
   get '/games/required_input_count', :as => 'required_input_count'
-  resources :games, only: [:show, :update, :index]
+  resources :games, only: [:show, :update, :index] do
+    get :ping, on: :member
+  end
   resources :users, only: [:show, :update]
 
   if Rails.env.development?

@@ -11,6 +11,9 @@ var init = function(player_id, game_id, chimeEnabled) {
   var needAlert = false;
   var faviconTimeout = 100;
 
+  var cachedSteps = []
+  var currentStep = 0
+
   var $root = function(pn) {
     //return (pn == player_id ? $(".js-mine") : $('.js-theirs'))
     return $('.js-p' + pn)
@@ -295,7 +298,7 @@ var init = function(player_id, game_id, chimeEnabled) {
   var chime = new Audio("/audio/chime.wav")
   var windowActive = window.isActive
 
-  var setUI = function(data) {
+  var setUI = function(data, inputNeeded) {
     // short circuit unless more events have happened, or
     // there is a new question.
     if (data.gameState && data.gameState.input_number == cachedInputNumber &&
@@ -306,31 +309,34 @@ var init = function(player_id, game_id, chimeEnabled) {
     cachedInputNumber = data.gameState.input_number;
     cachedRequiredInput = data.requiredInput
 
-    console.log(data)
-
     $('.js-loading').hide()
     $('.js-in-game').show()
 
-    // Do everything required for this question.
-    var requiredInput = data['requiredInput']
-    setup_inputs(requiredInput)
+    // Only if we are on the current step of the game.
+    if (inputNeeded) {
+      // Do everything required for this question.
+      var requiredInput = data['requiredInput']
+      setup_inputs(requiredInput)
 
-    if (requiredInput) {
-      if (!needInputAlready && !windowActive && chimeEnabled) {
-        chime.play()
+      if (requiredInput) {
+        if (!needInputAlready && !windowActive && chimeEnabled) {
+          chime.play()
+        }
+        needInputAlready = true
+        setFaviconToAlert();
+      } else {
+        needInputAlready = false
+        setFaviconToDefault();
       }
-      needInputAlready = true
-      setFaviconToAlert();
-    } else {
-      needInputAlready = false
-      setFaviconToDefault();
-    }
 
-    if (!needAlert && requiredInput) {
+      if (!needAlert && requiredInput) {
+        needAlert = requiredInput
+        setFaviconToAlert();
+      }
       needAlert = requiredInput
-      setFaviconToAlert();
+    } else {
+      setup_inputs(requiredInput)
     }
-    needAlert = requiredInput
 
     // Updates related to the gamestate
     var gameState = data['gameState']
@@ -400,10 +406,13 @@ var init = function(player_id, game_id, chimeEnabled) {
 
   // Ajax methods
   var ping = function() {
-    $.get('/games/' + game_id + '.json', {
+    $.get('/games/' + game_id + '/ping.json', {
+      index: cachedSteps.length
     }, function(data) {
-      setUI(data)
-      setTimeout(ping, 1000)
+      for (var i in data) {
+        cachedSteps[i] = data[i]
+      }
+      setTimeout(ping, 100)
     }, 'json')
   }
   var submitData = function(str) {
@@ -413,9 +422,19 @@ var init = function(player_id, game_id, chimeEnabled) {
       },
       method: 'PUT',
       success: function(data) {
-        setUI(data)
+        // setUI(data)
       }
     })
+  }
+
+  var stepUp = function() {
+    if (currentStep < cachedSteps.length-1) {
+      currentStep += 1;
+      console.log("ready?", currentStep,cachedSteps.length-1,  currentStep == cachedSteps.length-1)
+      setUI(cachedSteps[currentStep], currentStep == cachedSteps.length-1)
+    }
+    console.log("Step")
+    setTimeout(stepUp, 1000)
   }
 
   var setFaviconToAlert = function() {
@@ -464,6 +483,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     $(window).blur(function() {windowActive=false})
 
     ping()
+    stepUp();
   })
 }
 

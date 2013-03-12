@@ -84,6 +84,11 @@ class GamePlay
     end
   end
 
+  #TODO is this what we want?
+  def event_index
+    @events.to_a.count
+  end
+
   def resolve_timeout!
     @active = false
     @events.log! "Time up!"
@@ -99,7 +104,7 @@ class GamePlay
       @events.log! "Tie at #{@players[0].life}!"
       return
     end
-    @events.log! "#{winner.player_name} wins at #{winner.life} to #{loser.life}"
+    @events.log! "#{winner.player_name} wins at #{winner.life} to #{loser.life}", false
     @winner = winner.player_name
     @loser = loser.player_name
     return
@@ -107,7 +112,7 @@ class GamePlay
 
   def resolve_game!(winner)
     @active = false
-    @events.log! "#{@players[winner].player_name} wins!"
+    @events.log! "#{@players[winner].player_name} wins!", false
     @winner = @players[winner].player_name
     @loser = @players[(winner+1)%2].player_name
     return

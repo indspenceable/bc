@@ -34,7 +34,7 @@ class GamesController < LoggedInController
   end
 
   def ping
-    render json: game_state_hash
+    render json: event_index_to_game_state_hashes(Integer(params[:index]))
   end
 
   def required_input_count
@@ -57,6 +57,23 @@ class GamesController < LoggedInController
       'requiredInput' => current_game.play.required_input[current_game.player_id(current_user)]
     }
   end
+
+  def event_index_to_game_state_hashes(index)
+    last_index = current_game.play.event_index
+    gs_list = {}
+    (index..last_index).each do |i|
+      hsh = {
+      'gameState' => current_game.play(i).game_state(current_game.player_id(current_user)),
+      }
+      if i == last_index
+        hsh['requiredInput'] = current_game.play(i).required_input[current_game.player_id(current_user)]
+      end
+      gs_list[i] = hsh
+    end
+    puts "Gs list looks like #{gs_list}"
+    gs_list
+  end
+
 
   helper_method :current_game
   def current_game
