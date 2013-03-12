@@ -29,12 +29,13 @@ class GamesController < LoggedInController
       format.html do
         @player_id = current_game.player_id(current_user)
         @starting_configuration = game_state_hash.to_json
+        @existing_game_steps = event_index_to_game_state_hashes(current_game.player_id(current_user), 0).values.to_json
       end
     end
   end
 
   def ping
-    render json: event_index_to_game_state_hashes(Integer(params[:index]))
+    render json: event_index_to_game_state_hashes(current_game.player_id(current_user), Integer(params[:index]))
   end
 
   def required_input_count
@@ -58,17 +59,23 @@ class GamesController < LoggedInController
     }
   end
 
-  def event_index_to_game_state_hashes(index)
+  def event_index_to_game_state_hashes(pn, index)
     last_index = current_game.play.event_index
     gs_list = {}
     (index..last_index).each do |i|
       hsh = {
       'gameState' => current_game.play(i).game_state(current_game.player_id(current_user)),
       }
-      if i == last_index
-        hsh['requiredInput'] = current_game.play(i).required_input[current_game.player_id(current_user)]
-      end
+      # if i == last_index
+      #   hsh['requiredInput'] = current_game.play.required_input[current_game.player_id(current_user)]
+      # end
       gs_list[i] = hsh
+    end
+    if current_game.play(last_index).required_input[pn]
+      gs_list[last_index] = {
+        'gameState' => current_game.play.game_state(current_game.player_id(current_user)),
+        'requiredInput' => current_game.play.required_input[current_game.player_id(current_user)]
+      }
     end
     puts "Gs list looks like #{gs_list}"
     gs_list

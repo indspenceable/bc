@@ -86,7 +86,7 @@ class GamePlay
 
   #TODO is this what we want?
   def event_index
-    @events.to_a.count
+    @events.to_a.count + 1
   end
 
   def resolve_timeout!

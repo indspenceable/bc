@@ -162,4 +162,4 @@
 
 %script{:src => "/javascripts/game.js"}
 :javascript
-  Game.init("#{@player_id}", "#{params[:id]}", #{current_user.chime_enabled? ? "true" : "false"})
+  Game.init("#{@player_id}", "#{params[:id]}", #{@existing_game_steps}, #{current_user.chime_enabled? ? "true" : "false"})

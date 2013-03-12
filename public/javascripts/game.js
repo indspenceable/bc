@@ -3,7 +3,7 @@ function capitaliseFirstLetter(string)
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-var init = function(player_id, game_id, chimeEnabled) {
+var init = function(player_id, game_id, existingGameSteps, chimeEnabled) {
   var cachedInputNumber = -1;
   var cachedRequiredInput;
 
@@ -11,8 +11,8 @@ var init = function(player_id, game_id, chimeEnabled) {
   var needAlert = false;
   var faviconTimeout = 100;
 
-  var cachedSteps = []
-  var currentStep = 0
+  var cachedSteps = existingGameSteps
+  var currentStep = cachedSteps.length-2
 
   var $root = function(pn) {
     //return (pn == player_id ? $(".js-mine") : $('.js-theirs'))
@@ -299,23 +299,18 @@ var init = function(player_id, game_id, chimeEnabled) {
   var windowActive = window.isActive
 
   var setUI = function(data, inputNeeded) {
-    // short circuit unless more events have happened, or
-    // there is a new question.
-    if (data.gameState && data.gameState.input_number == cachedInputNumber &&
-      data.requiredInput == cachedRequiredInput) {
-      return;
-    }
-    // Set the cache so we'll shortcircuit next time.
-    cachedInputNumber = data.gameState.input_number;
-    cachedRequiredInput = data.requiredInput
+    // This only gets called when we actually need to update, now!
 
     $('.js-loading').hide()
     $('.js-in-game').show()
 
+    console.log("inputNeeded? ", inputNeeded, data)
+
     // Only if we are on the current step of the game.
-    if (inputNeeded) {
+    if (inputNeeded && cachedRequiredInput != data['requiredInput') {
       // Do everything required for this question.
       var requiredInput = data['requiredInput']
+      cachedRequiredInput = data.requiredInput
       setup_inputs(requiredInput)
 
       if (requiredInput) {
@@ -410,6 +405,7 @@ var init = function(player_id, game_id, chimeEnabled) {
       index: cachedSteps.length
     }, function(data) {
       for (var i in data) {
+        if (currentStep == i) { currentStep -= 1 }
         cachedSteps[i] = data[i]
       }
       setTimeout(ping, 100)
