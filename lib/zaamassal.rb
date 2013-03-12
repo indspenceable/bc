@@ -26,6 +26,7 @@ class Warped < ZaamassalStyle
   def initialize
     super('warped', 0..2, 0, 0, 'distortion')
   end
+
   def start_of_beat!
     {
       "retreat" => select_from_methods(retreat: [1])
@@ -90,13 +91,22 @@ class Pain < Paradigm
       "life_loss" => ->(me, input) { me.opponent.lose_life!(2) }
     }
   end
+
+  def name_and_effect
+    "Paradigm of Pain: (On Damage: Opponent loses 2 life)"
+  end
 end
 
 class Distortion < Paradigm
   def initialize
     super("distortion", 0, 0, 0)
   end
+
   flag :distortion
+
+  def name_and_effect
+    "Paradigm of Distortion: (Range 3~4 is always in your range. Attacks at range 3~4 don't hit you.)"
+  end
 end
 
 class Fluidity < Paradigm
@@ -112,6 +122,9 @@ class Fluidity < Paradigm
     {
       "movement" => select_from_methods(advance: [0,1])
     }
+  end
+  def name_and_effect
+    "Paradigm of Fluidity: (Before Activating: Move up to 1 space. End of Beat: Move up to 1 space.)"
   end
 end
 
@@ -129,6 +142,10 @@ class Resilience < Paradigm
       "lose_soak" => ->(me, input) { me.lose_soak! }
     }
   end
+
+  def name_and_effect
+    "Paradigm of Resilience: (Start of Beat: Gain Soak 2. After Activating: Lose all Soak)"
+  end
 end
 
 class Haste < Paradigm
@@ -137,6 +154,10 @@ class Haste < Paradigm
   end
   flag :wins_ties
   flag :stop_movement_if_adjacent
+
+  def name_and_effect
+    "Paradigm of Haste: (You win priority ties. Adjacent opponents can't move.)"
+  end
 end
 
 class ResilienceSoak < Card
@@ -227,7 +248,7 @@ class Zaamassal < Character
 
   def current_effects
     effects = []
-    effects += @paradigms.map{|p| "Paradigm of #{p.name}"} if @paradigms.any?
+    effects += @paradigms.map(&:name_and_effect)
     effects += super
     effects += @bonuses.map(&:name_and_effect)
     effects
@@ -235,7 +256,7 @@ class Zaamassal < Character
 
   def token_pool
     pool = []
-    # pool += @paradigms.map(&:name) if @paradigms.any?
+    pool += paradigm_map.values.map(&:name_and_effect)
     pool
   end
 
@@ -280,14 +301,18 @@ class Zaamassal < Character
     end
   end
 
-  def paradigm_name_to_instance(n)
-    paradigm_map = {
+  def paradigm_map
+    {
       'pain' => Pain.new,
-      'distortion' => Pain.new,
+      'distortion' => Distortion.new,
       'resilience' => Resilience.new,
       'haste' => Haste.new,
       'fluidity' => Fluidity.new,
-    }[n]
+    }
+  end
+
+  def paradigm_name_to_instance(n)
+    paradigm_map[n]
   end
 
   def gain_power_for_distance!
@@ -299,6 +324,7 @@ class Zaamassal < Character
   end
   def assume_paradigm!(choice)
     return if choice == 'pass'
+    log_me!("assumes the paradigm of: #{choice}.")
     @paradigms = [paradigm_name_to_instance(choice)]
   end
 
@@ -306,6 +332,7 @@ class Zaamassal < Character
     !@paradigms.any?{|p| p.name == choice }
   end
   def assume_paradigm_multi!(choice)
+    log_me!("assumes the paradigm of: #{choice}.")
     @paradigms << paradigm_name_to_instance(choice)
   end
 end

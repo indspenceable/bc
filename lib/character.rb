@@ -1,13 +1,11 @@
 class Character
   attr_reader :player_id, :player_name, :hand, :life, :finisher, :damage_dealt_this_beat
   attr_accessor :opponent, :position
-
-  def initialize player_id, player_name, input_manager, events, event_logger
+  def initialize player_id, player_name, input_manager, events
     @player_id = player_id
     @player_name = player_name
     @input_manager = input_manager
     @events = events
-    @event_logger = event_logger
     @position = player_id == 0 ? 1 : 5
     @clashed_bases = []
     @token_pool = []
@@ -37,6 +35,10 @@ class Character
 
   def token_names
     @token_pool.map(&:name).uniq
+  end
+
+  def finisher_name
+    @finisher ? @finisher.name : nil
   end
 
   def reveal_attack_pair_string
@@ -99,7 +101,9 @@ class Character
     (seen_by == @player_id || @revealed) && @style && @style.name
   end
   def special_action_name(seen_by=@player_id)
-    (seen_by == @player_id || @revealed) && @played_finisher && finisher.name
+    #always show the finisher, if they've played it.
+    return finisher.name if @played_finisher
+    # (seen_by == @player_id || @revealed) && @played_finisher && finisher.name
   end
   def clash!
     @clashed_bases << @base
@@ -219,14 +223,14 @@ class Character
   end
 
   def log_me!(msg)
-    @event_logger.call("#{player_name} #{msg}")
+    @events.log!("#{player_name} #{msg}")
   end
 
   def receive_damage!(damage)
     log_me!("gets hit for #{damage} damage")
     @damage_taken_this_beat += damage
     @life -= damage
-    throw :ko unless alive?
+    throw :halt, [:ko, opponent.player_id] unless alive?
   end
   def alive?
     @life > 0
@@ -403,7 +407,7 @@ class Character
         @position += n
       end
     end
-    @event_logger.call("#{player_name} advances #{n_s} to space #{@position}") if log_event
+    log_me!("advances #{n_s} to space #{@position}") if log_event
   end
 
   def retreat!(n_s,log_event=true)
@@ -414,7 +418,7 @@ class Character
       @position += n
     end
     #TODO - this looks like a bug.
-    @event_logger.call("#{player_name} retreats #{n_s} to space #{@position + 1}") if log_event
+    log_me!("retreats #{n_s} to space #{@position + 1}") if log_event
   end
 
   def pull?(n)
@@ -427,11 +431,11 @@ class Character
 
   def push!(n)
     @opponent.retreat!(n, false)
-    @event_logger.call("#{opponent.player_name} gets pushed #{n} to space #{@opponent.position}")
+    opponent.log_me!("gets pushed #{n} to space #{@opponent.position}")
   end
   def pull!(n)
     opponent.advance!(n, false)
-    @event_logger.call("#{opponent.player_name} gets pulled #{n} to space #{@opponent.position}")
+    opponent.log_me!("gets pulled #{n} to space #{@opponent.position}")
   end
 
 

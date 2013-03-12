@@ -18,7 +18,7 @@ class GamesController < LoggedInController
         :inputs => [])
 
       # Deliver an email
-      UserMailer.challenge(current_user, opponent, game).deliver if opponent.email_notifications_enabled?
+      UserMailer.challenge(opponent, current_user, game).deliver if opponent.email_notifications_enabled?
     end
     redirect_to game_path(game)
   end

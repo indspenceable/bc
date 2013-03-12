@@ -28,10 +28,6 @@
   width: 400px;*/
 }
 
-.header:hover .character-desc {
-  display: block;
-}
-
 .event-log {
   max-height: 100px;
   overflow: scroll;

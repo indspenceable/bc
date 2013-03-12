@@ -54,11 +54,11 @@ class GamePlay
     @players
   end
 
-  def initialize(starting_player, player_names, inputs=[])
+  def initialize(starting_player, player_names, inputs=[], idx=nil)
     @starting_player = starting_player
     @player_names = player_names
     @valid_inputs_thus_far = inputs
-    setup_game!(@valid_inputs_thus_far)
+    setup_game!(@valid_inputs_thus_far, idx)
   end
 
   def valid_inputs
@@ -67,68 +67,76 @@ class GamePlay
 
   attr_reader :winner, :loser, :tie
 
-  def setup_game!(inputs)
+  def setup_game!(inputs, idx=nil)
     @input_manager = InputManager.new(inputs)
-    @events = []
+    @events = EventManager.new(idx)
     @player_locations = {
       0 => 1,
       1 => 5
     }
     @last_active_player_id = @starting_player
     @active = true
-    catch :input_required do
-      catch :ko do
-        select_characters!
-        select_discards_and_finishers!
-        15.times do |round_number|
-          @round_number = round_number + 1 # 1 based
-          select_attack_pairs!
-          ante!
-          reveal!
-          # if either player runs out of cards, go to the next turn
-          if handle_clashes! == :no_cards
-            log_event!("A player ran out of cards. Turn is cycling.")
-            regain_cards!
-            next
-          end
-          regain_bases!
-          determine_active_player!
-          passive_abilities!
-          start_of_beat!
-          activate!(@active_player, @reactive_player)
-          activate!(@reactive_player, @active_player)
-          end_of_beat!
-          recycle!
-        end
-        # if they get here, the game timed out
-        @active = false
-        @events << "Time up!"
-        winner = loser = nil
-        if @players[0].life > @players[1].life
-          winner = @players[0]
-          loser = @players[1]
-        elsif @players[0].life < @players[1].life
-          winner = @players[1]
-          loser = @players[0]
-        else
-          @tie = true
-          @events << "Tie at #{@players[0].life}!"
-          return
-        end
-        @events << "#{winner.player_name} wins at #{winner.life} to #{loser.life}"
-        @winner = winner.player_name
-        @loser = loser.player_name
-        return
-      end
-      # if they get here, one of the characters got KO'd
-      @active = false
-      winner = @players[0].alive?? 0 : 1
-      @events << "#{@players[winner].player_name} wins!"
-      @winner = @players[winner].player_name
-      @loser = @players[(winner+1)%2].player_name
+    cause, winner = catch :halt do
+      play_15_turns!
+      return resolve_timeout!
+    end
+    if cause == :ko || cause == :concede
+      resolve_game!(winner)
+    end
+  end
+
+  def resolve_timeout!
+    @active = false
+    @events.log! "Time up!"
+    winner = loser = nil
+    if @players[0].life > @players[1].life
+      winner = @players[0]
+      loser = @players[1]
+    elsif @players[0].life < @players[1].life
+      winner = @players[1]
+      loser = @players[0]
+    else
+      @tie = true
+      @events.log! "Tie at #{@players[0].life}!"
       return
     end
-    # this means there wasn't enough input; thus, the game isn't over.
+    @events.log! "#{winner.player_name} wins at #{winner.life} to #{loser.life}"
+    @winner = winner.player_name
+    @loser = loser.player_name
+    return
+  end
+
+  def resolve_game!(winner)
+    @active = false
+    @events.log! "#{@players[winner].player_name} wins!"
+    @winner = @players[winner].player_name
+    @loser = @players[(winner+1)%2].player_name
+    return
+  end
+
+  def play_15_turns!
+    select_characters!
+    select_discards_and_finishers!
+    15.times do |round_number|
+      @round_number = round_number + 1 # 1 based
+      select_attack_pairs!
+      ante!
+      reveal!
+      # if either player runs out of cards, go to the next turn
+      if handle_clashes! == :no_cards
+        @events.log!("A player ran out of cards. Turn is cycling.")
+        regain_cards!
+        next
+      end
+      regain_bases!
+      determine_active_player!
+      passive_abilities!
+      start_of_beat!
+      activate!(@active_player, @reactive_player)
+      activate!(@reactive_player, @active_player)
+      end_of_beat!
+      recycle!
+    end
   end
 
   def input!(player_id, str)
@@ -159,7 +167,7 @@ class GamePlay
   def game_state(player_id=nil)
     return {:events => []} unless @players
     {
-      :events => @events,
+      :events => @events.to_a,
       :players => [
         player_info_for(0, player_id),
         player_info_for(1, player_id)
@@ -177,18 +185,6 @@ class GamePlay
 
   private
 
-  # log events to the game's event log
-  #    phase - string
-  #    *events - list of event strings to be separated by '; '
-  def log_event!(phase, *events)
-    if (events.empty?)
-      @events << phase
-      return @events
-    end
-    @events << (phase + ': ' + events.join('; '))
-    return @events
-  end
-
   # phases of the game
   def select_characters!
     #character selection
@@ -197,28 +193,22 @@ class GamePlay
       ["select_character", ->(text) { GamePlay.character_names.include?(text) }],
     )
 
-    log_event!("#{@player_names[0]} chooses: #{@input_manager.answer(0)}")
-    log_event!("#{@player_names[1]} chooses: #{@input_manager.answer(1)}")
+    @events.log!("#{@player_names[0]} chooses: #{@input_manager.answer(0)}")
+    @events.log!("#{@player_names[1]} chooses: #{@input_manager.answer(1)}")
 
     @players = [nil, nil]
-    # for now, just consume input.
-    event_logger = ->(*inputs) do
-      log_event!(inputs)
-    end
     @players[0] = GamePlay.character_list[
       GamePlay.character_names.index @input_manager.answer(0)].new(
         0,
         @player_names[0],
         @input_manager,
-        @events,
-        event_logger)
+        @events)
     @players[1] = GamePlay.character_list[
       GamePlay.character_names.index @input_manager.answer(1)].new(
         1,
         @player_names[1],
         @input_manager,
-        @events,
-        event_logger)
+        @events)
 
     @players[0].opponent = @players[1]
     @players[1].opponent = @players[0]
@@ -238,7 +228,7 @@ class GamePlay
     @players[0].set_initial_discards!
     @players[1].set_initial_discards!
 
-    # log_event!("Select initial discards", "#{@player_names[0]} discards #{p0a0} and #{p0a1}.", "#{@player_names[1]} discards #{p1a0} and #{p1a1}.")
+    # @events.log!("Select initial discards", "#{@player_names[0]} discards #{p0a0} and #{p0a1}.", "#{@player_names[1]} discards #{p1a0} and #{p1a1}.")
   end
 
   def select_attack_pairs!
@@ -267,7 +257,7 @@ class GamePlay
         # answer = @input_manager.answer(current_player_id)
         answer = select_from_methods(ante: current_player.ante_options).call(current_player, @input_manager)
         #TODO fix so "Player 1 passes" instead of "Player 1 antes pass"
-        # log_event!("Ante", "Player #{current_player_id} antes #{answer}")
+        # @events.log!("Ante", "Player #{current_player_id} antes #{answer}")
         passed_this_round = (answer == 'ante#pass')
       # end
       if passed_this_round
@@ -278,7 +268,7 @@ class GamePlay
       #toggle the player id between 0 and 1
       current_player_id = (current_player_id + 1) % 2
     end
-    log_event!("Ante phase done")
+    @events.log!("Ante phase done")
   end
 
   def reveal!
@@ -309,7 +299,7 @@ class GamePlay
         next
       end
 
-      log_event!("Clash at #{@players[0].priority} priority")
+      @events.log!("Clash at #{@players[0].priority} priority")
       @players.each do |p|
         p.clash!
       end
@@ -321,9 +311,9 @@ class GamePlay
       @players[0].select_new_base!(@input_manager.answer(0))
       @players[1].select_new_base!(@input_manager.answer(1))
 
-      log_event!("Resolve Clash", @players.each_with_index.map do |p, i|
+      @events.log!("Resolve Clash " + @players.each_with_index.map do |p, i|
         "#{@player_names[i]} reveals #{p.current_base_name}"
-      end)
+      end.join(' / '))
     end
   end
 
@@ -346,19 +336,19 @@ class GamePlay
       @active_player, @reactive_player = @players[1], @players[0]
     end
     #some characters care if they are active...
-    log_event!("#{active_player.player_name} is the active player (#{@active_player.priority} / #{@reactive_player.priority})")
+    @events.log!("#{active_player.player_name} is the active player (#{@active_player.priority} / #{@reactive_player.priority})")
     @last_active_player_id = @active_player.player_id
     @active_player.is_active!
     @reactive_player.is_reactive!
   end
 
   def start_of_beat!
-    log_event!("Start of beat #{@round_number}")
+    @events.log!("Start of beat #{@round_number}")
     @active_player.start_of_beat!
     @reactive_player.start_of_beat!
   end
   def end_of_beat!
-    log_event!("End of beat #{@round_number}")
+    @events.log!("End of beat #{@round_number}")
     @active_player.end_of_beat!
     @reactive_player.end_of_beat!
   end
@@ -370,7 +360,7 @@ class GamePlay
   def activate!(current, opponent)
     unless current.stunned?
       current.execute_attack!
-    else log_event!("#{current.player_name} is stunned!")
+    else @events.log!("#{current.player_name} is stunned!")
     end
   end
 
@@ -399,7 +389,8 @@ class GamePlay
       :extra_data => @players[player_id].extra_data,
       :discard1 => @players[player_id].discard1(as_seen_by_id),
       :discard2 => @players[player_id].discard2(as_seen_by_id),
-      :character_name => @players[player_id].name
+      :character_name => @players[player_id].name,
+      :finisher_name => @players[player_id].finisher_name,
     }
   end
 end

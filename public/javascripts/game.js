@@ -28,7 +28,9 @@ var init = function(player_id, game_id, chimeEnabled) {
     hikaru: "Hikaru has four elemental tokens each with a different bonus. Each beat, he may ante one token to get its effect, and then it is discarded. He regains tokens by using his styles, but may not regain any that he spent this turn.",
     cadenza: "Cadenza has 3 iron body tokens. Each beat, he may ante one for stun immunity that beat; additionally, every time he takes damage, he can spend one for (stun guard ∞)",
     khadath: "Khadath's styles allow him to place his gate trap. Opponents that move on immediately end that movement effect (You can move as you please starting on the trap). At reveal, opponents next to the trap get -1 priority, and opponents standing on top of the trap get -3 priority.",
-    rukyuk: "Rukyuk has 6 ammo tokens, each with a different bonus. Each turn he may ante one of them to get its bonus. If he doesn't ante any, he does not hit this beat."
+    rukyuk: "Rukyuk has 6 ammo tokens, each with a different bonus. Each turn he may ante one of them to get its bonus. If he doesn't ante any, he does not hit this beat.",
+    heketch: "Hekecth starts the duel with a dark force token. He can ante this to immediately teleport adjacent to the opponent, and gain 3 priority. His styles also allow him to spend his token for other benefits. At End of Beat, Heketch regains his token if there are at least 2 spaces between him and his opponent. He may never have more than one dark force token.",
+    zaamassal: "Zaamassal has 5 paradigms he can assume, according to his styles and unique base. Each paradigm has it's own benefits. Every time he assumes a paradigm, he loses his current paradigm. If Zaamassal gets stunned, he loses his current paradigm."
   }
 
   var cardDefinitions = {
@@ -92,14 +94,21 @@ var init = function(player_id, game_id, chimeEnabled) {
     assassin: makeCard(0, 0, 0, {"On Hit": "Retreat any number of spaces.", "On Damage, Range 1": "You may spend a dark force token. If you do, the opponent cannot move next beat."}),
     knives: makeCard("1~2",4,5, {"This attack does not stun at range one.": undefined, "This attack wins priority ties without clashing.": undefined}),
 
+    millionknives: makeCard("1~4", 3, 7, {"On Hit": "Advance one space. If you moved, and you are not adjacent to the opponent, then repeat this attack."}),
+    livingnightmare: makeCard(1, 3, 2, {"On Hit": "The opponent is stunned. For the rest of the duel, Heketch has unlimited dark force tokens."}),
+
     // Zaam
     malicious: makeCard(0, 1, -1, {"Stun Guard": 2, "After Activating": "You may assume the paradigm of pain."}),
     warped: makeCard("0~2", 0, 0, {"Start of Beat": "Retreat 1 Space.", "After Activating": "You may assume the paradigm of distortion."}),
-    sturdy: makeCard(0, 1, -1, {"Stun Immunity": 2, "Ignore all movement effects applied to you this beat.": undefined, "After Activating": "You may assume the paradigm of resilience."}),
+    sturdy: makeCard(0, 0, -1, {"Stun Immunity": undefined, "Ignore all movement effects applied to you this beat.": undefined, "After Activating": "You may assume the paradigm of resilience."}),
     urgent: makeCard("0~1", -1, 2, {"Before Activating": "Advance up to one space.", "After Activating": "You may assume the paradigm of haste."}),
-    sinuous: makeCard(0, 0, 1, {"Stun Guard": 2, "After Activating": "You may assume the paradigm of fluidity."}),
-    paradigmshift: makeCard("2~3", 3, 3, {"Before Activating": "Assume the paradigm of your choice."})
+    sinuous: makeCard(0, 0, 1, {"After Activating": "You may assume the paradigm of fluidity.", "End of Beat": "Teleport to any unoccupied space."}),
+    paradigmshift: makeCard("2~3", 3, 3, {"Before Activating": "Assume the paradigm of your choice."}),
+
+    openthegate: makeCard("1~2", 3, 7, {"On Hit": "Opponent is stunend. Zaamassal may assume 3 paradigms."}),
+    planardivider: makeCard(1, 2, 5, {"Before Activating": "Move to any unoccupied space.", "On Hit": "Move the opponent to any unoccupied space. +1 Power for each space between you and the opponent. Assume any paradigm."})
   }
+
   var loadCard = function(cardName, $card, overrideCardName) {
     $card.find('.name').text(overrideCardName || capitaliseFirstLetter(cardName))
     $card.find('.effects').empty()
@@ -145,13 +154,26 @@ var init = function(player_id, game_id, chimeEnabled) {
     $('.free-form').show()
   }
   var setAnswers = function(question) {
-    var $answers = $('.js-answers')
-    $answers.empty()
+    var $btnGroup = $('<div/>').addClass('btn-group')
     var matches = question.match(/<[^>]*>/g)
+    var $template = $('#template-card')
     for (var i in matches) {
       var currentMatch = matches[i].substring(1, matches[i].length-1)
-      $('<a/>').addClass('btn').text(currentMatch).appendTo($answers)
+      var currentAnswer = $('<a/>').addClass('btn').text(currentMatch)
+      if (cardDefinitions[currentMatch]) {
+        currentAnswer.popover({
+          html: true,
+          trigger: 'hover',
+          title: currentMatch,
+          placement: 'top',
+          content: loadCard(currentMatch, $template.clone()).html()
+        })
+      }
+      currentAnswer.appendTo($btnGroup)
     }
+    var $answers = $('.js-answers')
+    $answers.empty()
+    $answers.append($btnGroup)
     $answers.show()
   }
 
@@ -232,7 +254,7 @@ var init = function(player_id, game_id, chimeEnabled) {
         html: true,
         trigger: 'hover',
         title: discard1Cards[index],
-        content: loadCard(bases[index], $template.clone()).html()
+        content: loadCard(discard1Cards[index], $template.clone()).html()
         }).appendTo($discard1)
     }
     for (var index in discard2Cards) {
@@ -241,9 +263,25 @@ var init = function(player_id, game_id, chimeEnabled) {
         html: true,
         trigger: 'hover',
         title: discard2Cards[index],
-        content: loadCard(bases[index], $template.clone()).html()
+        content: loadCard(discard2Cards[index], $template.clone()).html()
         }).appendTo($discard2)
     }
+  }
+
+  var setHeader = function(pn, character, finisher) {
+    $root(pn).find('.character-name').text(capitaliseFirstLetter(character)).popover({
+      title: capitaliseFirstLetter(character),
+      content: characterUAs[character],
+      trigger: 'hover',
+      placement: 'bottom'
+    })
+    $root(pn).find('.finisher').text(capitaliseFirstLetter(finisher)).popover({
+      title: capitaliseFirstLetter(finisher),
+      html: true,
+      trigger: 'hover',
+      placement: 'bottom',
+      content: loadCard(finisher, $('#template-card').clone()).html()
+    })
   }
 
   var setExtraData = function(pn, data) {
@@ -294,7 +332,6 @@ var init = function(player_id, game_id, chimeEnabled) {
     }
     needAlert = requiredInput
 
-
     // Updates related to the gamestate
     var gameState = data['gameState']
     if (!gameState.players) { return }
@@ -306,6 +343,9 @@ var init = function(player_id, game_id, chimeEnabled) {
     displayBoard(gameState.players[0].location, gameState.players[1].location)
     // show the players hands
     for (var pn = 0; pn <= 1; pn++) {
+      setHeader(pn,
+        gameState.players[pn].character_name,
+        gameState.players[pn].finisher_name)
       fillCards(pn,
         gameState.players[pn].current_base,
         gameState.players[pn].current_style,
