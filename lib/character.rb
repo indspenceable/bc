@@ -501,6 +501,7 @@ class Character
   end
 
   def lose_life!(n)
+    log_me!("loses #{n} life.")
     @life -= n
   end
 
