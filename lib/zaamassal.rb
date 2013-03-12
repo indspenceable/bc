@@ -27,8 +27,6 @@ class Warped < ZaamassalStyle
     super('warped', 0..2, 0, 0, 'distortion')
   end
 
-  flag :distortion
-
   def start_of_beat!
     {
       "retreat" => select_from_methods(retreat: [1])
@@ -103,6 +101,7 @@ class Distortion < Paradigm
   def initialize
     super("distortion", 0, 0, 0)
   end
+
   flag :distortion
 
   def name_and_effect
@@ -305,7 +304,7 @@ class Zaamassal < Character
   def paradigm_map
     {
       'pain' => Pain.new,
-      'distortion' => Pain.new,
+      'distortion' => Distortion.new,
       'resilience' => Resilience.new,
       'haste' => Haste.new,
       'fluidity' => Fluidity.new,
