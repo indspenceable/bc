@@ -31,7 +31,7 @@ class Character
   end
 
   def finisher_name
-    @finisher ? @finisher.name : nil
+    @finisher ? @finisher.name : ""
   end
 
   def reveal_attack_pair_string
