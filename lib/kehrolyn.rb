@@ -46,7 +46,7 @@ class Whip
 	end
 	def oh_hit!
 		{
-			advance =>
+			hit_or_pull => ->(me, inputs) { me.hit_or_pull! }
 		}
 	end
 end
@@ -77,5 +77,13 @@ class Kehrolyn < Character
 	end
 	def self.character_name
 		'kehrolyn'
+	end
+
+	def hit_or_pull
+		if distance > 1
+			select_from_methods(pull: [1])
+		else
+			me.opponent.stunned!
+		end
 	end
 end
