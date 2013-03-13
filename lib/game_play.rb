@@ -4,6 +4,7 @@ require 'khadath'
 require 'rukyuk'
 require 'heketch'
 require 'zaamassal'
+require 'kehrolyn'
 
 # given a hash from methods to possible aruments prompt the user to select a
 # valid combination.
@@ -282,6 +283,7 @@ class GamePlay
     p = pl.priority
     p += 0.1 if pl.flag? :win_ties
     p += 0.3 if pl.played_finisher?
+    p -= 0.1 if pl.flag? :loses_ties
     p
   end
 
@@ -364,7 +366,7 @@ class GamePlay
   end
 
   def self.character_list
-    [Hikaru, Cadenza, Khadath, Rukyuk, Heketch, Zaamassal]
+    [Hikaru, Cadenza, Khadath, Rukyuk, Heketch, Zaamassal, Kehrolyn]
   end
   def self.character_names
     character_list.map(&:character_name)

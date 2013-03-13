@@ -44,12 +44,19 @@ class Whip
 	def initalize
 		super("whip", 0..1, 0 , 0)
 	end
+	def oh_hit!
+		{
+			advance =>
+		}
+	end
 end
 
 class Overload < Base
 	def initalize
-		super("overload", 1 , 3 , 2.9)
+		super("overload", 1 , 3 , 3)
 	end
+	flag :loses_ties
+
 	def start_of_beat!
 	end
 end
@@ -57,14 +64,16 @@ end
 
 class Kehrolyn < Character
 	def initialize *args
-	@hand << Overload.new
-	@hand += [
-		Bladed.new,
-		Exoskeletal.new,
-		Mutating.new,
-		Quicksilver.new,
-		Whip.new
-	]
+		super
+
+		@hand << Overload.new
+		@hand += [
+			Bladed.new,
+			Exoskeletal.new,
+			Mutating.new,
+			Quicksilver.new,
+			Whip.new
+		]
 	end
 	def self.character_name
 		'kehrolyn'
