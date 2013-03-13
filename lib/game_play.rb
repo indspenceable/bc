@@ -280,7 +280,7 @@ class GamePlay
 
   def priority_accounting_for_tiebreakers(pl)
     p = pl.priority
-    p += 0.1 if pl.flag? :win_ties
+    p += 0.1 if pl.flag? :wins_ties
     p += 0.3 if pl.played_finisher?
     p
   end
