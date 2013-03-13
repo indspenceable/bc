@@ -163,15 +163,16 @@ class Character
             end
           end
         end
-        if actions_to_do.count > 1
-          @input_manager.require_single_input!(player_id, "select_from:#{actions_to_do.keys.map{|x| "<#{x}>"}}",
-            ->(text) { actions_to_do.key?(text) })
-          current_action =@input_manager.answer(player_id)
+        if actions_to_do.count > 0
+          if actions_to_do.count > 1
+            @input_manager.require_single_input!(player_id, "select_from:#{actions_to_do.keys.map{|x| "<#{x}>"}}",
+              ->(text) { actions_to_do.key?(text) })
+            current_action = @input_manager.answer(player_id)
+          else
+            current_action = actions_to_do.keys.pop
+          end
           actions_to_do[current_action].call(self, @input_manager)
           completed_actions << current_action
-        elsif actions_to_do.count == 1
-          actions_to_do.values.pop.call(self, @input_manager)
-          return
         else
           return
         end
