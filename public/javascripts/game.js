@@ -89,7 +89,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     // Reggie
     critical: makeCard(0, -1, 1, {"This attack ignores stun guard.": undefined, "On Hit, Range 1": "Spend a dark force token to get +3 power."}),
     rasping: makeCard('0~1', -1, 1, {"On Hit, Range 1": "Spend a dark force token to get +3 power."}),
-    merciless: makeCard('0~1', -1, 1, {"If your opponent passes you this beat, they lose 2 life and can't move any more this beat.": undefined, "After Activating": "If you have a dark force token, do not get hit by attacks for the rest of this beat."}),
+    merciless: makeCard('0~1', -1, 0, {"If your opponent passes you this beat, they lose 2 life and can't move any more this beat.": undefined, "After Activating": "If you have a dark force token, do not get hit by attacks for the rest of this beat."}),
     psycho: makeCard(0, 0, 1, {"Start of Beat": "Advance until you are adjacent to your opponent.", "End of Beat, Range 1": "Spend a dark force token to repeat this attack."}),
     assassin: makeCard(0, 0, 0, {"On Hit": "Retreat any number of spaces.", "On Damage, Range 1": "You may spend a dark force token. If you do, the opponent cannot move next beat."}),
     knives: makeCard("1~2",4,5, {"This attack does not stun at range one.": undefined, "This attack wins priority ties without clashing.": undefined}),
