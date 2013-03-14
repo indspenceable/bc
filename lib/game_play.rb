@@ -329,7 +329,7 @@ class GamePlay
 
   def determine_active_player!
     # at this point, we know someone won priority
-    if @players[0].priority > @players[1].priority
+    if priority_accounting_for_tiebreakers(@players[0]) > priority_accounting_for_tiebreakers(@players[1])
       @active_player, @reactive_player = @players[0], @players[1]
     else
       @active_player, @reactive_player = @players[1], @players[0]
