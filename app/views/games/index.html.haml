@@ -17,7 +17,7 @@
         - begin
           = game_string(game)
         - rescue
-          = "Herp derp"
+          .label.label-warning Invalid Game.
   %tr
     %th Inactive Games
   -Game.inactive.order("created_at").each do |game|
@@ -26,4 +26,4 @@
         - begin
           = game_string(game)
         - rescue
-          = "Herp derp"
+          .label.label-warning Invalid Game.
