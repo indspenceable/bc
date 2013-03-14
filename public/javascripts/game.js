@@ -269,13 +269,13 @@ var init = function(player_id, game_id, chimeEnabled) {
   }
 
   var setHeader = function(pn, character, finisher) {
-    $root(pn).find('.character-name').text(capitaliseFirstLetter(character)).popover({
+    $root(pn).find('.character-name').empty().text(capitaliseFirstLetter(character)).popover({
       title: capitaliseFirstLetter(character),
       content: characterUAs[character],
       trigger: 'hover',
       placement: 'bottom'
     })
-    $root(pn).find('.finisher').text(capitaliseFirstLetter(finisher)).popover({
+    $root(pn).find('.finisher').empty().text(capitaliseFirstLetter(finisher)).popover({
       title: capitaliseFirstLetter(finisher),
       html: true,
       trigger: 'hover',
