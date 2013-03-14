@@ -404,7 +404,10 @@ var init = function(player_id, game_id, chimeEnabled) {
     }, function(data) {
       setUI(data)
       setTimeout(ping, 1000)
-    }, 'json')
+    }, 'json').fail(function() {
+      // failing
+      setTimeout(ping, 5000)
+    })
   }
   var submitData = function(str) {
     $.ajax('/games/' + game_id + '/', {
