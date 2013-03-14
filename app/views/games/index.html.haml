@@ -14,10 +14,16 @@
   -Game.active.order("created_at").each do |game|
     %tr
       %td
-        = game_string(game)
+        - begin
+          = game_string(game)
+        - rescue
+          = "Herp derp"
   %tr
     %th Inactive Games
   -Game.inactive.order("created_at").each do |game|
     %tr
       %td
-        = game_string(game)
+        - begin
+          = game_string(game)
+        - rescue
+          = "Herp derp"
