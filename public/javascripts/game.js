@@ -100,7 +100,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     // Zaam
     malicious: makeCard(0, 1, -1, {"Stun Guard": 2, "After Activating": "You may assume the paradigm of pain."}),
     warped: makeCard("0~2", 0, 0, {"Start of Beat": "Retreat 1 Space.", "After Activating": "You may assume the paradigm of distortion."}),
-    sturdy: makeCard(0, 0, -1, {"Stun Immunity": undefined, "Ignore all movement effects applied to you this beat.": undefined, "After Activating": "You may assume the paradigm of resilience."}),
+    sturdy: makeCard(0, 0, 1, {"Stun Immunity": undefined, "Ignore all movement effects applied to you this beat.": undefined, "After Activating": "You may assume the paradigm of resilience."}),
     urgent: makeCard("0~1", -1, 2, {"Before Activating": "Advance up to one space.", "After Activating": "You may assume the paradigm of haste."}),
     sinuous: makeCard(0, 0, 1, {"After Activating": "You may assume the paradigm of fluidity.", "End of Beat": "Teleport to any unoccupied space."}),
     paradigmshift: makeCard("2~3", 3, 3, {"Before Activating": "Assume the paradigm of your choice."}),
