@@ -275,7 +275,7 @@ class Heketch < Character
   def recycle!
     @merciless_dodge = false
     @merciless_stop_movement = false
-    @bonuse = []
+    @bonuses = []
     @stop_all_opponent_movement = @stop_all_opponent_movement_next_turn
     @stop_all_opponent_movement_next_turn = false
     super
