@@ -30,7 +30,8 @@ var init = function(player_id, game_id, chimeEnabled) {
     khadath: "Khadath's styles allow him to place his gate trap. Opponents that move on immediately end that movement effect (You can move as you please starting on the trap). At reveal, opponents next to the trap get -1 priority, and opponents standing on top of the trap get -3 priority.",
     rukyuk: "Rukyuk has 6 ammo tokens, each with a different bonus. Each turn he may ante one of them to get its bonus. If he doesn't ante any, he does not hit this beat.",
     heketch: "Hekecth starts the duel with a dark force token. He can ante this to immediately teleport adjacent to the opponent, and gain 3 priority. His styles also allow him to spend his token for other benefits. At End of Beat, Heketch regains his token if there are at least 2 spaces between him and his opponent. He may never have more than one dark force token.",
-    zaamassal: "Zaamassal has 5 paradigms he can assume, according to his styles and unique base. Each paradigm has it's own benefits. Every time he assumes a paradigm, he loses his current paradigm. If Zaamassal gets stunned, he loses his current paradigm."
+    zaamassal: "Zaamassal has 5 paradigms he can assume, according to his styles and unique base. Each paradigm has it's own benefits. Every time he assumes a paradigm, he loses his current paradigm. If Zaamassal gets stunned, he loses his current paradigm.",
+    hepzibah: "//TODO Put in the actual text. Hepzibah can ante her 5 Dark Force tokens each round to gain bonuses, but she loses one life per token anted."
   }
 
   var cardDefinitions = {
@@ -115,6 +116,9 @@ var init = function(player_id, game_id, chimeEnabled) {
     necrotizing: makeCard("0~2", -1, 0, {"On Hit": "Spend up to 3 life to gain +1 power per life spent."}),
     accursed: makeCard("0~1", -1, 0, {"Stun immunity if you anted 3 or more tokens this beat.": undefined}),
     bloodlight: makeCard("1~3", 2, 3, {"On Hit": "Gain life equal to damage dealt (max: number of tokens you anted)."}),
+
+    sealthepact: makeCard("N/A", "N/A", 0, {"Soak": 2, "After Activating": "Spend your opponent's life to ante your first Dark Pact token each turn."}),
+    altazziar: makeCard(1, 6, 2, {"Start of Beat": "Set life to 1. The effect of each token is doubled this turn (except Corruption)."})
   }
 
   var loadCard = function(cardName, $card, overrideCardName) {

@@ -81,6 +81,7 @@ class Accursed < Style
 			"accursed_stun_immunity" => ->(me, inputs) {
 				if (me.current_tokens.count >= 3)
 					me.accursed_stun_immunity = true
+					me.log_me!("gains stun immunity (Accursed)")
 				end
 			}
 		}
@@ -119,7 +120,7 @@ end
 
 class Endless < Token
 	def initialize
-		super("almighty", 0, 0, 2)
+		super("endless", 0, 0, 2)
 	end
 	def name_and_effect
 		"#{name.capitalize} (+2 priority)"
@@ -255,7 +256,10 @@ class Hepzibah < Character
 		end
 		return if super
 		log_me!("antes #{@token_pool.find{ |token| token.name == choice }.name_and_effect}")
+		@current_tokens += @token_pool.reject{ |token| token.name != choice }
+		@token_pool.delete_if{ |token| token.name == choice }
 		if choice == @pactbond_free_token
+			log_me!("does not lose life (Pactbond)")
 			return
 		elsif (@ante_opponent_life && !@used_opponent_life)
 			opponent.lose_life!(1)
@@ -263,9 +267,6 @@ class Hepzibah < Character
 		else
 			lose_life!(1)
 		end
-
-		@current_tokens += @token_pool.reject{ |token| token.name != choice }
-		@token_pool.delete_if{ |token| token.name == choice }
 	end
 
 	def free_token?(choice)
