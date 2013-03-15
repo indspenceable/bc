@@ -281,7 +281,7 @@ class GamePlay
 
   def priority_accounting_for_tiebreakers(pl)
     p = pl.priority
-    p += 0.1 if pl.flag? :win_ties
+    p += 0.1 if pl.flag? :wins_ties
     p += 0.3 if pl.played_finisher?
     p
   end
@@ -330,7 +330,7 @@ class GamePlay
 
   def determine_active_player!
     # at this point, we know someone won priority
-    if @players[0].priority > @players[1].priority
+    if priority_accounting_for_tiebreakers(@players[0]) > priority_accounting_for_tiebreakers(@players[1])
       @active_player, @reactive_player = @players[0], @players[1]
     else
       @active_player, @reactive_player = @players[1], @players[0]
