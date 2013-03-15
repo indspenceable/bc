@@ -363,6 +363,11 @@ var init = function(player_id, game_id, chimeEnabled) {
     }
     // Show the event log.
     $('.event-log').html(gameState['events'].reverse().join("<br/>"))
+    if (gameState.active) {
+      $root(player_id).find('.concede').show()
+    } else {
+      $('.concede').hide()
+    }
   }
 
 
@@ -461,6 +466,28 @@ var init = function(player_id, game_id, chimeEnabled) {
     $('.js-choose-character').on('click', '.btn', function() {
       submitData($(this).attr('charactername'))
       $('.js-choose-character').hide()
+    })
+
+    // Concede
+    var conceding
+    $('.concede').on('click', function() {
+      if (!conceding) {
+        conceding = true
+        var $that = $(this)
+        $that.addClass('btn-danger').removeClass('btn-warning')
+        setTimeout(function() {
+          conceding = false
+          $that.removeClass('btn-danger').addClass('btn-warning')
+        }, 2000)
+      } else {
+        submitData('concede');
+      }
+    })
+    $('.concede').popover({
+      placement: 'bottom',
+      trigger: 'hover',
+      title: 'Concede Game',
+      content: "Warning - if you concede the game, you lose!"
     })
 
     $(window).focus(function() {windowActive=true})

@@ -80,7 +80,7 @@ class GamePlay
       return resolve_timeout!
     end
     if cause == :ko || cause == :concede
-      resolve_game!(winner)
+      resolve_game!(cause, winner)
     end
   end
 
@@ -105,11 +105,12 @@ class GamePlay
     return
   end
 
-  def resolve_game!(winner)
+  def resolve_game!(cause, winner)
     @active = false
-    @events.log! "#{@players[winner].player_name} wins!"
     @winner = @players[winner].player_name
     @loser = @players[(winner+1)%2].player_name
+    @events.log! "#{@loser} concedes the game." if cause == :concede
+    @events.log! "#{@winner} wins!"
     return
   end
 
@@ -174,7 +175,8 @@ class GamePlay
       :input_number => @input_manager.input_counter,
       :current_phase => "select_character",
       :current_beat => @round_number,
-      :winner => @winner
+      :winner => @winner,
+      :active => @active,
     }
   end
 
