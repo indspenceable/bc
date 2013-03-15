@@ -11,7 +11,12 @@ require 'zaamassal'
 # * if only one is possible, do that.
 # * if more than one are possible, prompt the user to choose one of the possible
 #     ones.
+MOVEMENT_METHODS = [
+  :advance, :retreat, :pull, :push, :teleport_to, :teleport_opponent_to,
+  :set_trap_in_range, :set_trap
+]
 def select_from_methods(options)
+  return select_from_movement_methods(options) if options.keys.all?{|k| MOVEMENT_METHODS.include?(k)}
   option_list = []
   options.each do |method, arg_options|
     arg_options.each do |arg_option|

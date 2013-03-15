@@ -4,7 +4,7 @@ require "game_play"
 def answer_input(g, pn)
   if g.required_input[pn] == "attack_pair_select"
     attack_pair(g,pn)
-  elsif g.required_input[pn] =~ /select_from:/
+  elsif g.required_input[pn] =~ /select_from/
     select_from(g,pn)
   elsif g.required_input[pn] == "select_base_clash"
     select_base(g,pn)

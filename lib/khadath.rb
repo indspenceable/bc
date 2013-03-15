@@ -150,7 +150,7 @@ class Khadath < Character
   end
   def set_trap?(n)
     return false if @no_moving_trap_this_beat
-    @position != Integer(n) && @opponent.position != Integer(n)
+    return n if @position != Integer(n) && @opponent.position != Integer(n)
   end
   def set_trap!(n)
     @trap = Integer(n)
@@ -168,7 +168,9 @@ class Khadath < Character
     end
     # no one is on that location, and its within range)
     @position != dest && @opponent.position != dest &&
-    range && range.include?(Integer(n)) && dest >=0 && dest <7
+    range && range.include?(Integer(n)) && dest >=0 && dest <7 &&
+    # return the board position that this enables.
+    dest
   end
   def set_trap_in_range!(n)
     if @position < @opponent.position
