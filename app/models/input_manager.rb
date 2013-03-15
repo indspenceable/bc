@@ -50,7 +50,7 @@ class InputManager
     end
     if input_required?
       @input_buffer.each do |k,v|
-        # concede! if v == "concede"
+        concede!(k) if v[0] == "concede"
         raise "#{k} sent input (#{v}) when it wasn't needed." if v.any?
       end
       throw :halt, :input_required
@@ -59,6 +59,7 @@ class InputManager
   end
   def concede!(player_id)
     @required_input = {}
+    @input_counter += 1
     throw :halt, [:concede, (player_id+1)%2]
   end
   def answer!(player_id, string)
