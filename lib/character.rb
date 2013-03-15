@@ -322,7 +322,8 @@ class Character
     @base = bases.find{|b| b.name == $2}
   end
 
-  def retreat?(n_s)
+  def retreat?(n_s, triggered_by_opponent=false)
+    return false if triggered_by_opponent && flag?(:ignore_movement)
     n = Integer(n_s)
     if position < @opponent.position
       traversed_spaces = position.downto(position - n_s).to_a
@@ -340,7 +341,8 @@ class Character
     end
   end
 
-  def advance?(n_s)
+  def advance?(n_s, triggered_by_opponent=false)
+    return false if triggered_by_opponent && flag?(:ignore_movement)
     n = Integer(n_s)
     jump = n_s < distance ? 0 : 1
     if position > @opponent.position
@@ -380,6 +382,7 @@ class Character
 
   def teleport_opponent_to?(n)
     (position != Integer(n)) &&
+    (!opponent.flag?(:ignore_movement)) &&
     (n >= 0) &&
     (n <= 6) &&
     # return the square they'll end up in.
@@ -421,11 +424,11 @@ class Character
   end
 
   def pull?(n)
-    @opponent.advance?(n)
+    @opponent.advance?(n, true)
   end
 
   def push?(n)
-    @opponent.retreat?(n)
+    @opponent.retreat?(n, true)
   end
 
   def push!(n)
