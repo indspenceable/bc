@@ -285,7 +285,7 @@ var init = function(player_id, game_id, chimeEnabled) {
   }
 
   var setExtraData = function(pn, data) {
-    if (data.trap) {
+    if (data.trap !== undefined) {
       var color = (pn == 0 ? 'info' : 'important')
       $('.board').find('.s' + data.trap).append($("<span/>").addClass("label label-" + color).html($('<i/>').addClass('icon-asterisk')))
     }
