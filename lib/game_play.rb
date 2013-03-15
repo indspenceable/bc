@@ -47,6 +47,42 @@ def select_from_methods(options)
   end
 end
 
+def select_from_movement_methods(options)
+  option_list = []
+  options.each do |method, arg_options|
+    arg_options.each do |arg_option|
+      option_list << [method, arg_option]
+    end
+  end
+  ->(me, input) do
+    valid_options = {}
+    option_list.each do |method, arg|
+      confirmation_method = "#{method}?"
+      result = me.send(confirmation_method, arg)
+      # The first option that goes to a space - use that one
+      valid_options[result] ||= [method.to_s, arg.to_s] if result
+    end
+
+    return if valid_options.empty?
+    ans = nil
+    # ask them for input only if theres more than one valid option.
+    if valid_options.count > 1
+      option_names = valid_options.keys.map{|k| "<#{k}>"}.join('')
+      # ask them for the option number they want to do
+      input.require_single_input!(me.player_id, "select_from_movement:#{option_names}", ->(text) {
+        valid_options.key?(Integer(text))
+      })
+      ans = input.answer(me.player_id)
+      method, argument = valid_options[Integer(ans)]
+    else
+      method, argument = valid_options.values.first
+    end
+    # do that option number
+    me.send("#{method}!", argument)
+    return ans
+  end
+end
+
 class GamePlay
   attr_accessor :active_player, :reactive_player
   def characters

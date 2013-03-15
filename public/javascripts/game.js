@@ -153,6 +153,15 @@ var init = function(player_id, game_id, chimeEnabled) {
   var freeFormInput = function() {
     $('.free-form').show()
   }
+
+  var setBoardButtons = function(question) {
+    var matches = question.match(/<[^>]*>/g)
+    for (var i in matches) {
+      var currentMatch = matches[i].substring(1, matches[i].length-1)
+      $('.space.s' + currentMatch).addClass('clickToMove').attr('answer', currentMatch)
+    }
+  }
+
   var setAnswers = function(question) {
     var $btnGroup = $('<div/>').addClass('btn-group')
     var matches = question.match(/<[^>]*>/g)
@@ -181,6 +190,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     $('.js-bases, .js-styles, .js-tokens').removeClass("select-me")
     $('.free-form').hide()
     $('.js-answers').hide()
+    $('.space').removeClass('clickToMove')
   }
 
   var setup_inputs = function(question) {
@@ -193,8 +203,12 @@ var init = function(player_id, game_id, chimeEnabled) {
       chooseCharacter()
     } else if (question == "ante") {
       freeFormInput()
-    } else if (/^select_from:/.test(question)) {
-      setAnswers(question)
+    } else if (/^select_from/.test(question)) {
+      if (/^select_from_movement/.test(question)) {
+        setBoardButtons(question)
+      } else {
+        setAnswers(question)
+      }
     }
     return;
   }
@@ -466,6 +480,10 @@ var init = function(player_id, game_id, chimeEnabled) {
     $('.js-choose-character').on('click', '.btn', function() {
       submitData($(this).attr('charactername'))
       $('.js-choose-character').hide()
+    })
+
+    $('body').on('click', '.clickToMove', function() {
+      submitData($(this).attr('answer'))
     })
 
     // Concede
