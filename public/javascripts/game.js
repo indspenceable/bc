@@ -115,7 +115,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     pactbond: makeCard(0, 0, -1, {"Reveal": "Gain life equal to the number of tokens you anted this beat (max: 2).", "End of Beat": "Choose a token to ante for free next turn."}),
     necrotizing: makeCard("0~2", -1, 0, {"On Hit": "Spend up to 3 life to gain +1 power per life spent."}),
     accursed: makeCard("0~1", -1, 0, {"Stun immunity if you anted 3 or more tokens this beat.": undefined}),
-    bloodlight: makeCard("1~3", 2, 3, {"On Hit": "Gain life equal to damage dealt (max: number of tokens you anted)."}),
+    bloodlight: makeCard("1~3", 2, 3, {"On Damage": "Gain life equal to damage dealt (max: number of tokens you anted)."}),
 
     sealthepact: makeCard("N/A", "N/A", 0, {"Soak": 2, "After Activating": "Spend your opponent's life to ante your first Dark Pact token each turn."}),
     altazziar: makeCard(1, 6, 2, {"Start of Beat": "Set life to 1. The effect of each token is doubled this turn (except Corruption)."})
