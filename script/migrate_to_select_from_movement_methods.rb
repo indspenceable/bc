@@ -1,6 +1,6 @@
 movement_methods = MOVEMENT_METHODS.map(&:to_s)
 Game.transaction do
-  Game.where(active: false).each do |g|
+  Game.where(active: true).each do |g|
     inputs = g.inputs
     g.inputs = []
     play = g.play
