@@ -11,7 +11,7 @@ require 'zaamassal'
 # * if only one is possible, do that.
 # * if more than one are possible, prompt the user to choose one of the possible
 #     ones.
-def select_from_methods(selection_name=nil, options)
+def select_from_methods(options)
   option_list = []
   options.each do |method, arg_options|
     arg_options.each do |arg_option|
@@ -32,7 +32,7 @@ def select_from_methods(selection_name=nil, options)
     if valid_options.count > 1
       option_names = valid_options.map{|k,v| "<#{k}##{v}>"}.join('')
       # ask them for the option number they want to do
-      input.require_single_input!(me.player_id, selection_name || "select_from:#{option_names}", ->(text) {
+      input.require_single_input!(me.player_id, "select_from:#{option_names}", ->(text) {
         valid_options.include?(text.split('#'))
       })
       ans = input.answer(me.player_id)
