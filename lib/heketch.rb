@@ -213,6 +213,7 @@ class Heketch < Character
     return if super
     log_me!("antes a Dark Force token.")
     @dark_force = false
+    @bonuses << DarkForceAnteBonus.new
     select_from_methods(teleport_to: [@opponent.position-1, @opponent.position+1]).call(self, @input_manager)
   end
 
@@ -274,7 +275,7 @@ class Heketch < Character
   def recycle!
     @merciless_dodge = false
     @merciless_stop_movement = false
-    @bonuse = []
+    @bonuses = []
     @stop_all_opponent_movement = @stop_all_opponent_movement_next_turn
     @stop_all_opponent_movement_next_turn = false
     super

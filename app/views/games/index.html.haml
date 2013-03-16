@@ -8,16 +8,22 @@
         %ul.dropdown-menu
           - User.except(current_user).each do |user|
             %li
-              = link_to user.email, challenge_path(opponent_id: user.id)
+              = link_to user.name, challenge_path(opponent_id: user.id)
   %tr
     %th Active Games
   -Game.active.order("created_at").each do |game|
     %tr
       %td
-        = game_string(game)
+        - begin
+          = game_string(game)
+        - rescue
+          .label.label-warning Invalid Game.
   %tr
     %th Inactive Games
   -Game.inactive.order("created_at").each do |game|
     %tr
       %td
-        = game_string(game)
+        - begin
+          = game_string(game)
+        - rescue
+          .label.label-warning Invalid Game.

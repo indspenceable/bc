@@ -115,12 +115,12 @@ class Fluidity < Paradigm
   end
   def before_activating!
     {
-      "movement" => select_from_methods(advance: [0,1])
+      "movement" => select_from_methods(advance: [0,1], retreat: [1])
     }
   end
   def end_of_beat!
     {
-      "movement" => select_from_methods(advance: [0,1])
+      "movement" => select_from_methods(advance: [0,1], retreat: [1])
     }
   end
   def name_and_effect
@@ -316,7 +316,7 @@ class Zaamassal < Character
   end
 
   def gain_power_for_distance!
-    @bonuses << PlanarDividerPowerBonus.new(distance)
+    @bonuses << PlanarDividerPowerBonus.new(distance-1)
   end
 
   def assume_paradigm?(choice)

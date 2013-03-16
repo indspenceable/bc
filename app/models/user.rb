@@ -1,7 +1,10 @@
 class User < ActiveRecord::Base
-  attr_accessible :email, :email_notifications_enabled, :chime_enabled
+  attr_accessible :email_notifications_enabled, :chime_enabled
   serialize :metadata
   before_create :ensure_metadata_hash
+
+  validates :name, uniqueness: true, presence: true
+  validates :email, uniqueness: true, presence: true
 
   scope :except, ->(user) { where('NOT id = ?', user.id) }
   def games
@@ -16,13 +19,13 @@ class User < ActiveRecord::Base
   end
 
   def email_notifications_enabled
-    metadata[:email_notifications]
+    metadata[:email_notifications_enabled]
   end
   def email_notifications_enabled=(v)
-    metadata[:email_notifications]=v
+    metadata[:email_notifications_enabled]=v
   end
   def email_notifications_enabled?
-    metadata[:email_notifications]=="1"
+    metadata[:email_notifications_enabled]=="1"
   end
 
   def chime_enabled

@@ -1,16 +1,18 @@
 .row
   .span5
     .well.js-p0.header
-      %span.label.label-info.player-name= current_game.p0.email
+      %span.label.label-info.player-name= current_game.p0.name
       %span.label.label-info.character-name
       %span.label.label-info.finisher
+      %a.btn.btn-mini.btn-warning.concede{style: "display: none"} &times;
   .span2
     %h3.js-current-beat
   .span5
     .well.js-p1.header
-      %span.label.label-important.player-name= current_game.p1.email
+      %span.label.label-important.player-name= current_game.p1.name
       %span.label.label-important.character-name
       %span.label.label-important.finisher
+      %a.btn.btn-mini.btn-warning.concede{style: "display: none"} &times;
 .js-loading
   Loading...
 .js-choose-character{:style => "display: none"}

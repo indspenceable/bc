@@ -12,7 +12,12 @@ require 'kehrolyn'
 # * if only one is possible, do that.
 # * if more than one are possible, prompt the user to choose one of the possible
 #     ones.
-def select_from_methods(selection_name=nil, options)
+MOVEMENT_METHODS = [
+  :advance, :retreat, :pull, :push, :teleport_to, :teleport_opponent_to,
+  :set_trap_in_range, :set_trap
+]
+def select_from_methods(options)
+  return select_from_movement_methods(options) if options.keys.all?{|k| MOVEMENT_METHODS.include?(k)}
   option_list = []
   options.each do |method, arg_options|
     arg_options.each do |arg_option|
@@ -33,7 +38,7 @@ def select_from_methods(selection_name=nil, options)
     if valid_options.count > 1
       option_names = valid_options.map{|k,v| "<#{k}##{v}>"}.join('')
       # ask them for the option number they want to do
-      input.require_single_input!(me.player_id, selection_name || "select_from:#{option_names}", ->(text) {
+      input.require_single_input!(me.player_id, "select_from:#{option_names}", ->(text) {
         valid_options.include?(text.split('#'))
       })
       ans = input.answer(me.player_id)
@@ -41,6 +46,42 @@ def select_from_methods(selection_name=nil, options)
     else
       ans = valid_options.first.join('#')
       method, argument = valid_options.first
+    end
+    # do that option number
+    me.send("#{method}!", argument)
+    return ans
+  end
+end
+
+def select_from_movement_methods(options)
+  option_list = []
+  options.each do |method, arg_options|
+    arg_options.each do |arg_option|
+      option_list << [method, arg_option]
+    end
+  end
+  ->(me, input) do
+    valid_options = {}
+    option_list.each do |method, arg|
+      confirmation_method = "#{method}?"
+      result = me.send(confirmation_method, arg)
+      # The first option that goes to a space - use that one
+      valid_options[result] ||= [method.to_s, arg.to_s] if result
+    end
+
+    return if valid_options.empty?
+    ans = nil
+    # ask them for input only if theres more than one valid option.
+    if valid_options.count > 1
+      option_names = valid_options.keys.map{|k| "<#{k}>"}.join('')
+      # ask them for the option number they want to do
+      input.require_single_input!(me.player_id, "select_from_movement:#{option_names}", ->(text) {
+        valid_options.key?(Integer(text))
+      })
+      ans = input.answer(me.player_id)
+      method, argument = valid_options[Integer(ans)]
+    else
+      method, argument = valid_options.values.first
     end
     # do that option number
     me.send("#{method}!", argument)
@@ -81,7 +122,7 @@ class GamePlay
       return resolve_timeout!
     end
     if cause == :ko || cause == :concede
-      resolve_game!(winner)
+      resolve_game!(cause, winner)
     end
   end
 
@@ -106,11 +147,12 @@ class GamePlay
     return
   end
 
-  def resolve_game!(winner)
+  def resolve_game!(cause, winner)
     @active = false
-    @events.log! "#{@players[winner].player_name} wins!"
     @winner = @players[winner].player_name
     @loser = @players[(winner+1)%2].player_name
+    @events.log! "#{@loser} concedes the game." if cause == :concede
+    @events.log! "#{@winner} wins!"
     return
   end
 
@@ -175,7 +217,8 @@ class GamePlay
       :input_number => @input_manager.input_counter,
       :current_phase => "select_character",
       :current_beat => @round_number,
-      :winner => @winner
+      :winner => @winner,
+      :active => @active,
     }
   end
 
@@ -281,7 +324,7 @@ class GamePlay
 
   def priority_accounting_for_tiebreakers(pl)
     p = pl.priority
-    p += 0.1 if pl.flag? :win_ties
+    p += 0.1 if pl.flag? :wins_ties
     p += 0.3 if pl.played_finisher?
     p -= 0.1 if pl.flag? :loses_ties
     p
@@ -331,7 +374,7 @@ class GamePlay
 
   def determine_active_player!
     # at this point, we know someone won priority
-    if @players[0].priority > @players[1].priority
+    if priority_accounting_for_tiebreakers(@players[0]) > priority_accounting_for_tiebreakers(@players[1])
       @active_player, @reactive_player = @players[0], @players[1]
     else
       @active_player, @reactive_player = @players[1], @players[0]

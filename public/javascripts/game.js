@@ -88,8 +88,8 @@ var init = function(player_id, game_id, chimeEnabled) {
 
     // Reggie
     critical: makeCard(0, -1, 1, {"This attack ignores stun guard.": undefined, "On Hit, Range 1": "Spend a dark force token to get +3 power."}),
-    rasping: makeCard('0~1', -1, 1, {"On Hit, Range 1": "Spend a dark force token to get +3 power."}),
-    merciless: makeCard('0~1', -1, 1, {"If your opponent passes you this beat, they lose 2 life and can't move any more this beat.": undefined, "After Activating": "If you have a dark force token, do not get hit by attacks for the rest of this beat."}),
+    rasping: makeCard('0~1', -1, 1, {"On Hit, Range 1": "Spend a dark force token to get +3 power.", "On Damage": "Regain life equal to half the damage dealt."}),
+    merciless: makeCard('0~1', -1, 0, {"If your opponent passes you this beat, they lose 2 life and can't move any more this beat.": undefined, "After Activating": "If you have a dark force token, do not get hit by attacks for the rest of this beat."}),
     psycho: makeCard(0, 0, 1, {"Start of Beat": "Advance until you are adjacent to your opponent.", "End of Beat, Range 1": "Spend a dark force token to repeat this attack."}),
     assassin: makeCard(0, 0, 0, {"On Hit": "Retreat any number of spaces.", "On Damage, Range 1": "You may spend a dark force token. If you do, the opponent cannot move next beat."}),
     knives: makeCard("1~2",4,5, {"This attack does not stun at range one.": undefined, "This attack wins priority ties without clashing.": undefined}),
@@ -100,7 +100,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     // Zaam
     malicious: makeCard(0, 1, -1, {"Stun Guard": 2, "After Activating": "You may assume the paradigm of pain."}),
     warped: makeCard("0~2", 0, 0, {"Start of Beat": "Retreat 1 Space.", "After Activating": "You may assume the paradigm of distortion."}),
-    sturdy: makeCard(0, 0, -1, {"Stun Immunity": undefined, "Ignore all movement effects applied to you this beat.": undefined, "After Activating": "You may assume the paradigm of resilience."}),
+    sturdy: makeCard(0, 0, 0, {"Stun Immunity": undefined, "Ignore all movement effects applied to you this beat.": undefined, "After Activating": "You may assume the paradigm of resilience."}),
     urgent: makeCard("0~1", -1, 2, {"Before Activating": "Advance up to one space.", "After Activating": "You may assume the paradigm of haste."}),
     sinuous: makeCard(0, 0, 1, {"After Activating": "You may assume the paradigm of fluidity.", "End of Beat": "Teleport to any unoccupied space."}),
     paradigmshift: makeCard("2~3", 3, 3, {"Before Activating": "Assume the paradigm of your choice."}),
@@ -153,6 +153,15 @@ var init = function(player_id, game_id, chimeEnabled) {
   var freeFormInput = function() {
     $('.free-form').show()
   }
+
+  var setBoardButtons = function(question) {
+    var matches = question.match(/<[^>]*>/g)
+    for (var i in matches) {
+      var currentMatch = matches[i].substring(1, matches[i].length-1)
+      $('.space.s' + currentMatch).addClass('clickToMove').attr('answer', currentMatch)
+    }
+  }
+
   var setAnswers = function(question) {
     var $btnGroup = $('<div/>').addClass('btn-group')
     var matches = question.match(/<[^>]*>/g)
@@ -181,6 +190,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     $('.js-bases, .js-styles, .js-tokens').removeClass("select-me")
     $('.free-form').hide()
     $('.js-answers').hide()
+    $('.space').removeClass('clickToMove')
   }
 
   var setup_inputs = function(question) {
@@ -193,8 +203,12 @@ var init = function(player_id, game_id, chimeEnabled) {
       chooseCharacter()
     } else if (question == "ante") {
       freeFormInput()
-    } else if (/^select_from:/.test(question)) {
-      setAnswers(question)
+    } else if (/^select_from/.test(question)) {
+      if (/^select_from_movement/.test(question)) {
+        setBoardButtons(question)
+      } else {
+        setAnswers(question)
+      }
     }
     return;
   }
@@ -269,13 +283,13 @@ var init = function(player_id, game_id, chimeEnabled) {
   }
 
   var setHeader = function(pn, character, finisher) {
-    $root(pn).find('.character-name').text(capitaliseFirstLetter(character)).popover({
+    $root(pn).find('.character-name').empty().text(capitaliseFirstLetter(character)).popover({
       title: capitaliseFirstLetter(character),
       content: characterUAs[character],
       trigger: 'hover',
       placement: 'bottom'
     })
-    $root(pn).find('.finisher').text(capitaliseFirstLetter(finisher)).popover({
+    $root(pn).find('.finisher').empty().text(capitaliseFirstLetter(finisher)).popover({
       title: capitaliseFirstLetter(finisher),
       html: true,
       trigger: 'hover',
@@ -285,7 +299,7 @@ var init = function(player_id, game_id, chimeEnabled) {
   }
 
   var setExtraData = function(pn, data) {
-    if (data.trap) {
+    if (data.trap !== undefined) {
       var color = (pn == 0 ? 'info' : 'important')
       $('.board').find('.s' + data.trap).append($("<span/>").addClass("label label-" + color).html($('<i/>').addClass('icon-asterisk')))
     }
@@ -363,6 +377,11 @@ var init = function(player_id, game_id, chimeEnabled) {
     }
     // Show the event log.
     $('.event-log').html(gameState['events'].reverse().join("<br/>"))
+    if (gameState.active) {
+      $root(player_id).find('.concede').show()
+    } else {
+      $('.concede').hide()
+    }
   }
 
 
@@ -404,7 +423,10 @@ var init = function(player_id, game_id, chimeEnabled) {
     }, function(data) {
       setUI(data)
       setTimeout(ping, 1000)
-    }, 'json')
+    }, 'json').fail(function() {
+      // failing
+      setTimeout(ping, 5000)
+    })
   }
   var submitData = function(str) {
     $.ajax('/games/' + game_id + '/', {
@@ -458,6 +480,32 @@ var init = function(player_id, game_id, chimeEnabled) {
     $('.js-choose-character').on('click', '.btn', function() {
       submitData($(this).attr('charactername'))
       $('.js-choose-character').hide()
+    })
+
+    $('body').on('click', '.clickToMove', function() {
+      submitData($(this).attr('answer'))
+    })
+
+    // Concede
+    var conceding
+    $('.concede').on('click', function() {
+      if (!conceding) {
+        conceding = true
+        var $that = $(this)
+        $that.addClass('btn-danger').removeClass('btn-warning')
+        setTimeout(function() {
+          conceding = false
+          $that.removeClass('btn-danger').addClass('btn-warning')
+        }, 2000)
+      } else {
+        submitData('concede');
+      }
+    })
+    $('.concede').popover({
+      placement: 'bottom',
+      trigger: 'hover',
+      title: 'Concede Game',
+      content: "Warning - if you concede the game, you lose!"
     })
 
     $(window).focus(function() {windowActive=true})

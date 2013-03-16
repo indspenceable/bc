@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130311060204) do
+ActiveRecord::Schema.define(:version => 20130315203706) do
 
   create_table "games", :force => true do |t|
     t.text     "inputs"
@@ -23,15 +23,17 @@ ActiveRecord::Schema.define(:version => 20130311060204) do
     t.integer  "starting_player"
   end
 
-  add_index "games", ["active", "p0_id", "p1_id"], :name => "index_games_on_active_and_p0_id_and_p1_id", :unique => true
+  add_index "games", ["active", "p0_id", "p1_id"], :name => "index_games_on_active_and_p0_id_and_p1_id"
 
   create_table "users", :force => true do |t|
     t.string   "email"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.text     "metadata"
+    t.string   "name"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
+  add_index "users", ["name"], :name => "index_users_on_name", :unique => true
 
 end

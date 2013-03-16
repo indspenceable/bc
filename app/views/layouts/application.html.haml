@@ -70,31 +70,40 @@
                   })
                 }
                 $(requiredInputCount)
+              %li.divider-vertical
               %li
-                = link_to(current_user.email, current_user, class: '#my-profile')
+                = link_to(current_user.name, current_user, class: '#my-profile')
+              %li.divider-vertical
               %li.logged-in
                 %a#personaLogout{href: '#'} Logout
-                :javascript
-                  var signoutLink = document.getElementById('personaLogout');
-                  if (signoutLink) {
-                    signoutLink.onclick = function() { navigator.id.logout(); };
-                  };
-                  window.onLogin = function() {};
-                  window.onLogout = function() {
-                    window.location.reload();
-                  }
+            - elsif session[:email]
+              %li.logged-in
+                %a#personaLogout{href: '#'} Logout
             - else
               %li.logged-out
                 %a#personaLogin{href: '#'} Login
-                :javascript
-                  var signinLink = document.getElementById('personaLogin');
-                  if (signinLink) {
-                    signinLink.onclick = function() { navigator.id.request(); };
-                  };
-                  window.onLogout = function() {};
-                  window.onLogin = function() {
-                    window.location.reload();
-                  }
+            - if session[:email]
+              :javascript
+                var signoutLink = document.getElementById('personaLogout');
+                if (signoutLink) {
+                  signoutLink.onclick = function() { navigator.id.logout(); };
+                };
+                window.onLogin = function() {};
+                window.onLogout = function() {
+                  window.location.reload();
+                }
+            - else
+              :javascript
+                var signinLink = document.getElementById('personaLogin');
+                if (signinLink) {
+                  signinLink.onclick = function() { navigator.id.request(); };
+                };
+                window.onLogout = function() {
+                  window.location.reload();
+                }
+                window.onLogin = function() {
+                  window.location.reload();
+                }
       -flash.each do |k,v|
         .alert{class: flash_to_alert[k] || "oops#{k}"}
           = v
