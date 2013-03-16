@@ -8,7 +8,7 @@ module GamesHelper
   end
   def character_badges(character_name)
     badges = {}
-    badges["Beta"] = :warning if ['heketch', 'zaamassal'].include?(character_name)
+    badges["Beta"] = :warning if ['kehrolyn', 'hepzibah'].include?(character_name)
     badges
   end
 
