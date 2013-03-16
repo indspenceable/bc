@@ -50,16 +50,23 @@ class InputManager
     end
     if input_required?
       @input_buffer.each do |k,v|
+        concede!(k) if v[0] == "concede"
         raise "#{k} sent input (#{v}) when it wasn't needed." if v.any?
       end
       throw :halt, :input_required
     end
     @answers
   end
+  def concede!(player_id)
+    @required_input = {}
+    @input_counter += 1
+    throw :halt, [:concede, (player_id+1)%2]
+  end
   def answer!(player_id, string)
     raise "We weren't asking that player for anything." unless @required_input[player_id].any?
-    answer, validator, callback = @required_input[player_id].shift
-    raise "Invalid answer \"#{string}\" to #{answer}" unless validator.call(string)
+    question, validator, callback = @required_input[player_id].shift
+    concede!(player_id) if string == "concede"
+    raise "Invalid answer \"#{string}\" to #{question}" unless validator.call(string)
     @input_counter+=1
     @answers[player_id] = string.downcase
     callback.call(@answers[player_id]) if callback

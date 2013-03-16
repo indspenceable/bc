@@ -340,7 +340,8 @@ class Character
     @base = bases.find{|b| b.name == $2}
   end
 
-  def retreat?(n_s)
+  def retreat?(n_s, triggered_by_opponent=false)
+    return false if triggered_by_opponent && flag?(:ignore_movement)
     n = Integer(n_s)
     if position < @opponent.position
       traversed_spaces = position.downto(position - n_s).to_a
@@ -349,10 +350,17 @@ class Character
     end
     return false if traversed_spaces.any?{|x| x < 0 || x > 6 }
     return false if (@opponent.blocked_spaces & traversed_spaces).any?
-    true
+
+    #return the square we'll end up in
+    if position < @opponent.position
+      position - n_s
+    else
+      position + n_s
+    end
   end
 
-  def advance?(n_s)
+  def advance?(n_s, triggered_by_opponent=false)
+    return false if triggered_by_opponent && flag?(:ignore_movement)
     n = Integer(n_s)
     jump = n_s < distance ? 0 : 1
     if position > @opponent.position
@@ -362,7 +370,13 @@ class Character
     end
     return false if traversed_spaces.any?{|x| x < 0 || x > 6 }
     return false if (@opponent.blocked_spaces & traversed_spaces).any?
-    true
+
+    #return the square we'll end up in.
+    if position > @opponent.position
+      position - n_s - jump
+    else
+      position + n_s + jump
+    end
   end
 
   def blocked_spaces
@@ -373,7 +387,9 @@ class Character
     (opponent.position != Integer(n)) &&
     (n >= 0) &&
     (n <= 6) &&
-    (!@opponent.blocked_spaces.include?(n))
+    (!@opponent.blocked_spaces.include?(n)) &&
+    # Return the square we'll end up in.
+    n
   end
   def teleport_to!(n)
     @position = Integer(n)
@@ -384,8 +400,11 @@ class Character
 
   def teleport_opponent_to?(n)
     (position != Integer(n)) &&
+    (!opponent.flag?(:ignore_movement)) &&
     (n >= 0) &&
-    (n <= 6)
+    (n <= 6) &&
+    # return the square they'll end up in.
+    n
   end
   def teleport_opponent_to!(n)
     opponent.position = Integer(n)
@@ -423,11 +442,11 @@ class Character
   end
 
   def pull?(n)
-    @opponent.advance?(n)
+    @opponent.advance?(n, true)
   end
 
   def push?(n)
-    @opponent.retreat?(n)
+    @opponent.retreat?(n, true)
   end
 
   def push!(n)

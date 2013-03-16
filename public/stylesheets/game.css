@@ -5,6 +5,12 @@
   text-align: center;
   margin-bottom: 5px;
 }
+
+.space.clickToMove {
+  cursor: pointer;
+  background-color: #cec;
+}
+
 .js-current-beat {
   text-align: center;
 }
