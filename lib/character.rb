@@ -509,6 +509,10 @@ class Character
     log_me!("loses #{n} life.")
     @life -= n
   end
+  def gain_life!(n)
+    log_me!("gains #{n} life.")
+    @life += n
+  end
 
   # input callbacks. These check the validity of input that the player does.
   # is this the best design? I dunno. It does make it easy for us to identify
