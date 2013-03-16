@@ -85,6 +85,7 @@ class Bloodlight < Base
             # gain life per damage dealt, up to the number of tokens anted this turn
             "health_recovery" => ->(me, inputs) {
                 if me.damage_dealt_this_beat <= me.current_tokens.count
+                	puts ("OREO" + me.damage_dealt_this_beat.to_s)
                     life_recovered = (me.damage_dealt_this_beat)
                 else
                     life_recovered = (me.current_tokens.count)
@@ -155,10 +156,14 @@ class Altazziar < Finisher
     end
     def start_of_beat
         {
-            "altazziar_lose_life" => ->(me, inputs) {
+            "lose_life" => ->(me, inputs) {
                 me.lose_life!(@life - 1)
+            },
+            "double_token_effects" => ->(me, inputs) {
+            	for me.current_tokens.each do |token|
+            		me.altazziar_bonus << token.clone
+            	end
             }
-            # TODO add the doubling effect of tokens
         }
     end
 end
@@ -172,14 +177,14 @@ class SealThePact < Finisher
     end
     def after_activating
         {
-            "sealthepact_ante_opponent_life" => ->(me, inputs) {me.ante_opponent_life = true}
+            "ante_opponent_life" => ->(me, inputs) {me.ante_opponent_life = true}
         }
     end
 end
 
 
 class Hepzibah < Character
-    attr_accessor :ante_opponent_life, :current_tokens, :pactbond_free_token, :anathema_bonus, :accursed_stun_immunity
+    attr_accessor :ante_opponent_life, :current_tokens, :pactbond_free_token, :anathema_bonus, :accursed_stun_immunity, :altazziar_bonus
     def self.character_name
         "hepzibah"
     end
@@ -205,6 +210,7 @@ class Hepzibah < Character
         ]
         # tokens used this beat
         @current_tokens = []
+        @altazziar_bonus = []
         @ante_opponent_life = false
         @used_opponent_life = false
         @pactbond_free_token = nil
@@ -224,7 +230,7 @@ class Hepzibah < Character
     end
 
     def effect_sources
-        super + @current_tokens
+        super + @current_tokens + @altazziar_bonus
     end
 
     def ante_options
@@ -302,5 +308,6 @@ class Hepzibah < Character
         @accursed_stun_immunity = false
         @token_pool += @current_tokens
         @current_tokens = []
+        @altazziar_bonus = []
     end
 end
