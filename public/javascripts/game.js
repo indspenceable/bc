@@ -60,7 +60,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     hydraulic: makeCard(0, 2, -1, {"Before Activating": "Advance 1 space.", "Soak": 1}),
     mechanical: makeCard(0, 2, -2, {"End of Beat": "Advance up to 3 spaces."}),
     grapnel: makeCard("2~4", 0, 0, {"On Hit": "Pull opponent up to 3 spaces."}),
-    press: makeCard("1~2", 1, 0, {"Stun Guard": 2, "+1 damage for each point of damage you have taken this beat.": undefined}),
+    press: makeCard("1~2", 1, 0, {"Stun Guard": 6, "+1 damage for each point of damage you have taken this beat.": undefined}),
     // Finishers
     rocketpress: makeCard(1, 8, 0, {"Soak": 3, "Stun Immunity": undefined, "Before Activating": "Advance 2 or more spaces."}),
     feedbackfield: makeCard("1~2", 1, 0, {"Soak": 5, "On Hit": "This attack has +2 power for each point of damage Cadenza soaked this beat."}),
