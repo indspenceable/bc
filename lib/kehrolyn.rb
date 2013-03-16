@@ -192,6 +192,8 @@ class Kehrolyn < Character
   end
   def select_perma_style!(name)
     new_style = @hand.find{|c| c.is_a?(Style) && c.name == name}
+    # if its mutating, make it apply to the current form.
+    new_style.reveal!(self) if name == "mutating"
     @hand.delete(new_style)
     @perma_style = new_style
   end
