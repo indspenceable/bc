@@ -88,7 +88,6 @@
                 };
                 window.onLogin = function() {};
                 window.onLogout = function() {
-                  console.log("LOGOUGT")
                   window.location.reload();
                 }
             - else
@@ -97,9 +96,10 @@
                 if (signinLink) {
                   signinLink.onclick = function() { navigator.id.request(); };
                 };
-                window.onLogout = function() {};
+                window.onLogout = function() {
+                  window.location.reload();
+                }
                 window.onLogin = function() {
-                  console.log("LOGIN")
                   window.location.reload();
                 }
       -flash.each do |k,v|

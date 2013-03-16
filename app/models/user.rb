@@ -3,6 +3,9 @@ class User < ActiveRecord::Base
   serialize :metadata
   before_create :ensure_metadata_hash
 
+  validates :name, uniqueness: true, presence: true
+  validates :email, uniqueness: true, presence: true
+
   scope :except, ->(user) { where('NOT id = ?', user.id) }
   def games
     Game.where("p0_id = ? OR p1_id = ?", self.id, self.id)
