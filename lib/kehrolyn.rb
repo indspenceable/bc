@@ -26,16 +26,29 @@ class Mutating < Style
   def initialize
     super("mutating", 0, 0, 0)
   end
+
+  # For what its worth- target will only be null if they played their finisher.
+
+  def range
+    @target ? @target.range : super
+  end
+  def power
+    @target ? @target.power : super
+  end
+  def priority
+    @target ? @target.priority : super
+  end
+
   def reveal!(me)
     @target = me.mutating_target(self)
   end
   %w(start_of_beat! before_activating! on_hit! on_damage! after_activating!).each do |trigger|
     define_method(trigger) do
-      @target.respond_to?(trigger) ? @target.send(trigger) : {}
+      @target && @target.respond_to?(trigger) ? @target.send(trigger) : {}
     end
   end
   def end_of_beat!
-    (@target.respond_to?(:end_of_beat!) ? @target.send(:end_of_beat!) : {})
+    (@target && @target.respond_to?(:end_of_beat!) ? @target.send(:end_of_beat!) : {})
       .merge('lose_life' => ->(me,_) { me.lose_life!(1)})
   end
 end
