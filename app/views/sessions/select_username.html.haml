@@ -1,0 +1,8 @@
+%row
+  .span8.offset2.well
+    = form_for(@user, url: register_path) do |f|
+      %fieldset
+        %legend Select Username
+        = f.label :name do
+          = f.text_field :name
+        = f.submit("Submit", class:'btn')
