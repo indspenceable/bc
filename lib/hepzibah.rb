@@ -84,8 +84,8 @@ class Bloodlight < Base
         {
             # gain life per damage dealt, up to the number of tokens anted this turn
             "health_recovery" => ->(me, inputs) {
-                if me.damage_dealt_this_beat <= me.current_tokens.count
-                    life_recovered = (me.damage_dealt_this_beat)
+                if me.damage_dealt_this_attack <= me.current_tokens.count
+                    life_recovered = (me.damage_dealt_this_attack)
                 else
                     life_recovered = (me.current_tokens.count)
                 end
@@ -158,11 +158,9 @@ class Altazziar < Finisher
                 me.lose_life!(me.life - 1)
             },
             "double_token_effects" => ->(me, inputs) {
-            	logger.fatal("\n\n OREO1" + me.current_effects)
             	me.current_tokens.each do |token|
             		me.altazziar_bonus << token.clone
             	end
-            	logger.fatal("\n\n OREO2" + me.current_effects)
             }
         }
     end
@@ -184,6 +182,7 @@ end
 
 
 class Hepzibah < Character
+    attr_reader :token_pool
     attr_accessor :ante_opponent_life, :current_tokens, :pactbond_free_token, :anathema_bonus, :accursed_stun_immunity, :altazziar_bonus
     def self.character_name
         "hepzibah"

@@ -1,6 +1,6 @@
 class Character
-  attr_reader :player_id, :player_name, :hand, :life, :finisher, :damage_dealt_this_beat
-  attr_accessor :opponent, :position
+  attr_reader :player_id, :player_name, :hand, :life, :finisher, :damage_dealt_this_beat, :damage_dealt_this_attack
+  attr_accessor :opponent, :position, :current_effects
   def initialize player_id, player_name, input_manager, events
     @player_id = player_id
     @player_name = player_name

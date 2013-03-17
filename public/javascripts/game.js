@@ -285,7 +285,8 @@ var init = function(player_id, game_id, chimeEnabled) {
         }).appendTo($styles)
     }
     for (var index in tokens) {
-      $('<div/>').addClass('token').text(tokens[index]).appendTo($tokens)
+      // TODO This is ugly. We will eventually need to overhaul this entire thing to get popovers to work correctly for tokens anyway
+      $('<div/>').addClass('token').text(tokens[index].name).appendTo($tokens)
     }
     for (var index in discard1Cards) {
       $('<div/>').addClass('card mini-card').text(discard1Cards[index]).popover({
@@ -340,7 +341,7 @@ var init = function(player_id, game_id, chimeEnabled) {
       data.requiredInput == cachedRequiredInput) {
       return;
     }
-    // Set the cache so we'll shortcircuit next time.
+    // Set the cache so we'll ßtokenshortcircuit next time.
     cachedInputNumber = data.gameState.input_number;
     cachedRequiredInput = data.requiredInput
 

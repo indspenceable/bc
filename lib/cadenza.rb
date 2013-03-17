@@ -179,7 +179,8 @@ class Cadenza < Character
     (@battery_bonus ? 4 : 0) + super
   end
   def token_pool
-    (["Iron Body"] * @token_count) + super
+    # TODO This is ugly. I feel like we should be using real tokens here and leverage them in the JS
+    ([{name:"Iron Body"}] * @token_count) + super
   end
 
   #ante-ing iron body tokens
