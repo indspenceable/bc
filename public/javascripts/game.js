@@ -340,7 +340,7 @@ var init = function(player_id, game_id, chimeEnabled) {
       data.requiredInput == cachedRequiredInput) {
       return;
     }
-    // Set the cache so we'll ßtokenshortcircuit next time.
+    // Set the cache so we'll shortcircuit next time.
     cachedInputNumber = data.gameState.input_number;
     cachedRequiredInput = data.requiredInput
 
