@@ -23,7 +23,7 @@ class Darkheart < Style
     {
       "gain_life" => ->(me, inputs) {me.gain_life!(2)},
       "discard_token" => ->(me, inputs) {
-        select_from_methods(discard_token: me.opponent.token_names).call(me.opponent, inputs)
+        me.opponent.select_and_discard_a_token!
       }
     }
   end

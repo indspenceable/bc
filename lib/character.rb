@@ -465,6 +465,10 @@ class Character
     []
   end
 
+  def select_and_discard_a_token!
+    select_from_methods(discard_token: token_names).call(self, @input_manager)
+  end
+
   # This must be overwritten if your character does not use a @token_discard
   def discard_token!(choice)
     @token_discard += @token_pool.reject{ |token| token.name != choice }

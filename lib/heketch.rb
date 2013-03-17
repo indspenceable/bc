@@ -190,6 +190,12 @@ class Heketch < Character
     sources
   end
 
+  # TODO this is ugly, but should work for now.
+  def select_and_discard_a_token!
+    log_me!("discards his dark force token.") if @dark_force
+    @dark_force = false
+  end
+
   def current_effects
     super + @bonuses.map(&:name_and_effect)
   end
