@@ -26,6 +26,7 @@ class Character
     #TODO make this work with press.
     @damage_taken_this_beat = 0
     @damage_dealt_this_beat = 0
+    @damage_dealt_this_attack = 0
     @damage_soaked_this_beat = 0
   end
 
@@ -286,6 +287,7 @@ class Character
     end
     @damage_taken_this_beat = 0
     @damage_dealt_this_beat = 0
+    @damage_dealt_this_attack = 0
     @damage_soaked_this_beat = 0
     @dodge = false
     @base = @style = nil
@@ -545,12 +547,22 @@ class Character
       on_hit!
       damage_dealt = opponent.take_hit!(power)
       log_me!("hits #{opponent.player_name} for #{damage_dealt} damage!")
-      @damage_dealt_by_this_attack = damage_dealt
+      @damage_dealt_this_attack = damage_dealt
+      @damage_dealt_this_beat += damage_dealt
       on_damage! if damage_dealt > 0
     else
       log_me!("misses!")
     end
     after_activating!
+  end
+
+  def lose_life!(n)
+    log_me!("loses #{n} life.")
+    @life -= n
+  end
+  def gain_life!(n)
+    log_me!("gains #{n} life.")
+    @life += n
   end
 
   # input callbacks. These check the validity of input that the player does.

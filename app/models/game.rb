@@ -14,10 +14,10 @@ class Game < ActiveRecord::Base
   scope :inactive, where(:active => false)
 
   def play(idx=nil)
-    GamePlay.new(starting_player, [p0.email, p1.email], inputs, idx)
+    GamePlay.new(starting_player, [p0.name, p1.name], inputs, idx)
   end
   def input_and_save!(id, action)
-    g = GamePlay.new(starting_player, [p0.email, p1.email], inputs)
+    g = GamePlay.new(starting_player, [p0.name, p1.name], inputs)
     g.input!(id, action)
     self.inputs = g.valid_inputs
     save!

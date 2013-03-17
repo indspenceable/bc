@@ -31,7 +31,8 @@ var init = function(player_id, game_id, chimeEnabled) {
     rukyuk: "Rukyuk has 6 ammo tokens, each with a different bonus. Each turn he may ante one of them to get its bonus. If he doesn't ante any, he does not hit this beat.",
     heketch: "Hekecth starts the duel with a dark force token. He can ante this to immediately teleport adjacent to the opponent, and gain 3 priority. His styles also allow him to spend his token for other benefits. At End of Beat, Heketch regains his token if there are at least 2 spaces between him and his opponent. He may never have more than one dark force token.",
     zaamassal: "Zaamassal has 5 paradigms he can assume, according to his styles and unique base. Each paradigm has it's own benefits. Every time he assumes a paradigm, he loses his current paradigm. If Zaamassal gets stunned, he loses his current paradigm.",
-    hepzibah: "//TODO Put in the actual text. Hepzibah can ante her 5 Dark Force tokens each round to gain bonuses, but she loses one life per token anted."
+    hepzibah: "//TODO Put in the actual text. Hepzibah can ante her 5 Dark Force tokens each round to gain bonuses, but she loses one life per token anted.",
+    kehrolyn: "Each beat, Kehrolyn applies the style in her discard1 to her current attackpair."
   }
 
   var cardDefinitions = {
@@ -60,7 +61,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     hydraulic: makeCard(0, 2, -1, {"Before Activating": "Advance 1 space.", "Soak": 1}),
     mechanical: makeCard(0, 2, -2, {"End of Beat": "Advance up to 3 spaces."}),
     grapnel: makeCard("2~4", 0, 0, {"On Hit": "Pull opponent up to 3 spaces."}),
-    press: makeCard("1~2", 1, 0, {"Stun Guard": 2, "+1 damage for each point of damage you have taken this beat.": undefined}),
+    press: makeCard("1~2", 1, 0, {"Stun Guard": 6, "+1 damage for each point of damage you have taken this beat.": undefined}),
     // Finishers
     rocketpress: makeCard(1, 8, 0, {"Soak": 3, "Stun Immunity": undefined, "Before Activating": "Advance 2 or more spaces."}),
     feedbackfield: makeCard("1~2", 1, 0, {"Soak": 5, "On Hit": "This attack has +2 power for each point of damage Cadenza soaked this beat."}),
@@ -118,7 +119,18 @@ var init = function(player_id, game_id, chimeEnabled) {
     bloodlight: makeCard("1~3", 2, 3, {"On Damage": "Gain life equal to damage dealt (max: number of tokens you anted)."}),
 
     sealthepact: makeCard("N/A", "N/A", 0, {"Soak": 2, "After Activating": "Spend your opponent's life to ante your first Dark Pact token each turn."}),
-    altazziar: makeCard(1, 6, 2, {"Start of Beat": "Set life to 1. The effect of each token is doubled this turn (except Corruption)."})
+    altazziar: makeCard(1, 6, 2, {"Start of Beat": "Set life to 1. The effect of each token is doubled this turn (except Corruption)."}),
+
+    // Kehrolyn
+    bladed: makeCard(0, 2, 0, {"Stun Guard": 2}),
+    exoskeletal: makeCard(0, 0, 0, {"Soak": 2, "Ignore all movement effects applied to you this beat.": undefined}),
+    mutating: makeCard(0,0,0, {"Reveal": "This style gains all stats and effects of Kehrolyn's current form. If it is her current form, it instead copies the style she played this beat.", "End of Beat": "Lose one life."}),
+    quicksilver: makeCard(0,0,2, {"End of Beat": "Move up to one space"}),
+    whip: makeCard("0~1", 0, 0, {"On Hit": "If the opponent is at range 1, they are stunned. Otherwise, pull them 1 space."}),
+    overload: makeCard(1, 3, 3, {"Start of Beat": "Choose an additional style from your hand to apply to this attack. If it has a reveal trigger, do that now."}),
+
+    hydrafork: makeCard("1~3", 6, 0, {"Stun Immunity": undefined, "After Activating": "Gain 5 life."}),
+    theauguststrain: makeCard("1~2", 4, 5, {"Stun Guard": 2, "Soak": 2, "On Hit": "Remove a style from your hand from the game. Apply that style as an additional form to Kehrolyn's attack pair from now on."})
   }
 
   var loadCard = function(cardName, $card, overrideCardName) {

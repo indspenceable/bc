@@ -203,7 +203,7 @@ class Cadenza < Character
   def current_effects
     ary = []
     ary << "Battery (+4 Priority)" if @battery_bonus
-    ary << "Press (+#{@damage_taken_this_beat} damage)" if flag? :bonus_power_per_damage_taken
+    ary << "Press (+#{@damage_taken_this_beat} damage)" if flag? :bonus_power_per_damage_taken && @revealed
     ary << "Stun Guard (Iron Body)" if @iron_body_stun_guard
     ary << "Stun Immunity (Iron Body)" if @iron_body_stun_immunity
     # Need to mark the bonus for feedback field

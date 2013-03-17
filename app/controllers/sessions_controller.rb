@@ -23,7 +23,9 @@ class SessionsController < ApplicationController
   def dev_login
     session[:email] = params[:email]
     session[:email_override] = true
-    User.find_or_create_by_email(session[:email], :name => "FAKE_USER_FOR#{session[:email]}")
+    u = User.find_or_create_by_email(session[:email])
+    u.name = "FAKE_USER_FOR#{session[:email]}"
+    u.save
     redirect_to games_path
   end
 

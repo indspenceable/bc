@@ -316,7 +316,7 @@ class Zaamassal < Character
   end
 
   def gain_power_for_distance!
-    @bonuses << PlanarDividerPowerBonus.new(distance)
+    @bonuses << PlanarDividerPowerBonus.new(distance-1)
   end
 
   def assume_paradigm?(choice)

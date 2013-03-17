@@ -70,8 +70,10 @@
                   })
                 }
                 $(requiredInputCount)
+              %li.divider-vertical
               %li
-                = link_to(current_user.email, current_user, class: '#my-profile')
+                = link_to(current_user.name, current_user, class: '#my-profile')
+              %li.divider-vertical
               %li.logged-in
                 %a#personaLogout{href: '#'} Logout
             - elsif session[:email]

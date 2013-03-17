@@ -85,14 +85,12 @@ class Bloodlight < Base
             # gain life per damage dealt, up to the number of tokens anted this turn
             "health_recovery" => ->(me, inputs) {
                 if me.damage_dealt_this_beat <= me.current_tokens.count
-                	puts ("OREO" + me.damage_dealt_this_beat.to_s)
                     life_recovered = (me.damage_dealt_this_beat)
                 else
                     life_recovered = (me.current_tokens.count)
                 end
-                print ("life recovered " + life_recovered.to_s)
                 if life_recovered > 0
-                    gain_life!(life_recovered)
+                    me.gain_life!(life_recovered)
                 end
             }
         }
@@ -154,15 +152,17 @@ class Altazziar < Finisher
     def initialize
         super("altazziar", 1, 6, 2)
     end
-    def start_of_beat
+    def start_of_beat!
         {
             "lose_life" => ->(me, inputs) {
-                me.lose_life!(@life - 1)
+                me.lose_life!(me.life - 1)
             },
             "double_token_effects" => ->(me, inputs) {
-            	for me.current_tokens.each do |token|
+            	logger.fatal("\n\n OREO1" + me.current_effects)
+            	me.current_tokens.each do |token|
             		me.altazziar_bonus << token.clone
             	end
+            	logger.fatal("\n\n OREO2" + me.current_effects)
             }
         }
     end
@@ -175,7 +175,7 @@ class SealThePact < Finisher
     def soak
         2
     end
-    def after_activating
+    def after_activating!
         {
             "ante_opponent_life" => ->(me, inputs) {me.ante_opponent_life = true}
         }

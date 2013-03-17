@@ -8,7 +8,7 @@ module GamesHelper
   end
   def character_badges(character_name)
     badges = {}
-    badges["Beta"] = :warning if ['heketch', 'zaamassal'].include?(character_name)
+    badges["Beta"] = :warning if ['kehrolyn', 'hepzibah'].include?(character_name)
     badges
   end
 
@@ -20,7 +20,7 @@ module GamesHelper
 
   def game_string(game)
     players = game.play.characters
-    flavor_str = "#{game.p0.email} #{players ? "(#{players[0].name.capitalize})" : ''} VS #{game.p1.email} #{players ? "(#{players[1].name.capitalize})" : ''}"
+    flavor_str = "#{game.p0.name} #{players ? "(#{players[0].name.capitalize})" : ''} VS #{game.p1.name} #{players ? "(#{players[1].name.capitalize})" : ''}"
     link_str = link_to flavor_str, game_path(game)
     "#{link_str} #{badges(game_badges(game))}".html_safe
   end
