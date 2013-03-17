@@ -110,6 +110,9 @@ class FeedbackFieldBonus < Token
 end
 
 class IronBody
+  def name
+    "Iron Body Token"
+  end
 end
 
 class Cadenza < Character
