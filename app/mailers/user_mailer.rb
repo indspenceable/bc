@@ -10,8 +10,8 @@ class UserMailer < ActionMailer::Base
     @game = game
     mail(:to => user.email,
          :subject => "You've been issued a challenge!") do |format|
-      format.html if Rails.env.production?
-      format.text if Rails.env.production?
+      format.html
+      format.text
     end
   end
 end
