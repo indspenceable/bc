@@ -238,16 +238,6 @@ class Character
     @life > 0
   end
 
-  def lose_life!(amount)
-    log_me!("loses #{amount} life")
-    @life -= Integer(amount)
-  end
-
-  def gain_life!(amount)
-    log_me!("gains #{amount} life")
-    @life += Integer(amount)
-  end
-
   def can_stun?
     true
   end
