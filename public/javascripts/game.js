@@ -285,8 +285,7 @@ var init = function(player_id, game_id, chimeEnabled) {
         }).appendTo($styles)
     }
     for (var index in tokens) {
-      // TODO This is ugly. We will eventually need to overhaul this entire thing to get popovers to work correctly for tokens anyway
-      $('<div/>').addClass('token').text(tokens[index].name).appendTo($tokens)
+      $('<div/>').addClass('token').text(tokens[index]).appendTo($tokens)
     }
     for (var index in discard1Cards) {
       $('<div/>').addClass('card mini-card').text(discard1Cards[index]).popover({

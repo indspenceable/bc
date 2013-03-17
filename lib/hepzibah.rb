@@ -299,6 +299,11 @@ class Hepzibah < Character
     def discard_token?(choice)
     	false
     end
+
+    def token_pool
+        @token_pool.map(&:name_and_effect)
+    end
+
     def recycle!
         super
         @used_opponent_life = false
