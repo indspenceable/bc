@@ -21,6 +21,8 @@
   .row
     - GamePlay.character_names.each do |name|
       %a.btn{charactername: name}
+        %div
+          = image_tag "/images/character_icons/#{name}.png", :style => "height: 100px"
         = name
         = badges(character_badges(name))
 .js-in-game{:style => "display: none"}

@@ -293,7 +293,7 @@ var init = function(player_id, game_id, chimeEnabled) {
   }
 
   var setHeader = function(pn, character, finisher) {
-    $root(pn).find('.character-portrait').append($('<img/>').css('height', '50px').attr('src', '/images/character_icons/'+character+'.png'))
+    $root(pn).find('.character-portrait').empty().append($('<img/>').css('height', '50px').attr('src', '/images/character_icons/'+character+'.png'))
     $root(pn).find('.character-name').empty().text(capitaliseFirstLetter(character)).popover({
       title: capitaliseFirstLetter(character),
       content: characterUAs[character],
