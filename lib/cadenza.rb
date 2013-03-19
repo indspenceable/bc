@@ -178,8 +178,10 @@ class Cadenza < Character
   def priority
     (@battery_bonus ? 4 : 0) + super
   end
+
   def token_pool
-    (["Iron Body"] * @token_count) + super
+    descriptor = { title: "Iron Body", content: 'Ante: Stun Immunity. On Damage, spend for Stun Guard: infinite.'}
+    ([descriptor] * @token_count) + super
   end
 
   #ante-ing iron body tokens

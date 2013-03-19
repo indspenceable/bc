@@ -89,24 +89,24 @@ class ExplosiveShell < Token
   def initialize
     super("explosiveshell", 0, 2, 0)
   end
-  def name_and_effect
-    "#{name.capitalize} (+2 power)"
+  def effect
+    "+2 power"
   end
 end
 class SwiftShell < Token
   def initialize
     super("swiftshell", 0, 0, 2)
   end
-  def name_and_effect
-    "#{name.capitalize} (+2 priority)"
+  def effect
+    "+2 priority"
   end
 end
 class Longshot < Token
   def initialize
     super("longshot", (-1..1), 0, 0)
   end
-  def name_and_effect
-    "#{name.capitalize} (-1~+1 range)"
+  def effect
+    "-1~+1 range"
   end
 end
 class ImpactShell < Token
@@ -118,8 +118,8 @@ class ImpactShell < Token
       "push" => select_from_methods(push: [2])
     }
   end
-  def name_and_effect
-    "#{name.capitalize} (On Hit: Push Opponent 2 spaces)"
+  def effect
+    "On Hit: Push Opponent 2 spaces"
   end
 end
 class APShell < Token
@@ -129,8 +129,8 @@ class APShell < Token
   def ignore_soak?
     true
   end
-  def name_and_effect
-    "#{name.capitalize} (Ignore soak)"
+  def effect
+    "Ignore soak"
   end
 end
 class FlashShell < Token
@@ -140,8 +140,8 @@ class FlashShell < Token
   def ignore_stun_guard?
     true
   end
-  def name_and_effect
-    "#{name.capitalize} (Ignore Stun Guard)"
+  def effect
+    "Ignore Stun Guard"
   end
 end
 
@@ -208,8 +208,8 @@ class Rukyuk < Character
   def ante!(choice)
     return if choice == "pass"
     return if super(choice)
-    log_me!("antes #{@token_pool.find{ |token| token.name == choice }.name_and_effect}")
     @current_token = @token_pool.find{ |token| token.name == choice }
+    log_me!("antes #{@current_token.name} (#{@current_token.effect})")
     @token_pool.delete_if{ |token| token.name == choice }
   end
 
@@ -254,12 +254,12 @@ class Rukyuk < Character
     sources
   end
 
-  def current_effects
-    Array(@current_token.try(:name_and_effect)) + super
+  def current_effect_descriptors
+    Array(@current_token.try(:descriptor)) + super
   end
 
-  def token_pool
-    @token_pool.map(&:name_and_effect)
+  def token_pool_descriptors
+    @token_pool.map(&:descriptor)
   end
 
   def recycle!

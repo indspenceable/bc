@@ -92,8 +92,8 @@ class Fire < Token
   def initialize
     super("fire", 0, 3, 0)
   end
-  def name_and_effect
-    "#{name.capitalize} (+3 power)"
+  def effect
+    "+3 power"
   end
 end
 
@@ -104,8 +104,8 @@ class Earth < Token
   def soak
     3
   end
-  def name_and_effect
-    "#{name.capitalize} (soak 3)"
+  def effect
+    "Soak 3"
   end
 end
 
@@ -113,8 +113,8 @@ class Wind < Token
   def initialize
     super("wind", 0, 0, 2)
   end
-  def name_and_effect
-    "#{name.capitalize} (+2 priority)"
+  def effect
+    "+2 priority"
   end
 end
 
@@ -122,8 +122,8 @@ class Water < Token
   def initialize
     super("water", -1..1, 0, 0)
   end
-  def name_and_effect
-    "#{name.capitalize} (-1 ~ +1 range)"
+  def effect
+    "-1 ~ +1 range"
   end
 end
 
@@ -222,8 +222,8 @@ class Hikaru < Character
     end
   end
 
-  def current_effects
-    super + @current_tokens.map(&:name_and_effect)
+  def current_effect_descriptors
+    super + @current_tokens.map(&:descriptor)
   end
 
   def recycle!
@@ -239,8 +239,9 @@ class Hikaru < Character
   def ante_options
     (@current_tokens.empty? ? @token_pool.map(&:name) : []) + super
   end
-  def token_pool
-    @token_pool.map(&:name_and_effect)
+
+  def token_pool_descriptors
+    @token_pool.map(&:descriptor)
   end
 
   def ante!(choice)
@@ -249,8 +250,9 @@ class Hikaru < Character
       return
     end
     return if super
-    log_me!("antes #{@token_pool.find{ |token| token.name == choice }.name_and_effect}")
-    @current_tokens += @token_pool.reject{ |token| token.name != choice }
+    token = @token_pool.find{ |token| token.name == choice }
+    log_me!("antes #{token.name} #{token.effect}")
+    @current_tokens << token
     @token_pool.delete_if{ |token| token.name == choice }
   end
 

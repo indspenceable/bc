@@ -231,7 +231,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     $('.board').find('.s' + p0).append($("<span/>").addClass("label label-info").html($('<i/>').addClass('icon-user')))
     $('.board').find('.s' + p1).append($("<span/>").addClass("label label-important").html($('<i/>').addClass('icon-user')))
   }
-  var fillCards = function(pn, currentBase, currentStyle, specialAction, bases, styles, tokens, discard1Cards, discard2Cards) {
+  var fillCards = function(pn, currentBase, currentStyle, specialAction, bases, styles, discard1Cards, discard2Cards) {
     if (currentBase) {
       loadCard(currentBase.toLowerCase(), $root(pn).filter('.attack-pair').find('.real.base'))
     } else {
@@ -252,7 +252,6 @@ var init = function(player_id, game_id, chimeEnabled) {
     }
     var $bases = $root(pn).find('.js-bases').empty()
     var $styles = $root(pn).find('.js-styles').empty()
-    var $tokens = $root(pn).find('.js-tokens').empty()
     var $discard1 = $root(pn).find('.js-discard1').empty()
     var $discard2 = $root(pn).find('.js-discard2').empty()
 
@@ -272,9 +271,6 @@ var init = function(player_id, game_id, chimeEnabled) {
         title: styles[index],
         content: loadCard(styles[index], $template.clone()).html()
         }).appendTo($styles)
-    }
-    for (var index in tokens) {
-      $('<div/>').addClass('token').text(tokens[index]).appendTo($tokens)
     }
     for (var index in discard1Cards) {
       $('<div/>').addClass('card mini-card').text(discard1Cards[index]).popover({
@@ -316,6 +312,27 @@ var init = function(player_id, game_id, chimeEnabled) {
       var color = (pn == 0 ? 'info' : 'important')
       $('.board').find('.s' + data.trap).append($("<span/>").addClass("label label-" + color).html($('<i/>').addClass('icon-asterisk')))
     }
+  }
+
+  var fillEffectList = function(pn, data, $ele) {
+    // $root(pn).filter('.js-current-effects').html(gameState.players[pn].current_effects.join("<br/>"))
+    for (var i in data) {
+      di = data[i]
+      $('<div/>').text(di.title).popover({
+        title: di.title,
+        content: di.content,
+        trigger: 'hover',
+        placement: pn == 0 ? 'right' : 'left'
+      }).appendTo($ele)
+    }
+  }
+
+  var fillCurrentEffects = function(pn, data) {
+    fillEffectList(pn, data, $root(pn).filter('.js-current-effects').empty())
+  }
+
+  var fillTokenPool = function(pn, data) {
+    fillEffectList(pn, data, $root(pn).find('.js-tokens').empty())
   }
 
   var needInputAlready = true
@@ -379,12 +396,12 @@ var init = function(player_id, game_id, chimeEnabled) {
         gameState.players[pn].special_action,
         gameState.players[pn].bases,
         gameState.players[pn].styles,
-        gameState.players[pn].token_pool,
         gameState.players[pn].discard1,
         gameState.players[pn].discard2)
       // Display player life
       $root(pn).filter('.life').text("P" + pn + ": " + gameState.players[pn].life + " Life")
-      $root(pn).filter('.js-current-effects').html(gameState.players[pn].current_effects.join("<br/>"))
+      fillCurrentEffects(pn, gameState.players[pn].current_effects)
+      fillTokenPool(pn, gameState.players[pn].token_pool)
       $('.p' + pn + 'header').find('.character-desc').text(characterUAs[gameState.players[pn].character_name])
       setExtraData(pn, gameState.players[pn].extra_data)
     }
