@@ -314,7 +314,14 @@ var init = function(player_id, game_id, chimeEnabled) {
   var setExtraData = function(pn, data) {
     if (data.trap !== undefined) {
       var color = (pn == 0 ? 'info' : 'important')
-      $('.board').find('.s' + data.trap).append($("<span/>").addClass("label label-" + color).html($('<i/>').addClass('icon-asterisk')))
+      var space = $('.board').find('.s' + data.trap)
+      var meta = space.find('.meta')
+      if (meta.length == 0) {
+        meta = $('<div/>').addClass('meta').prependTo(space)
+      } else {
+        meta = meta[0]
+      }
+      meta.append($("<span/>").addClass("label label-" + color).html($('<i/>').addClass('icon-asterisk')))
     }
   }
 
