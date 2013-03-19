@@ -28,6 +28,10 @@
   border-radius: 4px;
 }
 
+.space {
+  min-height: 90px;
+}
+
 .header .character-desc {
   display: none;
   /*position: absolute;

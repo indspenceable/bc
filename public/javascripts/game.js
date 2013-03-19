@@ -226,10 +226,11 @@ var init = function(player_id, game_id, chimeEnabled) {
     return;
   }
 
-  var displayBoard = function(p0, p1) {
-    $('.board').find('.space').empty()
-    $('.board').find('.s' + p0).append($("<span/>").addClass("label label-info").html($('<i/>').addClass('icon-user')))
-    $('.board').find('.s' + p1).append($("<span/>").addClass("label label-important").html($('<i/>').addClass('icon-user')))
+  var displayBoard = function(p0, p0Name, p1, p1Name) {
+    $('.board').find('.space').empty().css('border-color', '')
+    $('.board').find('.s' + p0).append($('<img/>').attr('src', '/images/character_icons/' + p0Name + '.png')).css('border-color', 'blue')
+    $('.board').find('.s' + p1).append($('<img/>').attr('src', '/images/character_icons/' + p1Name + '.png')).css('border-color', 'red')
+    // $('.board').find('.s' + p1).append($("<span/>").addClass("label label-important").html($('<i/>').addClass('icon-user')))
   }
   var fillCards = function(pn, currentBase, currentStyle, specialAction, bases, styles, discard1Cards, discard2Cards) {
     if (currentBase) {
@@ -384,7 +385,8 @@ var init = function(player_id, game_id, chimeEnabled) {
       $('.js-current-beat').html("<h3>" + gameState.current_beat + "</h3>")
     }
     // Display the board
-    displayBoard(gameState.players[0].location, gameState.players[1].location)
+    displayBoard(gameState.players[0].location, gameState.players[0].character_name,
+      gameState.players[1].location, gameState.players[1].character_name)
     // show the players hands
     for (var pn = 0; pn <= 1; pn++) {
       setHeader(pn,
