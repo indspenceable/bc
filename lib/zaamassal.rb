@@ -290,8 +290,10 @@ class Zaamassal < Character
 
   def stunned!
     super
-    log_me!("loses his paradigms.")
-    @paradigms = [] if @stunned
+    if @stunned
+      log_me!("loses his paradigms.")
+      @paradigms = []
+    end
   end
 
   def assume_three_paradigms!
