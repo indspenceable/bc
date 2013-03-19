@@ -293,19 +293,22 @@ var init = function(player_id, game_id, chimeEnabled) {
   }
 
   var setHeader = function(pn, character, finisher) {
+    $root(pn).find('.character-portrait').append($('<img/>').css('height', '50px').attr('src', '/images/character_icons/'+character+'.png'))
     $root(pn).find('.character-name').empty().text(capitaliseFirstLetter(character)).popover({
       title: capitaliseFirstLetter(character),
       content: characterUAs[character],
       trigger: 'hover',
       placement: 'bottom'
     })
-    $root(pn).find('.finisher').empty().text(capitaliseFirstLetter(finisher)).popover({
-      title: capitaliseFirstLetter(finisher),
-      html: true,
-      trigger: 'hover',
-      placement: 'bottom',
-      content: loadCard(finisher, $('#template-card').clone()).html()
-    })
+    if(finisher) {
+      $root(pn).find('.finisher').empty().text(capitaliseFirstLetter(finisher)).popover({
+        title: capitaliseFirstLetter(finisher),
+        html: true,
+        trigger: 'hover',
+        placement: 'bottom',
+        content: loadCard(finisher, $('#template-card').clone()).html()
+      })
+    }
   }
 
   var setExtraData = function(pn, data) {
