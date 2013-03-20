@@ -2,6 +2,7 @@ require "hikaru"
 require "cadenza"
 require 'khadath'
 require 'rukyuk'
+require 'hepzibah'
 require 'heketch'
 require 'zaamassal'
 require 'kehrolyn'
@@ -409,8 +410,9 @@ class GamePlay
   end
 
   def self.character_list
-    [Hikaru, Cadenza, Khadath, Rukyuk, Heketch, Zaamassal, Kehrolyn]
+    [Hikaru, Cadenza, Khadath, Rukyuk, Heketch, Zaamassal, Hepzibah, Kehrolyn]
   end
+
   def self.character_names
     character_list.map(&:character_name)
   end

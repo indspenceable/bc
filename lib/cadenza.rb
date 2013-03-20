@@ -109,6 +109,15 @@ class FeedbackFieldBonus < Token
   end
 end
 
+class IronBody < Token
+  def initialize
+    super("ironbody", 0, 0, 0)
+  end
+  def effect
+    "Ante: Stun Immunity. On Damage, spend for Stun Guard: infinite."
+  end
+end
+
 class Cadenza < Character
   def initialize *args
     super
@@ -120,7 +129,7 @@ class Cadenza < Character
       Grapnel.new,
       Hydraulic.new,
     ]
-    @token_count = 3
+    @token_pool += [IronBody.new, IronBody.new, IronBody.new]
     @bonuses = []
   end
   def self.character_name
@@ -139,9 +148,16 @@ class Cadenza < Character
     @battery_charge = true
   end
 
+  def next_available_iron_body
+    @token_pool.find{|n| n.is_a? IronBody}
+  end
+  def remove_one_iron_body!
+    @token_pool.delete(next_available_iron_body)
+  end
+
   def receive_damage!(damage)
     super
-    if damage > 0 && @token_count > 0 && exceeds_stun_guard?(damage)
+    if damage > 0 && next_available_iron_body && exceeds_stun_guard?(damage)
       select_from_methods(iron_body: ['yes', 'pass']).call(self, @input_manager)
     end
   end
@@ -152,12 +168,12 @@ class Cadenza < Character
 
   def iron_body?(action)
     return true if action == "pass"
-    return @token_count > 0
+    return next_available_iron_body
   end
   def iron_body!(action)
     return if action == "pass"
     log_me!("discards an iron body token for infinite stun guard.")
-    @token_count -= 1
+    remove_one_iron_body!
     @iron_body_stun_guard = true
   end
 
@@ -179,9 +195,8 @@ class Cadenza < Character
     (@battery_bonus ? 4 : 0) + super
   end
 
-  def token_pool
-    descriptor = { title: "Iron Body", content: 'Ante: Stun Immunity. On Damage, spend for Stun Guard: infinite.'}
-    ([descriptor] * @token_count) + super
+  def token_pool_descriptors
+    @token_pool.map(&:descriptor) + super
   end
 
   #ante-ing iron body tokens
@@ -192,13 +207,13 @@ class Cadenza < Character
   def ante?(action)
     return true if action == "pass"
     return true if super
-    return @token_count > 0 && !@iron_body_stun_immunity
+    return next_available_iron_body && !@iron_body_stun_immunity
   end
   def ante!(action)
     return if action == "pass"
     return if super
     log_me!("antes an iron body token.")
-    @token_count -= 1
+    remove_one_iron_body!
     @iron_body_stun_immunity = true
   end
 
