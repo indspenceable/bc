@@ -42,6 +42,10 @@ class Card
   def ignore_stun_guard?
     false
   end
+
+  def descriptor
+    {title: name, content: effect}
+  end
 end
 
 class Style < Card;end

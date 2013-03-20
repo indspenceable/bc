@@ -79,7 +79,11 @@ class ParadigmShift < Base
   end
 end
 
-class Paradigm < Card;end
+class Paradigm < Card
+  def descriptor
+    {title: "Paradigm of #{name}", content: effect}
+  end
+end
 
 class Pain < Paradigm
   def initialize
@@ -92,8 +96,8 @@ class Pain < Paradigm
     }
   end
 
-  def name_and_effect
-    "Paradigm of Pain: (On Damage: Opponent loses 2 life)"
+  def effect
+    "On Damage: Opponent loses 2 life"
   end
 end
 
@@ -104,8 +108,8 @@ class Distortion < Paradigm
 
   flag :distortion
 
-  def name_and_effect
-    "Paradigm of Distortion: (Range 3~4 is always in your range. Attacks at range 3~4 don't hit you.)"
+  def effect
+    "Range 3~4 is always in your range. Attacks at range 3~4 don't hit you."
   end
 end
 
@@ -123,8 +127,8 @@ class Fluidity < Paradigm
       "movement" => select_from_methods(advance: [0,1], retreat: [1])
     }
   end
-  def name_and_effect
-    "Paradigm of Fluidity: (Before Activating: Move up to 1 space. End of Beat: Move up to 1 space.)"
+  def effect
+    "Before Activating: Move up to 1 space. End of Beat: Move up to 1 space."
   end
 end
 
@@ -143,8 +147,8 @@ class Resilience < Paradigm
     }
   end
 
-  def name_and_effect
-    "Paradigm of Resilience: (Start of Beat: Gain Soak 2. After Activating: Lose all Soak)"
+  def effect
+    "Start of Beat: Gain Soak 2. After Activating: Lose all Soak"
   end
 end
 
@@ -155,8 +159,8 @@ class Haste < Paradigm
   flag :wins_ties
   flag :stop_movement_if_adjacent
 
-  def name_and_effect
-    "Paradigm of Haste: (You win priority ties. Adjacent opponents can't move.)"
+  def effect
+    "You win priority ties. Adjacent opponents can't move."
   end
 end
 
@@ -167,8 +171,8 @@ class ResilienceSoak < Card
   def soak
     2
   end
-  def name_and_effect
-    "Resilience (Soak 2)"
+  def effect
+    "Soak 2"
   end
 end
 
@@ -210,8 +214,8 @@ class PlanarDividerPowerBonus < Token
   def initialize p
     super("planardividerpowerbonus", 0, p, 0)
   end
-  def name_and_effect
-    "Planar Divider power bonus"
+  def effect
+    "+#{p} power (Planar Divider)"
   end
 end
 
@@ -246,17 +250,17 @@ class Zaamassal < Character
     sources
   end
 
-  def current_effects
+  def current_effect_descriptors
     effects = []
-    effects += @paradigms.map(&:name_and_effect)
+    effects += @paradigms.map(&:descriptor)
     effects += super
-    effects += @bonuses.map(&:name_and_effect)
+    effects += @bonuses.map(&:descriptor)
     effects
   end
 
-  def token_pool
+  def token_pool_descriptors
     pool = []
-    pool += paradigm_map.values.map(&:name_and_effect)
+    pool += paradigm_map.values.map(&:descriptor)
     pool
   end
 
@@ -290,8 +294,10 @@ class Zaamassal < Character
 
   def stunned!
     super
-    log_me!("loses his paradigms.")
-    @paradigms = [] if @stunned
+    if @stunned
+      log_me!("loses his paradigms.")
+      @paradigms = []
+    end
   end
 
   def assume_three_paradigms!

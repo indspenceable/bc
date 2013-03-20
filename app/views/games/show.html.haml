@@ -1,6 +1,7 @@
 .row
   .span5
     .well.js-p0.header
+      %span.character-portrait
       %span.label.label-info.player-name= current_game.p0.name
       %span.label.label-info.character-name
       %span.label.label-info.finisher
@@ -9,6 +10,7 @@
     %h3.js-current-beat
   .span5
     .well.js-p1.header
+      %span.character-portrait
       %span.label.label-important.player-name= current_game.p1.name
       %span.label.label-important.character-name
       %span.label.label-important.finisher
@@ -19,6 +21,8 @@
   .row
     - GamePlay.character_names.each do |name|
       %a.btn{charactername: name}
+        %div
+          = image_tag "/images/character_icons/#{name}.png", :style => "height: 100px"
         = name
         = badges(character_badges(name))
 .js-in-game{:style => "display: none"}

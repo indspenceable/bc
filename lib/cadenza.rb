@@ -109,9 +109,12 @@ class FeedbackFieldBonus < Token
   end
 end
 
-class IronBody
-  def name
-    "Iron Body Token"
+class IronBody < Token
+  def initialize
+    super("ironbody", 0, 0, 0)
+  end
+  def effect
+    "Ante: Stun Immunity. On Damage, spend for Stun Guard: infinite."
   end
 end
 
@@ -191,8 +194,9 @@ class Cadenza < Character
   def priority
     (@battery_bonus ? 4 : 0) + super
   end
-  def token_pool
-    @token_pool.map(&:name) + super
+
+  def token_pool_descriptors
+    @token_pool.map(&:descriptor) + super
   end
 
   #ante-ing iron body tokens

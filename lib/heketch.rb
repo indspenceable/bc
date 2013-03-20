@@ -97,8 +97,8 @@ class DarkForce < Token
   def initialize
     super("darkforce", 0, 0, 3)
   end
-  def name_and_effect
-    "Dark Force (+3 Priority)"
+  def effect
+    "+3 Priority"
   end
 end
 
@@ -125,20 +125,11 @@ class LivingNightmare < Finisher
   end
 end
 
-class DarkForceAnteBonus < Token
-  def initialize
-    super("darkforceantebonus", 0, 0, 3)
-  end
-  def name_and_effect
-    "Dark Force (+3 priority)"
-  end
-end
-
 class DarkForcePowerBonus < Token
   def initialize
     super("darkforcepowerbonus", 0, 3, 0)
   end
-  def name_and_effect
+  def effect
     "+3 Power"
   end
 end
@@ -196,8 +187,8 @@ class Heketch < Character
     @dark_force = false
   end
 
-  def current_effects
-    super + @bonuses.map(&:name_and_effect)
+  def current_effect_descriptors
+    super + @bonuses.map(&:descriptor)
   end
 
   def ante_options
@@ -205,9 +196,10 @@ class Heketch < Character
     opts << "dark_force" if has_dark_force?
     opts
   end
-  def token_pool
+  def token_pool_descriptors
     pool = []
-    pool << "Dark Force (Teleport, +3 Priority)" if has_dark_force?
+    dark_force_descriptor = {title: "Dark Force", content: "+3 priority, and teleport to a space adjacent to the opponent."}
+    pool << dark_force_descriptor if has_dark_force?
     pool
   end
 
@@ -219,7 +211,7 @@ class Heketch < Character
     return if super
     log_me!("antes a Dark Force token.")
     @dark_force = false
-    @bonuses << DarkForceAnteBonus.new
+    @bonuses << DarkForce.new
     select_from_methods(teleport_to: [@opponent.position-1, @opponent.position+1]).call(self, @input_manager)
   end
 

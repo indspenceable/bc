@@ -28,6 +28,15 @@
   border-radius: 4px;
 }
 
+.space {
+  min-height: 90px;
+}
+
+.meta {
+  position: absolute;
+  text-align: center;
+}
+
 .header .character-desc {
   display: none;
   /*position: absolute;

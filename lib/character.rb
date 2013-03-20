@@ -461,7 +461,7 @@ class Character
     opts
   end
 
-  def token_pool
+  def token_pool_descriptors
     []
   end
 
@@ -479,11 +479,11 @@ class Character
     @token_pool.any?{|token| token.name == choice}
   end
 
-  def current_effects
-    @opponent.current_opponent_effects
+  def current_effect_descriptors
+    @opponent.current_opponent_effect_descriptors
   end
   # these are current effects provided by your opponent, like trap penalty
-  def current_opponent_effects
+  def current_opponent_effect_descriptors
     []
   end
 
