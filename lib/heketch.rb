@@ -181,6 +181,12 @@ class Heketch < Character
     sources
   end
 
+  # TODO this is ugly, but should work for now.
+  def select_and_discard_a_token!
+    log_me!("discards his dark force token.") if @dark_force
+    @dark_force = false
+  end
+
   def current_effect_descriptors
     super + @bonuses.map(&:descriptor)
   end
@@ -308,7 +314,7 @@ class Heketch < Character
   end
 
   def heal_half_damage!
-    life_to_gain = (@damage_dealt_by_this_attack - (@damage_dealt_by_this_attack/2))
+    life_to_gain = (@damage_dealt_this_attack - (@damage_dealt_this_attack/2))
     log_me!("Gained #{life_to_gain}")
     @life += life_to_gain
   end

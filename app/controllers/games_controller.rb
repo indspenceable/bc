@@ -17,8 +17,10 @@ class GamesController < LoggedInController
         :active => true,
         :inputs => [])
 
-      # Deliver an email
-      UserMailer.challenge(opponent, current_user, game).deliver if opponent.email_notifications_enabled?
+      # Deliver an email if it's enabled, and we're in production.
+      if opponent.email_notifications_enabled? && Rails.env.production?
+        UserMailer.challenge(opponent, current_user, game).deliver
+      end
     end
     redirect_to game_path(game)
   end
