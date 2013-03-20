@@ -101,8 +101,8 @@ class Almighty < Token
   def initialize
     super("almighty", 0, 2, 0)
   end
-  def name_and_effect
-    "#{name.capitalize} (+2 power)"
+  def effect
+    "+2 power"
   end
 end
 
@@ -110,8 +110,8 @@ class Endless < Token
   def initialize
     super("endless", 0, 0, 2)
   end
-  def name_and_effect
-    "#{name.capitalize} (+2 priority)"
+  def effect
+    "+2 priority"
   end
 end
 
@@ -119,8 +119,8 @@ class Immortality < Token
   def initialize
     super("immortality", 0, 0, 0)
   end
-  def name_and_effect
-    "#{name.capitalize} (soak 2)"
+  def effect
+    "soak 2"
   end
   def soak
     2
@@ -131,8 +131,8 @@ class Inevitable < Token
   def initialize
     super("inevitable", 0..1, 0, 0)
   end
-  def name_and_effect
-    "#{name.capitalize} (0 ~ +1 range)"
+  def effect
+    "0 ~ +1 range"
   end
 end
 
@@ -140,8 +140,8 @@ class Corruption < Token
   def initialize
     super("corruption", 0, 0, 0)
   end
-  def name_and_effect
-    "#{name.capitalize} (ignores stun guard)"
+  def effect
+    "ignores stun guard"
   end
   def ignore_stun_guard?
     true
@@ -249,8 +249,9 @@ class Hepzibah < Character
       return
     end
     return if super
-    log_me!("antes #{@token_pool.find{ |token| token.name == choice }.name_and_effect}")
-    @current_tokens += @token_pool.reject{ |token| token.name != choice }
+    anted_token = @token_pool.find{ |token| token.name == choice }
+    log_me!("antes #{anted_token.name} (#{anted_token.effect})")
+    @current_tokens << anted_token
     @token_pool.delete_if{ |token| token.name == choice }
     if choice == @pactbond_free_token
       log_me!("does not lose life (Pactbond)")
@@ -300,8 +301,8 @@ class Hepzibah < Character
     false
   end
 
-  def token_pool
-    @token_pool.map(&:name_and_effect)
+  def token_pool_descriptors
+    @token_pool.map(&:descriptor)
   end
 
   def recycle!
