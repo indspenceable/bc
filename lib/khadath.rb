@@ -48,7 +48,7 @@ class Evacuation < Style
   def start_of_beat!
     {
       "place_trap_and_retrat" => ->(me,inpts){
-        select_from_methods(set_trap: [me.position]).call(me,inpts)
+        me.set_trap!(me.position) unless me.flag? :no_moving_trap_this_beat
         select_from_methods(retreat: [1]).call(me,inpts)
       }
     }
