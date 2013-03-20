@@ -48,7 +48,7 @@ class Evacuation < Style
   def start_of_beat!
     {
       "place_trap_and_retrat" => ->(me,inpts){
-        me.set_trap!(me.position)
+        select_from_methods(set_trap: [me.position]).call(me,inpts)
         select_from_methods(retreat: [1]).call(me,inpts)
       }
     }
