@@ -70,10 +70,8 @@ class Snare < Base
   def initialize
     super("snare", nil, 3, 1)
   end
-  def passive!(me)
-    me.no_moving_trap_this_beat!
-  end
 
+  flag :no_moving_trap_this_beat!
   flag :hits_on_and_adjacent_to_trap
 
   def stun_immunity?
@@ -149,7 +147,7 @@ class Khadath < Character
     select_from_methods(set_trap: [0,1,2,3,4,5,6]).call(self, @input_manager)
   end
   def set_trap?(n)
-    return false if @no_moving_trap_this_beat
+    return false if flag? :no_moving_trap_this_beat
     return n if @position != Integer(n) && @opponent.position != Integer(n)
   end
   def set_trap!(n)
@@ -160,7 +158,7 @@ class Khadath < Character
     select_from_methods(set_trap_in_range: [0,1,2,3,4,5,6]).call(self, @input_manager)
   end
   def set_trap_in_range?(n)
-    return false if @no_moving_trap_this_beat
+    return false if flag? :no_moving_trap_this_beat
     if @position < @opponent.position
       dest = @position + Integer(n)
     else
@@ -195,9 +193,6 @@ class Khadath < Character
     super || (@dodge_trapped_opponents && @opponent.position == @trap) || dodge_ranged_attacks?
   end
 
-  def no_moving_trap_this_beat!
-    @no_moving_trap_this_beat = true
-  end
 
   def in_range?
     if flag? :hits_on_and_adjacent_to_trap
@@ -214,7 +209,6 @@ class Khadath < Character
     @hunters_bonus = nil
     @block_ranged_attacks = nil
     @dodge_trapped_opponents = nil
-    @no_moving_trap_this_beat = nil
   end
 
   def blocked_spaces
