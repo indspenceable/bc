@@ -71,7 +71,7 @@ class Snare < Base
     super("snare", nil, 3, 1)
   end
 
-  flag :no_moving_trap_this_beat!
+  flag :no_moving_trap_this_beat
   flag :hits_on_and_adjacent_to_trap
 
   def stun_immunity?
