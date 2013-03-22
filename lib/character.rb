@@ -471,8 +471,9 @@ class Character
 
   # This must be overwritten if your character does not use a @token_discard
   def discard_token!(choice)
-    @token_discard += @token_pool.reject{ |token| token.name != choice }
-    @token_pool.delete_if{ |token| token.name == choice }
+    token_to_discard = @token_pool.find{ |token| token.name == choice }
+    @token_discard << token_to_discard
+    @token_pool.delete(token_to_discard)
   end
 
   def discard_token?(choice)
