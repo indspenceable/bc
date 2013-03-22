@@ -304,7 +304,6 @@ class GamePlay
         #   "ante", current_player.ante_callback)
         # answer = @input_manager.answer(current_player_id)
         answer = select_from_methods(ante: current_player.ante_options).call(current_player, @input_manager)
-        @input_manager.stop_cancels!
         #TODO fix so "Player 1 passes" instead of "Player 1 antes pass"
         # @events.log!("Ante", "Player #{current_player_id} antes #{answer}")
         passed_this_round = (answer == 'ante#pass')
