@@ -557,6 +557,7 @@ class Character
   def gain_life!(n)
     log_me!("gains #{n} life.")
     @life += n
+    @life = 20 if @life > 20
   end
 
   # input callbacks. These check the validity of input that the player does.
