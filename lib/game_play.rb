@@ -220,15 +220,15 @@ class GamePlay
       :current_beat => @round_number,
       :winner => @winner,
       :active => @active,
-      :can_cancel => can_cancel?(player_id)
+      :can_undo => can_undo?(player_id)
     }
   end
 
   def active?
     !!@active
   end
-  def can_cancel?(player_id)
-    @input_manager.can_cancel.include?(player_id)
+  def can_undo?(player_id)
+    @input_manager.can_undo.include?(player_id)
   end
 
   private
@@ -321,7 +321,7 @@ class GamePlay
 
   def reveal!
     @players.each(&:reveal!)
-    @input_manager.stop_cancels!
+    @input_manager.stop_undos!
   end
 
   def passive_abilities!
@@ -363,7 +363,7 @@ class GamePlay
 
       @events.log!("Resolve Clash " + @players.each_with_index.map do |p, i|
         "#{@player_names[i]} reveals #{p.current_base_name}"
-      @input_manager.stop_cancels!
+      @input_manager.stop_undos!
       end.join(' / '))
     end
   end

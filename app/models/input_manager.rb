@@ -1,7 +1,7 @@
 # Input manager manages input.
 
 class InputManager
-  attr_reader :input_counter, :can_cancel
+  attr_reader :input_counter, :can_undo
   def initialize(input_buffer)
     @required_input = {}
     @input_buffer = Hash.new{|h, k| h[k] = []}
@@ -17,11 +17,11 @@ class InputManager
     @required_input = Hash.new{|h,k| h[k] = []}
     @required_input[player_id] << [input_string, validator]
     answer_inputs!
-    @can_cancel = [player_id]
+    @can_undo = [player_id]
   end
   def require_multi_input!(*args)
     raise "Didn't answer previous question" if input_required?
-    @can_cancel = []
+    @can_undo = []
     @required_input = Hash.new{|h,k| h[k] = []}
     @answers = {}
     args.each_slice(2) do |str_validator_callback_pair|
@@ -30,7 +30,7 @@ class InputManager
       end
     end
     answer_inputs!
-    @can_cancel = []
+    @can_undo = []
   end
   def required_input
     Hash[@required_input.select{|k,v| v.any?}.map do |k,v|
@@ -41,8 +41,8 @@ class InputManager
     @answers[player_id]
   end
 
-  def stop_cancels!
-    @can_cancel = []
+  def stop_undos!
+    @can_undo = []
   end
 
   private
@@ -77,7 +77,7 @@ class InputManager
     @input_counter+=1
     @answers[player_id] = string.downcase
     callback.call(@answers[player_id]) if callback
-    @can_cancel << player_id
+    @can_undo << player_id
     @answers[player_id]
   end
   def input_required?
