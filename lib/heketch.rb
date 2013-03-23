@@ -226,15 +226,15 @@ class Heketch < Character
   end
 
   def extra_power_at_range_one?(choice)
-    valid_answer_for_dark_force?(choice)
+    valid_answer_for_dark_force?(choice) && distance == 1
   end
 
   def spend_token_to_repeat?(choice)
-    valid_answer_for_dark_force?(choice)
+    valid_answer_for_dark_force?(choice) && distance == 1
   end
 
   def spend_token_to_stop_movement?(choice)
-    valid_answer_for_dark_force?(choice)
+    valid_answer_for_dark_force?(choice) && distance == 1
   end
 
   def extra_power_at_range_one!(choice)
