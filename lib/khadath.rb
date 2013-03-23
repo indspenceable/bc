@@ -81,11 +81,17 @@ class TrapPenalty < Token
   def initialize(amt)
     super("trap_penalty", 0, 0, amt)
   end
+  def effect
+    "#{@priority} priority"
+  end
 end
 
 class HuntersBonus < Token
   def initialize
     super("hunters_bonus", 0, 2, 2)
+  end
+  def effect
+    "+2 Power, +2 Priority"
   end
 end
 

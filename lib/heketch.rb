@@ -143,6 +143,9 @@ class RegainDarkForce < Token
       "regain" => ->(me,inputs) { me.regain_dark_force! }
     }
   end
+  def descriptor?
+    false
+  end
 end
 
 class Heketch < Character

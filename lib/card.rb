@@ -46,6 +46,10 @@ class Card
   def descriptor
     {title: name, content: effect}
   end
+  #override for things you don't want to display in the UI.
+  def descriptor?
+    true
+  end
 end
 
 class Style < Card;end
