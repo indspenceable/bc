@@ -152,15 +152,15 @@ class Altazziar < Finisher
   def initialize
     super("altazziar", 1, 6, 2)
   end
+  def reveal!(me)
+    me.current_tokens.each do |token|
+      me.altazziar_bonus << token.clone
+    end
+  end
   def start_of_beat!
     {
       "lose_life" => ->(me, inputs) {
         me.lose_life!(me.life - 1)
-      },
-      "double_token_effects" => ->(me, inputs) {
-        me.current_tokens.each do |token|
-          me.altazziar_bonus << token.clone
-        end
       }
     }
   end
