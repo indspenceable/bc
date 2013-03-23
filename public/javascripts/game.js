@@ -280,7 +280,7 @@ var init = function(player_id, game_id, chimeEnabled) {
         content: loadCard(bases[index], $template.clone()).html()
         })
       base.appendTo($bases)
-      if (requiredInput) {
+      if (/^attack_pair/.test(requiredInput)) {
         base.addClass('select-me')
         base.click(function() {
           setBase($(this).text())
@@ -295,7 +295,7 @@ var init = function(player_id, game_id, chimeEnabled) {
         content: loadCard(styles[index], $template.clone()).html()
         })
       style.appendTo($styles)
-      if (requiredInput && (requiredInput == "attack_pair_select" || styles[index] != "specialaction")) {
+      if (/^attack_pair/.test(requiredInput) && (requiredInput == "attack_pair_select" || styles[index] != "specialaction")) {
         style.addClass('select-me')
         style.click(function() {
           setStyle($(this).text())
