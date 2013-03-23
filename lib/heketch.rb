@@ -143,6 +143,9 @@ class RegainDarkForce < Token
       "regain" => ->(me,inputs) { me.regain_dark_force! }
     }
   end
+  def descriptor?
+    false
+  end
 end
 
 class Heketch < Character
@@ -185,10 +188,6 @@ class Heketch < Character
   def select_and_discard_a_token!
     log_me!("discards his dark force token.") if @dark_force
     @dark_force = false
-  end
-
-  def current_effect_descriptors
-    super + @bonuses.map(&:descriptor)
   end
 
   def ante_options

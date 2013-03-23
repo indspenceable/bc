@@ -497,7 +497,7 @@ class Character
   end
 
   def current_effect_descriptors
-    @opponent.current_opponent_effect_descriptors
+    (effect_sources - [@base, @style, @finisher]).select(&:descriptor?).map(&:descriptor)
   end
   # these are current effects provided by your opponent, like trap penalty
   def current_opponent_effect_descriptors

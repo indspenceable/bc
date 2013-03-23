@@ -254,10 +254,6 @@ class Rukyuk < Character
     sources
   end
 
-  def current_effect_descriptors
-    Array(@current_token.try(:descriptor)) + super
-  end
-
   def token_pool_descriptors
     @token_pool.map(&:descriptor)
   end

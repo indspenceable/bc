@@ -232,9 +232,6 @@ class Hepzibah < Character
     super + @current_tokens + @altazziar_bonus
   end
 
-  def current_effect_descriptors
-    super + @current_tokens.map(&:descriptor) + @altazziar_bonus.map(&:descriptor)
-  end
 
   def ante_options
     ((@life > 1) ? @token_pool.map(&:name) : []) + super
