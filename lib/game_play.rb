@@ -165,7 +165,7 @@ class GamePlay
       select_attack_pairs!
       ante!
       reveal!
-      next @players.each(&:recycle!) if handle_pulses!
+      next if handle_pulses!
       # if either player runs out of cards, go to the next turn
       if handle_clashes! == :no_cards
         @events.log!("A player ran out of cards. Turn is cycling.")
@@ -358,12 +358,19 @@ class GamePlay
   def handle_pulses!
     if @players.all?(&:pulsed?)
       @events.log!("both players pulsed")
+      @players[0].pulse!(true)
+      @players[1].pulse!(true)
+      @players.each(&:recycle!)
       true
     elsif @players[0].pulsed?
+      @players[1].recycle!
       @players[0].pulse!
+      @players[0].recycle!
       true
     elsif @players[1].pulsed?
+      @players[0].recycle!
       @players[1].pulse!
+      @players[1].recycle!
       true
     else
       false

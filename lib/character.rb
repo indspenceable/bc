@@ -135,10 +135,18 @@ class Character
     @special_action_available = false
     @hand.delete_if{|c| c.is_a? SpecialAction }
   end
-  def pulse!
+  def pulse!(both_players_pulsed = false)
     log_me!("uses pulse")
-    select_from_methods(push: [1,2,3,4,5]).call(self, @input_manager)
-    select_from_methods(retreat: [1,2,3,4,5]).call(self, @input_manager)
+    if both_players_pulsed
+      #retreat as far as possible
+      (6..1).each do |i|
+        retreat!(i) and break if retreat?(i)
+      end
+    else
+      #only you pulsed, so prompt for push/retreat
+      select_from_methods(push: [1,2,3,4,5]).call(self, @input_manager)
+      select_from_methods(retreat: [1,2,3,4,5]).call(self, @input_manager)
+    end
     @special_action_available = false
     @hand << @base
     @base = @style = nil
