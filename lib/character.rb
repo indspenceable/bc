@@ -65,11 +65,11 @@ class Character
   end
 
   def discard1(seen_by)
-    p = (seen_by == @player_id &&@temp_discard1) || @discard1 || []
+    p = (seen_by == @player_id && @temp_discard1) || @discard1 || []
     p.map(&:name)
   end
   def discard2(seen_by)
-    p = (seen_by == @player_id &&@temp_discard2) || @discard2 || []
+    p = (seen_by == @player_id && @temp_discard2) || @discard2 || []
     p.map(&:name)
   end
 
