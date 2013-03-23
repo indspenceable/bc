@@ -132,31 +132,42 @@ class Character
   end
 
   def cancel!
-    @special_action_available = false
-    @hand.delete_if{|c| c.is_a? SpecialAction }
+    @played_cancel = false
   end
   def pulse!(both_players_pulsed = false)
     log_me!("uses pulse")
     if both_players_pulsed
+      log_me!("both players did it!")
       #retreat as far as possible
       (6..1).each do |i|
         retreat!(i) and break if retreat?(i)
       end
     else
+      log_me!("Only i did it.")
       #only you pulsed, so prompt for push/retreat
-      select_from_methods(push: [1,2,3,4,5]).call(self, @input_manager)
-      select_from_methods(retreat: [1,2,3,4,5]).call(self, @input_manager)
+      select_from_methods(push: [0, 1,2,3,4,5]).call(self, @input_manager)
+      select_from_methods(retreat: [0, 1,2,3,4,5]).call(self, @input_manager)
     end
-    @special_action_available = false
     @hand << @base
     @base = @style = nil
     @played_pulse = true
   end
   def cancelled?
-    @temp_style.is_a?(SpecialAction) && !%(dash burst).include?(@temp_base.name)
+    @played_cancel
   end
   def pulsed?
-    @style.is_a?(SpecialAction) && %(dash burst).include?(@base.name)
+    @played_pulse
+  end
+
+  def turn_special_action_pairs_into_special_actions!
+    if @temp_style.is_a?(SpecialAction)
+      @played_cancel = !%(dash burst).include?(@temp_base.name)
+      @played_pulse = %(dash burst).include?(@temp_base.name)
+      @temp_base = @temp_style = nil
+      @special_action_available = false
+    else
+      @played_cancel = @played_pulse = false
+    end
   end
 
   # order doens't matter on reveal.
@@ -169,6 +180,10 @@ class Character
     @revealed = true
     if @played_finisher
       log_me!("reveals #{@finisher.name}")
+    elsif @played_pulse
+      log_me!("reveals a pulse.")
+    elsif @played_cancel
+      log_me!("cancels.")
     else
       log_me!("reveals #{@style.name} #{@base.name}")
     end

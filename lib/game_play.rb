@@ -164,6 +164,7 @@ class GamePlay
       @round_number = round_number + 1 # 1 based
       select_attack_pairs!
       ante!
+      @players.each(&:turn_special_action_pairs_into_special_actions!)
       reveal!
       next if handle_pulses!
       # if either player runs out of cards, go to the next turn
@@ -322,36 +323,26 @@ class GamePlay
 
   def reveal!
     @input_manager.stop_undos!
+    # reveal.
+    @players.each(&:reveal!)
     # did they BOTH cancel?
-    if @players[0].cancelled? && @players[1].cancelled?
-      @events.log!("Both players reveal cancel!")
-      @players[0].cancel!
-      @players[1].cancel!
+    if @players.all?(&:cancelled?)
+      @players.each(&:cancel!)
       select_attack_pairs!
-    elsif @players[0].cancelled?
-      @players[1].reveal!
-      @events.log!("player 0 cancels!")
-      @players[0].cancel!
-      @input_manager.require_single_input!(
-        0,
-        "attack_pair_select",
-        @players[0].valid_attack_pair_callback
-      )
-      @players[0].set_attack_pair!(@input_manager.answer(0))
-      @players[0].reveal!
-    elsif @players[1].cancelled?
-      @players[0].reveal!
-      @events.log!("player 1 cancels!")
-      @players[1].cancel!
-      @input_manager.require_single_input!(
-        1,
-        "attack_pair_select",
-        @players[1].valid_attack_pair_callback
-      )
-      @players[1].set_attack_pair!(@input_manager.answer(1))
-      @players[1].reveal!
+      reveal!
     else
-      @players.each(&:reveal!)
+      @players.each do |p|
+        if p.cancelled?
+          p.cancel!
+          @input_manager.require_single_input!(
+            p.player_id,
+            "attack_pair_select",
+            p.valid_attack_pair_callback
+          )
+          p.set_attack_pair!(@input_manager.answer(p.player_id))
+          p.reveal!
+        end
+      end
     end
   end
 
