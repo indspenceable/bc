@@ -38,7 +38,8 @@ class Character
     @token_pool.map(&:name).uniq
   end
 
-  def finisher_name
+  def finisher_name(player_id=@player_id)
+    return @temp_finisher.name if @temp_finisher
     @finisher ? @finisher.name : ""
   end
 
@@ -308,7 +309,10 @@ class Character
     b1 = bases.find{|b| b.name == $2}
     @temp_discard1 = [s1, b1]
   end
+
+  #also sets the finisher
   def set_initial_discards!
+    @finisher = @temp_finisher
     @discard2 = @temp_discard2
     @discard1 = @temp_discard1
     (@temp_discard1 + @temp_discard2).each do |c|
@@ -316,13 +320,14 @@ class Character
     end
     @temp_discard1 = nil
     @temp_discard2 = nil
+    @temp_finisher = nil
     log_me!("discards #{@discard2.map(&:name).join(' ')} to discard 2.")
     log_me!("discards #{@discard1.map(&:name).join(' ')} to discard 1.")
     log_me!("selects #{@finisher.name} for their finisher.")
   end
 
   def select_finisher!(n)
-    @finisher = finishers.find{|f| f.name == n}
+    @temp_finisher = finishers.find{|f| f.name == n}
   end
 
   def set_attack_pair!(choice)
