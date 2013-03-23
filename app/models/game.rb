@@ -20,7 +20,7 @@ class Game < ActiveRecord::Base
     g = GamePlay.new(starting_player, [p0.name, p1.name], inputs)
     # CANCEL BUTTON
     if action == "cancel"
-      if g.can_cancel?(player_id)
+      if g.can_cancel?(player_id) && g.active?
         loop do
           pn, _ = self.inputs.pop
           break if pn == player_id
