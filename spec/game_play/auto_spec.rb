@@ -36,13 +36,13 @@ def select_from(g, pn)
 end
 
 CHARACTER = ENV['CHARACTER']
-
+COUNT = ENV['COUNT'].to_i > 0 ? ENV['COUNT'].to_i : 30
 
 describe GamePlay do
   (CHARACTER ? [CHARACTER] : GamePlay.character_names).each do |c1|
     GamePlay.character_names.each do |c2|
       it "doesn't raise errors when you give valid input in a #{c1} #{c2} game." do
-        30.times do |i|
+        COUNT.times do |i|
           g = GamePlay.new(i%2, ['p0', 'p1'])
 
           g.input!(0, c1)
