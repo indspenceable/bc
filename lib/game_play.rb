@@ -320,8 +320,32 @@ class GamePlay
   end
 
   def reveal!
-    @players.each(&:reveal!)
     @input_manager.stop_undos!
+    # did they BOTH cancel?
+    if @players[0].cancelled? && @players[1].cancelled?
+      @events.log!("Both players reveal cancel!")
+      select_attack_pairs!
+    elsif @players[0].cancelled?
+      @players[1].reveal!
+      @events.log!("player 0 cancels!")
+      @input_manager.require_single_input!(
+        "attack_pair_select",
+        @players[0].valid_attack_pair_callback
+      )
+      @players[0].set_attack_pair!(@input_manager.answer(0))
+      @players[0].reveal!
+    elsif @players[1].cancelled?
+      @players[0].reveal!
+      @events.log!("player 1 cancels!")
+      @input_manager.require_single_input!(
+        "attack_pair_select",
+        @players[1].valid_attack_pair_callback
+      )
+      @players[1].set_attack_pair!(@input_manager.answer(1))
+      @players[1].reveal!
+    else
+      @players.each(&:reveal!)
+    end
   end
 
   def passive_abilities!
