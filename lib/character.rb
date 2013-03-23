@@ -20,7 +20,8 @@ class Character
       Strike.new,
       Shot.new,
       Burst.new,
-      Dash.new
+      Dash.new,
+      SpecialAction.new
     ]
 
     @life = 20
@@ -128,6 +129,13 @@ class Character
     regain_bases!
     @hand << @style
     @style = nil
+  end
+
+  def cancelled?
+    @style.is_a?(SpecialAction) && !%(dash burst).include?(@base.name)
+  end
+  def pulsed?
+    @style.is_a?(SpecialAction) && %(dash burst).include?(@base.name)
   end
 
   # order doens't matter on reveal.

@@ -165,7 +165,7 @@ class GamePlay
       select_attack_pairs!
       ante!
       reveal!
-      next recycle! if handle_pulses!
+      next @players.each(&:recycle!) if handle_pulses!
       # if either player runs out of cards, go to the next turn
       if handle_clashes! == :no_cards
         @events.log!("A player ran out of cards. Turn is cycling.")
@@ -330,6 +330,7 @@ class GamePlay
       @players[1].reveal!
       @events.log!("player 0 cancels!")
       @input_manager.require_single_input!(
+        0,
         "attack_pair_select",
         @players[0].valid_attack_pair_callback
       )
@@ -339,6 +340,7 @@ class GamePlay
       @players[0].reveal!
       @events.log!("player 1 cancels!")
       @input_manager.require_single_input!(
+        1,
         "attack_pair_select",
         @players[1].valid_attack_pair_callback
       )
