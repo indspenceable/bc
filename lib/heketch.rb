@@ -12,7 +12,7 @@ class Critical < Style
 
   def on_hit!
     {
-      "extra_power" => select_from_methods(extra_power_at_range_one: %w(yes no))
+      "extra_power" => select_from_methods("Spend a dark force token for +3 power?", extra_power_at_range_one: %w(yes no))
     }
   end
 end
@@ -23,7 +23,7 @@ class Rasping < Style
   end
   def on_hit!
     {
-      "extra_power" => select_from_methods(extra_power_at_range_one: %w(yes no))
+      "extra_power" => select_from_methods("Spend a dark force token for +3 power?", extra_power_at_range_one: %w(yes no))
     }
   end
 
@@ -61,7 +61,7 @@ class Psycho < Style
 
   def end_of_beat!
     {
-      "repeat_attack" => select_from_methods(spend_token_to_repeat: %w(yes no))
+      "repeat_attack" => select_from_methods("Spend a dark force token to repeat this attack?", spend_token_to_repeat: %w(yes no))
     }
   end
 end
@@ -79,7 +79,7 @@ class Assassin < Style
 
   def on_damage!
     {
-      "stop_movement_next_beat" => select_from_methods(spend_token_to_stop_movement: %w(yes no))
+      "stop_movement_next_beat" => select_from_methods("Spend a dark force token to stop opponent from moving next turn?", spend_token_to_stop_movement: %w(yes no))
     }
   end
 end
@@ -211,7 +211,7 @@ class Heketch < Character
     log_me!("antes a Dark Force token.")
     @dark_force = false
     @bonuses << DarkForce.new
-    select_from_methods(teleport_to: [@opponent.position-1, @opponent.position+1]).call(self, @input_manager)
+    select_from_methods("Select which adjacent location to teleport to.", teleport_to: [@opponent.position-1, @opponent.position+1]).call(self, @input_manager)
   end
 
   def ante?(choice)

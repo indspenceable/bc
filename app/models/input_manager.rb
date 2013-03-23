@@ -10,12 +10,12 @@ class InputManager
     end
     @input_counter = 0
   end
-  def require_single_input!(player_id, input_string, validator)
+  def require_single_input!(player_id, input_string, pretty_string, validator)
     raise "Didn't answer previous question" if input_required?
     @input_counter+=1
     @answers = {}
     @required_input = Hash.new{|h,k| h[k] = []}
-    @required_input[player_id] << [input_string, validator]
+    @required_input[player_id] << [[input_string, pretty_string], validator]
     answer_inputs!
     @can_undo = [player_id]
   end

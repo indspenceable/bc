@@ -205,20 +205,23 @@ var init = function(player_id, game_id, chimeEnabled) {
       currentAnswer.appendTo($btnGroup)
     }
     var $answers = $('.js-answers')
-    $answers.empty()
+    // $answers.empty()
     $answers.append($btnGroup)
     $answers.show()
   }
 
-  var resetInputs = function() {
+  var resetInputs = function(question) {
     $('.js-bases, .js-styles, .js-tokens').removeClass("select-me")
     $('.free-form').hide()
-    $('.js-answers').hide()
+    $('.js-answers').text("No Input Required")
+    if (question) {
+      $('.js-answers').show().text(question)
+    }
     $('.space').removeClass('clickToMove')
   }
 
   var setup_inputs = function(question) {
-    resetInputs();
+    resetInputs(question);
     if (/^attack_pair/.test(question)) {
       selectAttackPair()
     } else if (/^select_base/.test(question)) {
