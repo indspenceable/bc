@@ -14,9 +14,7 @@ class Teleport < Style
   def initialize
     super("teleport", 0..2, 1, -4)
   end
-  def reveal!(me)
-    me.trap_blocks_ranged_attacks!
-  end
+  flag :trap_blocks_ranged_attacks
   def end_of_beat!
     {
       "move_and_move_trap" => ->(me, inpts){
@@ -139,9 +137,9 @@ class Khadath < Character
     super + Array(@hunters_bonus)
   end
 
-  def trap_blocks_ranged_attacks!
-    @block_ranged_attacks = true
-  end
+  # def trap_blocks_ranged_attacks!
+  #   @block_ranged_attacks = true
+  # end
 
   def move_trap_anywhere!
     select_from_methods(set_trap: [0,1,2,3,4,5,6]).call(self, @input_manager)
@@ -184,7 +182,7 @@ class Khadath < Character
 
   def dodge_ranged_attacks?
     return false unless @trap
-    return false unless @block_ranged_attacks
+    return false unless flag? :trap_blocks_ranged_attacks
     (@position < @trap && @trap < @opponent.position) ||
     (@position > @trap && @trap > @opponent.position)
   end
