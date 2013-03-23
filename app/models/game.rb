@@ -16,10 +16,24 @@ class Game < ActiveRecord::Base
   def play(idx=nil)
     GamePlay.new(starting_player, [p0.name, p1.name], inputs, idx)
   end
-  def input_and_save!(id, action)
+  def input_and_save!(player_id, action)
     g = GamePlay.new(starting_player, [p0.name, p1.name], inputs)
-    g.input!(id, action)
-    self.inputs = g.valid_inputs
+    # CANCEL BUTTON
+    if action == "cancel"
+      if g.can_cancel?(player_id)
+        loop do
+          pn, _ = self.inputs.pop
+          break if pn == player_id
+        end
+
+      else
+        raise "Player #{player_id} tried to cancel when it was invalid."
+      end
+    else
+
+      g.input!(player_id, action)
+      self.inputs = g.valid_inputs
+    end
     save!
   end
 

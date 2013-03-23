@@ -220,11 +220,15 @@ class GamePlay
       :current_beat => @round_number,
       :winner => @winner,
       :active => @active,
+      :can_cancel => can_cancel?(player_id)
     }
   end
 
   def active?
     !!@active
+  end
+  def can_cancel?(player_id)
+    @input_manager.can_cancel.include?(player_id)
   end
 
   private
@@ -300,6 +304,7 @@ class GamePlay
         #   "ante", current_player.ante_callback)
         # answer = @input_manager.answer(current_player_id)
         answer = select_from_methods(ante: current_player.ante_options).call(current_player, @input_manager)
+        @input_manager.stop_cancels!
         #TODO fix so "Player 1 passes" instead of "Player 1 antes pass"
         # @events.log!("Ante", "Player #{current_player_id} antes #{answer}")
         passed_this_round = (answer == 'ante#pass')
@@ -317,6 +322,7 @@ class GamePlay
 
   def reveal!
     @players.each(&:reveal!)
+    @input_manager.stop_cancels!
   end
 
   def passive_abilities!
@@ -358,6 +364,7 @@ class GamePlay
 
       @events.log!("Resolve Clash " + @players.each_with_index.map do |p, i|
         "#{@player_names[i]} reveals #{p.current_base_name}"
+      @input_manager.stop_cancels!
       end.join(' / '))
     end
   end

@@ -435,6 +435,11 @@ var init = function(player_id, game_id, chimeEnabled) {
     } else {
       $('.concede').hide()
     }
+    if (gameState.can_cancel ) {
+      $root(player_id).find('.js-cancel').show()
+    } else {
+      $('.js-cancel').hide()
+    }
   }
 
 
@@ -559,6 +564,9 @@ var init = function(player_id, game_id, chimeEnabled) {
       trigger: 'hover',
       title: 'Concede Game',
       content: "Warning - if you concede the game, you lose!"
+    })
+    $('.js-cancel').tooltip({trigger: 'hover', title: "Undo"}).on('click', function(){
+      submitData('cancel')
     })
 
     $(window).focus(function() {windowActive=true})
