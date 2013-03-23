@@ -270,7 +270,7 @@ class Character
   def recycle!
     @stunned = false
     # Don't cycle cards on turns we play finishers.
-    unless @played_finisher
+    unless @played_finisher || @played_pulse
       @hand += @discard2
       @discard2 = @discard1
       @discard1 = [@style, @base]

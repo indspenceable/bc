@@ -165,6 +165,7 @@ class GamePlay
       select_attack_pairs!
       ante!
       reveal!
+      next recycle! if handle_pulses!
       # if either player runs out of cards, go to the next turn
       if handle_clashes! == :no_cards
         @events.log!("A player ran out of cards. Turn is cycling.")
@@ -345,6 +346,25 @@ class GamePlay
       @players[1].reveal!
     else
       @players.each(&:reveal!)
+    end
+  end
+
+  def handle_pulses!
+    if @players.all?(&:pulsed?)
+      @events.log!("both players pulsed")
+      true
+    elsif @players[0].pulsed?
+      @events.log!("p0.played pulse")
+      select_from_methods(push: [1,2,3,4,5]).call(@players[0], @input_manager)
+      select_from_methods(retreat: [1,2,3,4,5]).call(@players[0], @input_manager)
+      true
+    elsif @players[1].pulsed?
+      @events.log!("p1.played pulse")
+      select_from_methods(push: [1,2,3,4,5]).call(@players[1], @input_manager)
+      select_from_methods(retreat: [1,2,3,4,5]).call(@players[1], @input_manager)
+      true
+    else
+      false
     end
   end
 
