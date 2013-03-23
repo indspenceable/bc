@@ -241,18 +241,6 @@ class Khadath < Character
     end
     rtn + super
   end
-  # these are current effects provided by your opponent, like trap penalty
-  def current_opponent_effect_descriptors
-    rtn = []
-    if they_are_on_or_next_to_trap?
-      if @trap == @opponent.position
-        rtn << {title: "Gate Trap Penalty", content: "-3 priority"}
-      else
-        rtn << {title: "Gate Trap Penalty", content: "-1 priority"}
-      end
-    end
-    rtn + super
-  end
 
   def extra_data
     {

@@ -190,10 +190,6 @@ class Heketch < Character
     @dark_force = false
   end
 
-  def current_effect_descriptors
-    super + @bonuses.map(&:descriptor)
-  end
-
   def ante_options
     opts = super
     opts << "dark_force" if has_dark_force?

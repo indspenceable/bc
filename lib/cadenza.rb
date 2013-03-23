@@ -107,6 +107,9 @@ class FeedbackFieldBonus < Token
   def initialize(pwr)
     super("feedbackfieldpowerbonus", 0, pwr, 0)
   end
+  def effect
+    "+#{@power} Power"
+  end
 end
 
 class IronBody < Token

@@ -222,10 +222,6 @@ class Hikaru < Character
     end
   end
 
-  def current_effect_descriptors
-    super + @current_tokens.map(&:descriptor)
-  end
-
   def recycle!
     super
     @token_discard += @current_tokens
