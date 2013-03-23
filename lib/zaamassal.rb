@@ -266,7 +266,7 @@ class Zaamassal < Character
 
   def in_range?
     return true if super
-    return (distance == 3 || distance == 4) if flag? :distortion
+    return (distance == 3 || distance == 4) && !opponent.dodges? if flag? :distortion
   end
 
   def dodges?
