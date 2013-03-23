@@ -325,10 +325,13 @@ class GamePlay
     # did they BOTH cancel?
     if @players[0].cancelled? && @players[1].cancelled?
       @events.log!("Both players reveal cancel!")
+      @players[0].cancel!
+      @players[1].cancel!
       select_attack_pairs!
     elsif @players[0].cancelled?
       @players[1].reveal!
       @events.log!("player 0 cancels!")
+      @players[0].cancel!
       @input_manager.require_single_input!(
         0,
         "attack_pair_select",
@@ -339,6 +342,7 @@ class GamePlay
     elsif @players[1].cancelled?
       @players[0].reveal!
       @events.log!("player 1 cancels!")
+      @players[1].cancel!
       @input_manager.require_single_input!(
         1,
         "attack_pair_select",
@@ -356,14 +360,10 @@ class GamePlay
       @events.log!("both players pulsed")
       true
     elsif @players[0].pulsed?
-      @events.log!("p0.played pulse")
-      select_from_methods(push: [1,2,3,4,5]).call(@players[0], @input_manager)
-      select_from_methods(retreat: [1,2,3,4,5]).call(@players[0], @input_manager)
+      @players[0].pulse!
       true
     elsif @players[1].pulsed?
-      @events.log!("p1.played pulse")
-      select_from_methods(push: [1,2,3,4,5]).call(@players[1], @input_manager)
-      select_from_methods(retreat: [1,2,3,4,5]).call(@players[1], @input_manager)
+      @players[1].pulse!
       true
     else
       false

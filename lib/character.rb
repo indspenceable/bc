@@ -131,6 +131,17 @@ class Character
     @style = nil
   end
 
+  def cancel!
+    @special_action_available = false
+    @hand.delete_if{|c| c.is_a? SpecialAction }
+  end
+  def pulse!
+    log_me!("uses pulse")
+    select_from_methods(push: [1,2,3,4,5]).call(self, @input_manager)
+    select_from_methods(retreat: [1,2,3,4,5]).call(self, @input_manager)
+    @special_action_available = false
+    @hand.delete_if{|c| c.is_a? SpecialAction }
+  end
   def cancelled?
     @style.is_a?(SpecialAction) && !%(dash burst).include?(@base.name)
   end
