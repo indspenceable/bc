@@ -21,7 +21,6 @@ class Character
       Shot.new,
       Burst.new,
       Dash.new,
-      SpecialAction.new
     ]
 
     @life = 20
@@ -340,6 +339,7 @@ class Character
     (@temp_discard1 + @temp_discard2).each do |c|
       @hand.delete(c)
     end
+    @hand << SpecialAction.new
     @temp_discard1 = nil
     @temp_discard2 = nil
     @temp_finisher = nil
