@@ -8,7 +8,7 @@ class ZaamassalStyle < Style
   end
   def after_activating!
     {
-      "assume_#{@paradigm}" => select_from_methods(assume_paradigm: ['pass', @paradigm])
+      "assume_#{@paradigm}" => select_from_methods("You may assume the paradigm of #{@paradigm}.", assume_paradigm: ['pass', @paradigm])
     }
   end
 end
@@ -52,7 +52,7 @@ class Urgent < ZaamassalStyle
   end
   def before_activating!
     {
-      "advance" => select_from_methods(advance: [0, 1])
+      "advance" => select_from_methods("You may advance 1 space.", advance: [0, 1])
     }
   end
 end
@@ -63,7 +63,7 @@ class Sinuous < ZaamassalStyle
   end
   def end_of_beat!
     {
-      "teleport" => ->(me, input) { me.teleport_to_unoccupied_space! }
+      "teleport" => ->(me, input) { me.teleport_to_unoccupied_space!("(Sinuous) Teleport anywhere.") }
     }
   end
 end
@@ -74,7 +74,7 @@ class ParadigmShift < Base
   end
   def before_activating!
     {
-      "select_paradigm" => select_from_methods(assume_paradigm: %w(pain distortion resilience haste fluidity))
+      "select_paradigm" => select_from_methods("You may assume any paradigm.", assume_paradigm: %w(pain distortion resilience haste fluidity))
     }
   end
 end
@@ -119,12 +119,12 @@ class Fluidity < Paradigm
   end
   def before_activating!
     {
-      "movement" => select_from_methods(advance: [0,1], retreat: [1])
+      "movement" => select_from_methods("You may move 1 space.", advance: [0,1], retreat: [1])
     }
   end
   def end_of_beat!
     {
-      "movement" => select_from_methods(advance: [0,1], retreat: [1])
+      "movement" => select_from_methods("You may move 1 space.", advance: [0,1], retreat: [1])
     }
   end
   def effect
@@ -196,15 +196,15 @@ class PlanarDivider < Finisher
   end
   def before_activating!
     {
-      "move_anywhere" => ->(me, inputs) { me.teleport_to_unoccupied_space! }
+      "move_anywhere" => ->(me, inputs) { me.teleport_to_unoccupied_space!("Move to any space.") }
     }
   end
   def on_hit!
     {
       "move_opponent" => ->(me, inputs) {
-        select_from_methods(teleport_opponent_to: [0,1,2,3,4,5,6]).call(me,inputs)
+        select_from_methods("Move the opponent to any space.", teleport_opponent_to: [0,1,2,3,4,5,6]).call(me,inputs)
         me.gain_power_for_distance!
-        select_from_methods(assume_paradigm: %w(pain distortion resilience haste fluidity)).call(me, inputs)
+        select_from_methods("You may assume any paradigm.", assume_paradigm: %w(pain distortion resilience haste fluidity)).call(me, inputs)
       }
     }
   end
@@ -294,8 +294,8 @@ class Zaamassal < Character
 
   def assume_three_paradigms!
     @paradigms = []
-    3.times do
-      select_from_methods(assume_paradigm_multi: %w(pain distortion resilience haste fluidity)).call(self, @input_manager)
+    3.times do |n|
+      select_from_methods("Assume paradigm (#{n}/3).", assume_paradigm_multi: %w(pain distortion resilience haste fluidity)).call(self, @input_manager)
     end
   end
 

@@ -205,20 +205,29 @@ var init = function(player_id, game_id, chimeEnabled) {
       currentAnswer.appendTo($btnGroup)
     }
     var $answers = $('.js-answers')
-    $answers.empty()
-    $answers.append($btnGroup)
+    // $answers.empty()
+    $answers.append($("<br/>")).append($btnGroup)
     $answers.show()
   }
 
-  var resetInputs = function() {
+  var resetInputs = function(question) {
     $('.js-bases, .js-styles, .js-tokens').removeClass("select-me")
     $('.free-form').hide()
-    $('.js-answers').hide()
+    $('.js-answers').text("No Input Required")
+    if (question) {
+      $('.js-answers').show().text(question)
+    }
     $('.space').removeClass('clickToMove')
   }
 
-  var setup_inputs = function(question) {
-    resetInputs();
+  var setup_inputs = function(requiredInput) {
+    var question = null
+    var pretty = null
+    if (requiredInput) {
+      question = requiredInput.question
+      pretty = requiredInput.pretty
+    }
+    resetInputs(pretty);
     if (/^attack_pair/.test(question)) {
       selectAttackPair()
     } else if (/^select_base/.test(question)) {
@@ -365,12 +374,12 @@ var init = function(player_id, game_id, chimeEnabled) {
     // short circuit unless more events have happened, or
     // there is a new question.
     if (data.gameState && data.gameState.input_number == cachedInputNumber &&
-      data.requiredInput == cachedRequiredInput) {
+      (data.requiredInput && data.requiredInput.question) == cachedRequiredInput) {
       return;
     }
     // Set the cache so we'll shortcircuit next time.
     cachedInputNumber = data.gameState.input_number;
-    cachedRequiredInput = data.requiredInput
+    cachedRequiredInput = (data.requiredInput && data.requiredInput.question)
 
     console.log(data)
 
