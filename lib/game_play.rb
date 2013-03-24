@@ -206,6 +206,15 @@ class GamePlay
     setup_game!(@valid_inputs_thus_far)
   end
 
+  def all_required_input(player_id)
+    if required_input_for_player?(player_id)
+      {
+        question: required_input(player_id),
+        pretty: pretty_required_input(player_id),
+      }
+    end
+  end
+
   # returns a hash from player_id to the input they need
   def required_input(player_id)
     @input_manager.required_input[player_id][0] if required_input_for_player?(player_id)

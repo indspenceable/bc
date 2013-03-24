@@ -206,7 +206,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     }
     var $answers = $('.js-answers')
     // $answers.empty()
-    $answers.append($btnGroup)
+    $answers.append($("<br/>")).append($btnGroup)
     $answers.show()
   }
 
@@ -220,8 +220,14 @@ var init = function(player_id, game_id, chimeEnabled) {
     $('.space').removeClass('clickToMove')
   }
 
-  var setup_inputs = function(question) {
-    resetInputs(question);
+  var setup_inputs = function(requiredInput) {
+    var question = null
+    var pretty = null
+    if (requiredInput) {
+      question = requiredInput.question
+      pretty = requiredInput.pretty
+    }
+    resetInputs(pretty);
     if (/^attack_pair/.test(question)) {
       selectAttackPair()
     } else if (/^select_base/.test(question)) {
