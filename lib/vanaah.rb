@@ -23,8 +23,8 @@ class Judgment < Style
     end
     def reveal!(me)
         {
-            #Opponent in range of this attack cannot move out of range of this attack this beat
-
+            # Nearest opponent cannot move
+            @judgment_paralysis = JudgmentParalysis.new
         }
     end
 end
@@ -41,15 +41,14 @@ class Paladin < Style
             }
         }
     end
+    def stun_guard
+        3
+    end
 end
 
 class Glorious < Style
     def initialize
         super("glorious", 0, 2, 0)
-    end
-    def reveal!(me)
-        #Can't hit foes with higher priority
-        me.range_limit = "higher_priority"
     end
 
     def before_activating!
@@ -60,6 +59,9 @@ class Glorious < Style
             }
         }
     end
+
+    # Can't hit foes with higher priority
+    flag :cannot_hit_higher_priority
 end
 
 class Vengeance < Style
@@ -69,10 +71,9 @@ class Vengeance < Style
     def stun_guard
         4
     end
-    def reveal!(me)
-        #Can't hit foes with lower priority
-        me.range_limit = "lower_priority"
-    end
+
+    # Can't hit foes with lower priority
+    flag :cannot_hit_lower_priority
 end
 
 class Scythe < Base
@@ -104,6 +105,17 @@ class DivineRush < Token
     def name_and_effect
         "Divine Rush (+2 power, +2 priority)" 
     end
+end
+
+class JudgmentParalysis < Token
+    def initialize
+        super("judgmentparalysis", 0, 0, 0)
+    end
+    def name_and_effect
+        "Judgment (Cannot move this beat)"
+    end
+
+    flag :cannot_move
 end
 
 class DeathWalksPenalty < Token
@@ -146,7 +158,7 @@ class HandOfDivinity < Finisher
 
 class Vanaah < Character
     attr_reader :token_pool
-    attr_accessor :range_limit, :current_tokens, :death_walks_penalty
+    attr_accessor :current_tokens, :death_walks_penalty, :judgment_paralysis
     def self.character_name
         "vanaah"
     end
@@ -172,6 +184,8 @@ class Vanaah < Character
         @range_mod = nil
         # For timing the recycle of the death walks -4 priority token
         @death_walks_penalty_timeout = 1
+        # For blocking movement
+        @judgment_paralysis = nil
     end
 
     def ante?(choice)
@@ -199,10 +213,8 @@ class Vanaah < Character
 
     def in_range?
         # TODO test me
-        unless @range_mod.nil? then
-            if (@range_limit == "higher_priority" && opponent.priority > priority) || (@range_limit == "lower_priority" && opponent.priority < priority)
-                return false
-            end
+        if (flag?(:cannot_hit_higher_priority) && opponent.priority > priority) || flag?(:cannot_hit_lower_priority) && opponent.priority < priority)
+            return false
         end
         super
     end
@@ -212,12 +224,13 @@ class Vanaah < Character
     end
 
     def opponent_effect_sources
-        super + Array(@death_walks_penalty)
+        super + [@death_walks_penalty, @judgment_paralysis]
     end
 
     def current_opponent_effects_descriptors
         rtn = []
         rtn << {title: "Death Walks Penalty", content: "-4 priority"} unless @death_walks_penalty.nil?
+        rtn << {title: "Judgment Movement Restriction", content: "Cannot move this beat"} unless @judgment_paralysis.nil?
         rtn + super
     end
 
@@ -230,5 +243,14 @@ class Vanaah < Character
         @range_limit = nil
         # Divine Rush token cycles with cards
         @discard1 << @current_tokens.pop unless @current_tokens.empty?
+        # Death Walks penalty lasts 1 turn
+        if @death_walks_penalty_timeout == 0
+            @death_walks_penalty = nil
+            @death_walks_penalty_timeout = 1
+        end
+        @death_walks_penalty_timeout -= 1 unless @death_walks_penalty.nil?
+        # reset Judgment paralysis
+        @judgment_paralysis = nil
+
     end
 end

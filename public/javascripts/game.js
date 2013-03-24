@@ -33,6 +33,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     zaamassal: "Zaamassal has 5 paradigms he can assume, according to his styles and unique base. Each paradigm has it's own benefits. Every time he assumes a paradigm, he loses his current paradigm. If Zaamassal gets stunned, he loses his current paradigm.",
     hepzibah: "Hepzibah can ante her 5 Dark Force tokens each round to gain bonuses, but she loses one life per token anted.",
     kehrolyn: "Each beat, Kehrolyn applies the style in her discard1 to her current attackpair."
+    vanaah: "Vanaah has a Divine Rush token that she can ante to gain +2 power and +2 priority. After using the token, the token is discarded with the attack pair and is returned with the attack pair after two beats."
   }
 
   var cardDefinitions = {
@@ -110,7 +111,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     openthegate: makeCard("1~2", 3, 7, {"On Hit": "Opponent is stunend. Zaamassal may assume 3 paradigms."}),
     planardivider: makeCard(1, 2, 5, {"Before Activating": "Move to any unoccupied space.", "On Hit": "Move the opponent to any unoccupied space. +1 Power for each space between you and the opponent. Assume any paradigm."}),
 
-    //Hepz
+    // Hepz
     anathema: makeCard(0, -1, -1, {"+1 power, +1 priority for each token you anted this beat (max: 3).": undefined}),
     darkheart: makeCard(0, 0, -1, {"On Hit": "Gain 2 life. The opponent must discard a token, if they have any."}),
     pactbond: makeCard(0, 0, -1, {"Reveal": "Gain life equal to the number of tokens you anted this beat (max: 2).", "End of Beat": "Choose a token to ante for free next turn."}),
@@ -131,6 +132,17 @@ var init = function(player_id, game_id, chimeEnabled) {
 
     hydrafork: makeCard("1~3", 6, 0, {"Stun Immunity": undefined, "After Activating": "Gain 5 life."}),
     theauguststrain: makeCard("1~2", 4, 5, {"Stun Guard": 2, "Soak": 2, "On Hit": "Remove a style from your hand from the game. Apply that style as an additional form to Kehrolyn's attack pair from now on."})
+
+    // Vanaah
+    reaping: makeCard("0~1", 0, 1, {"On Hit": "Opponent discards a token. If he cannot, then regain Divine Rush."}),
+    judgment: makeCard("0~1", 1, -1, {"The nearest opponent cannot move this beat.": undefined}),
+    paladin: makeCard("0~1", 1, -2, {"End of Beat": "Move directly to a space adjacent to an opponent."}),
+    glorious: makeCard(0, 2, 0, {"Before Activating": "Advance up to 1 space.", "This attack cannot hit foes with higher priority.": undefined}),
+    vengeance: makeCard(0, 2, 0, {"Stun Guard": 4, "This attack cannot hit foes with lower priority."}),
+    scythe: makeCard("1~2", 3, 3, {"Before Activating": "Advance 1 space.", "On Hit": "Pull opponent up to 1 space."}),
+
+    deathwalks: makeCard("1~2", 5, 6, {"On Hit": "Stuns the opponent. The opponent has -4 priority next beat."}),
+    handofdivinity: makeCard(5, 7, 3, {"On Hit": "Advance any number of spaces.", "Soak": 3})
   }
 
   var loadCard = function(cardName, $card, overrideCardName) {
