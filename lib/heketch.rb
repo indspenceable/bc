@@ -143,6 +143,9 @@ class RegainDarkForce < Token
       "regain" => ->(me,inputs) { me.regain_dark_force! }
     }
   end
+  def descriptor?
+    false
+  end
 end
 
 class Heketch < Character
@@ -187,10 +190,6 @@ class Heketch < Character
     @dark_force = false
   end
 
-  def current_effect_descriptors
-    super + @bonuses.map(&:descriptor)
-  end
-
   def ante_options
     opts = super
     opts << "dark_force" if has_dark_force?
@@ -227,15 +226,15 @@ class Heketch < Character
   end
 
   def extra_power_at_range_one?(choice)
-    valid_answer_for_dark_force?(choice)
+    valid_answer_for_dark_force?(choice) && distance == 1
   end
 
   def spend_token_to_repeat?(choice)
-    valid_answer_for_dark_force?(choice)
+    valid_answer_for_dark_force?(choice) && distance == 1
   end
 
   def spend_token_to_stop_movement?(choice)
-    valid_answer_for_dark_force?(choice)
+    valid_answer_for_dark_force?(choice) && distance == 1
   end
 
   def extra_power_at_range_one!(choice)

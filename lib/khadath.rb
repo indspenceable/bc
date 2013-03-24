@@ -81,11 +81,17 @@ class TrapPenalty < Token
   def initialize(amt)
     super("trap_penalty", 0, 0, amt)
   end
+  def effect
+    "#{@priority} priority"
+  end
 end
 
 class HuntersBonus < Token
   def initialize
     super("hunters_bonus", 0, 2, 2)
+  end
+  def effect
+    "+2 Power, +2 Priority"
   end
 end
 
@@ -231,18 +237,6 @@ class Khadath < Character
         rtn << TrapPenalty.new(-3)
       else
         rtn << TrapPenalty.new(-1)
-      end
-    end
-    rtn + super
-  end
-  # these are current effects provided by your opponent, like trap penalty
-  def current_opponent_effect_descriptors
-    rtn = []
-    if they_are_on_or_next_to_trap?
-      if @trap == @opponent.position
-        rtn << {title: "Gate Trap Penalty", content: "-3 priority"}
-      else
-        rtn << {title: "Gate Trap Penalty", content: "-1 priority"}
       end
     end
     rtn + super

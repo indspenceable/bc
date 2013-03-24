@@ -8,6 +8,9 @@ class Bladed < Style
   def stun_guard
     2
   end
+  def effect
+    "+2 Power, Stun Guard 2"
+  end
 end
 
 class Exoskeletal < Style
@@ -19,6 +22,9 @@ class Exoskeletal < Style
 
   def soak
     2
+  end
+  def effect
+    "Soak 2, Ignore Movement effects applied by opponents."
   end
 end
 
@@ -51,6 +57,9 @@ class Mutating < Style
     (@target && @target.respond_to?(:end_of_beat!) ? @target.send(:end_of_beat!) : {})
       .merge('lose_life' => ->(me,_) { me.lose_life!(1)})
   end
+  def effect
+    "If Current form, duplicates current style. Otherwise, copies current form. End of Beat: Lose 1 life."
+  end
 end
 
 class Quicksilver < Style
@@ -62,6 +71,9 @@ class Quicksilver < Style
       'advance' => select_from_methods(advance: [0, 1], retreat: [1])
     }
   end
+  def effect
+    "+2 Priority. End of Beat: Move up to 1 space."
+  end
 end
 
 class Whip < Style
@@ -72,6 +84,9 @@ class Whip < Style
     {
       'hit_or_pull' => ->(me, inputs) { me.hit_or_pull! }
     }
+  end
+  def effect
+    "0~1 Range. On Hit: if range > 1, pull 1. Otherwise, opponent is stunned."
   end
 end
 
@@ -171,7 +186,7 @@ class Kehrolyn < Character
   end
 
   def current_form
-    @discard1.find{|c| c.is_a? Style }
+    @discard1 && @discard1.find{|c| c.is_a? Style }
   end
 
   def hit_or_pull!

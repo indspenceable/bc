@@ -250,14 +250,6 @@ class Zaamassal < Character
     sources
   end
 
-  def current_effect_descriptors
-    effects = []
-    effects += @paradigms.map(&:descriptor)
-    effects += super
-    effects += @bonuses.map(&:descriptor)
-    effects
-  end
-
   def token_pool_descriptors
     pool = []
     pool += paradigm_map.values.map(&:descriptor)
