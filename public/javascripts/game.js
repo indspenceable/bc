@@ -374,12 +374,12 @@ var init = function(player_id, game_id, chimeEnabled) {
     // short circuit unless more events have happened, or
     // there is a new question.
     if (data.gameState && data.gameState.input_number == cachedInputNumber &&
-      data.requiredInput == cachedRequiredInput) {
+      (data.requiredInput && data.requiredInput.question) == cachedRequiredInput) {
       return;
     }
     // Set the cache so we'll shortcircuit next time.
     cachedInputNumber = data.gameState.input_number;
-    cachedRequiredInput = data.requiredInput
+    cachedRequiredInput = (data.requiredInput && data.requiredInput.question)
 
     console.log(data)
 
