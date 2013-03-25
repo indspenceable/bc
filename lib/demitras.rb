@@ -46,6 +46,12 @@ class Crescendo < Token
 	end
 end
 
+class SymphonyOfDemise < Finisher
+	def initialize
+		super("symphonyofdemise", 1, 0, 9)
+	end
+end
+
 class Demitras < Character
 	def initialize *args
 		super
