@@ -239,8 +239,8 @@ class GamePlay
     {
       :events => @events.to_a,
       :players => [
-        player_info_for(0, player_id),
-        player_info_for(1, player_id)
+        player_info_for(@players[0], player_id),
+        player_info_for(@players[1], player_id)
       ],
       :input_number => @input_manager.input_counter,
       :current_phase => "select_character",
@@ -495,24 +495,24 @@ class GamePlay
 
   # returns a hash of player info, for that player id.
   # this adds more information if player_id and as_seen_by_id match
-  def player_info_for(player_id, as_seen_by_id)
+  def player_info_for(player, as_seen_by_id)
     {
-      :life => @players[player_id].life,
-      :location => @players[player_id].position,
-      :stunned => @players[player_id].stunned?,
-      :bases => @players[player_id].bases(as_seen_by_id).map(&:name),
-      :styles => @players[player_id].styles(as_seen_by_id).map(&:name),
-      :current_base => @players[player_id].current_base_name(as_seen_by_id),
-      :current_style => @players[player_id].current_style_name(as_seen_by_id),
-      :special_action => @players[player_id].special_action_name(as_seen_by_id),
-      :token_pool => @players[player_id].token_pool_descriptors,
-      :current_effects => @players[player_id].current_effect_descriptors,
-      :extra_data => @players[player_id].extra_data,
-      :discard1 => @players[player_id].discard1(as_seen_by_id),
-      :discard2 => @players[player_id].discard2(as_seen_by_id),
-      :character_name => @players[player_id].name,
-      :finisher_name => @players[player_id].finisher_name(as_seen_by_id),
-      :special_action_available => @players[player_id].special_action_available,
+      :life => player.life,
+      :location => player.position,
+      :stunned => player.stunned?,
+      :bases => player.bases(as_seen_by_id).map(&:name),
+      :styles => player.styles(as_seen_by_id).map(&:name),
+      :current_base => player.current_base_name(as_seen_by_id),
+      :current_style => player.current_style_name(as_seen_by_id),
+      :special_action => player.special_action_name(as_seen_by_id),
+      :token_pool => player.token_pool_descriptors,
+      :current_effects => player.current_effect_descriptors,
+      :extra_data => player.extra_data,
+      :discard1 => player.discard1(as_seen_by_id),
+      :discard2 => player.discard2(as_seen_by_id),
+      :character_name => player.name,
+      :finisher_name => player.finisher_name(as_seen_by_id),
+      :special_action_available => player.special_action_available,
     }
   end
 end
