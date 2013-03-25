@@ -145,8 +145,8 @@ class Character
     else
       log_me!("Only i did it.")
       #only you pulsed, so prompt for push/retreat
-      select_from_methods(push: [0, 1,2,3,4,5]).call(self, @input_manager)
-      select_from_methods(retreat: [0, 1,2,3,4,5]).call(self, @input_manager)
+      select_from_methods("Push the opponent any number of spaces.", push: [0, 1,2,3,4,5]).call(self, @input_manager)
+      select_from_methods("Retreat any number of spaces.", retreat: [0, 1,2,3,4,5]).call(self, @input_manager)
     end
     @hand << @base
     @base = @style = nil

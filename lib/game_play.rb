@@ -362,6 +362,7 @@ class GamePlay
           @input_manager.require_single_input!(
             p.player_id,
             "attack_pair_select",
+            "Select Attack Pair (Cancel)",
             p.valid_attack_pair_callback
           )
           p.set_attack_pair!(@input_manager.answer(p.player_id))
