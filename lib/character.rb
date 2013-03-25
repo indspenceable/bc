@@ -77,20 +77,23 @@ class Character
   def pass_by!
   end
 
+  def hand(seen_by)
+    rtn = @hand
+    rtn -= [@temp_base, @temp_style] if (seen_by == @player_id)
+    rtn -= @temp_discard2 if @temp_discard2 && seen_by == @player_id
+    rtn -= @temp_discard1 if @temp_discard1 && seen_by == @player_id
+    rtn += [SpecialAction.new] if @special_action_available
+    rtn
+  end
+
   def bases(seen_by=@player_id)
     # if we haven't revealed, but this not another player
-    c_hand = (seen_by == @player_id) ? @hand - [@temp_base, @temp_style] : @hand
-    c_hand -= @temp_discard2 if @temp_discard2 && seen_by == @player_id
-    c_hand -= @temp_discard1 if @temp_discard1 && seen_by == @player_id
-    c_hand.select do |card|
+    hand(seen_by).select do |card|
       card.is_a?(Base)
     end
   end
   def styles(seen_by=@player_id)
-    c_hand = (seen_by == @player_id) ? @hand - [@temp_base, @temp_style] : @hand
-    c_hand -= @temp_discard2 if @temp_discard2 && seen_by == @player_id
-    c_hand -= @temp_discard1 if @temp_discard1 && seen_by == @player_id
-    c_hand.select do |card|
+    hand(seen_by).select do |card|
       card.is_a?(Style)
     end
   end
@@ -373,7 +376,7 @@ class Character
     (@temp_discard1 + @temp_discard2).each do |c|
       @hand.delete(c)
     end
-    @hand << SpecialAction.new
+    # @hand << SpecialAction.new
     @temp_discard1 = nil
     @temp_discard2 = nil
     @temp_finisher = nil
@@ -635,6 +638,7 @@ class Character
         previous_answer =~ /([a-z]*)_([a-z]*)/
         return false if $2 == base_name || $1 == style_name
       end
+      return false if (style_name == "specialaction") && !@special_action_available
       bases.map(&:name).include?(base_name) && styles.map(&:name).include?(style_name)
     end
   end
