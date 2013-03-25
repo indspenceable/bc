@@ -175,7 +175,9 @@ class GamePlay
       @round_number = round_number + 1 # 1 based
       select_attack_pairs!
       ante!
+      @players.each(&:turn_special_action_pairs_into_special_actions!)
       reveal!
+      next if handle_pulses!
       # if either player runs out of cards, go to the next turn
       if handle_clashes! == :no_cards
         @events.log!("A player ran out of cards. Turn is cycling.")
@@ -345,8 +347,50 @@ class GamePlay
   end
 
   def reveal!
-    @players.each(&:reveal!)
     @input_manager.stop_undos!
+    # reveal.
+    @players.each(&:reveal!)
+    # did they BOTH cancel?
+    if @players.all?(&:cancelled?)
+      @players.each(&:cancel!)
+      select_attack_pairs!
+      reveal!
+    else
+      @players.each do |p|
+        if p.cancelled?
+          p.cancel!
+          @input_manager.require_single_input!(
+            p.player_id,
+            "attack_pair_select",
+            p.valid_attack_pair_callback
+          )
+          p.set_attack_pair!(@input_manager.answer(p.player_id))
+          p.reveal!
+        end
+      end
+    end
+  end
+
+  def handle_pulses!
+    if @players.all?(&:pulsed?)
+      @events.log!("both players pulsed")
+      @players[0].pulse!(true)
+      @players[1].pulse!(true)
+      @players.each(&:recycle!)
+      true
+    elsif @players[0].pulsed?
+      @players[1].recycle!
+      @players[0].pulse!
+      @players[0].recycle!
+      true
+    elsif @players[1].pulsed?
+      @players[0].recycle!
+      @players[1].pulse!
+      @players[1].recycle!
+      true
+    else
+      false
+    end
   end
 
   def passive_abilities!
@@ -466,7 +510,8 @@ class GamePlay
       :discard1 => @players[player_id].discard1(as_seen_by_id),
       :discard2 => @players[player_id].discard2(as_seen_by_id),
       :character_name => @players[player_id].name,
-      :finisher_name => @players[player_id].finisher_name,
+      :finisher_name => @players[player_id].finisher_name(as_seen_by_id),
+      :special_action_available => @players[player_id].special_action_available,
     }
   end
 end

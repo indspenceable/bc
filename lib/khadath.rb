@@ -139,8 +139,8 @@ class Khadath < Character
     end
   end
 
-  def effect_sources
-    super + Array(@hunters_bonus)
+  def character_specific_effect_sources
+    Array(@hunters_bonus)
   end
 
   # def trap_blocks_ranged_attacks!

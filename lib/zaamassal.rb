@@ -243,8 +243,8 @@ class Zaamassal < Character
     [OpenTheGate.new, PlanarDivider.new]
   end
 
-  def effect_sources
-    sources = super
+  def character_specific_effect_sources
+    sources = []
     sources += @bonuses
     sources += @paradigms
     sources

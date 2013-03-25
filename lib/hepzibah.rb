@@ -228,8 +228,8 @@ class Hepzibah < Character
     @pactbond_free_token = nil
   end
 
-  def effect_sources
-    super + @current_tokens + @altazziar_bonus
+  def character_specific_effect_sources
+    @current_tokens + @altazziar_bonus
   end
 
 

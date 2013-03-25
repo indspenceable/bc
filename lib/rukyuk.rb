@@ -246,8 +246,8 @@ class Rukyuk < Character
     execute_attack!
   end
 
-  def effect_sources
-    sources = super
+  def character_specific_effect_sources
+    sources = []
     # We can't call flag? here... boo.
     sources += Array(@current_token) unless sources.any?{|s| s.flag?(:no_ammo_benefit)}
     sources += @bonuses

@@ -155,8 +155,8 @@ class Kehrolyn < Character
     [HydraFork.new, TheAugustStrain.new]
   end
 
-  def effect_sources
-    sources = super
+  def character_specific_effect_sources
+    sources = []
     sources << @perma_style if @perma_style
     sources << current_form
     sources += @bonuses
