@@ -37,6 +37,8 @@ var init = function(player_id, game_id, chimeEnabled) {
 
   var cardDefinitions = {
     emptyCard: makeCard('', '', '', {}),
+    specialaction: makeCard("N/A", "N/A", "N/A", {"Pulse": "when paired with Dash, Burst", "Cancel": "when paired with anything else."}),
+
     dash: makeCard("N/A", "N/A", 9, {"After Activating": "Move 1, 2, or 3 spaces. If you switch sides with an opponent, they cannot hit you this turn."}),
     grasp: makeCard(1, 2, 5, {"On Hit": "Move opponent 1 space."}),
     drive: makeCard(1, 3, 4, {"Before Activating": "Advance 1 or 2 spaces."}),
