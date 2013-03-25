@@ -6,6 +6,7 @@ require 'hepzibah'
 require 'heketch'
 require 'zaamassal'
 require 'kehrolyn'
+require 'vanaah'
 
 # given a hash from methods to possible aruments prompt the user to select a
 # valid combination.
@@ -416,7 +417,7 @@ class GamePlay
   end
 
   def self.character_list
-    [Hikaru, Cadenza, Khadath, Rukyuk, Heketch, Zaamassal, Hepzibah, Kehrolyn]
+    [Hikaru, Cadenza, Khadath, Rukyuk, Heketch, Zaamassal, Hepzibah, Kehrolyn, Vanaah]
   end
 
   def self.character_names

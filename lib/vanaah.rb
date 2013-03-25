@@ -22,10 +22,8 @@ class Judgment < Style
         super("judgment", 0..1, 1, -1)
     end
     def reveal!(me)
-        {
             # Nearest opponent cannot move
-            @judgment_paralysis = JudgmentParalysis.new
-        }
+            me.judgment_paralysis = JudgmentParalysis.new
     end
 end
 
@@ -102,8 +100,8 @@ class DivineRush < Token
     def initialize
         super("divinerush", 0, 2, 2)
     end
-    def name_and_effect
-        "Divine Rush (+2 power, +2 priority)" 
+    def effect
+        "+2 power, +2 priority" 
     end
 end
 
@@ -111,8 +109,8 @@ class JudgmentParalysis < Token
     def initialize
         super("judgmentparalysis", 0, 0, 0)
     end
-    def name_and_effect
-        "Judgment (Cannot move this beat)"
+    def effect
+        "Cannot move this beat"
     end
 
     flag :cannot_move
@@ -122,8 +120,8 @@ class DeathWalksPenalty < Token
     def initialize
         super("deathwalkspenalty", 0, 0, -4)
     end
-    def name_and_effect
-        "Death Walks Penalty (-4 priority)"
+    def effect
+        "-4 priority"
     end
 end
 
@@ -139,6 +137,7 @@ class DeathWalks < Finisher
                 me.death_walks_penalty = DeathWalksPenalty.new
             }
         }
+    end
 end
 
 class HandOfDivinity < Finisher
@@ -155,6 +154,8 @@ class HandOfDivinity < Finisher
                 select_from_methods(advance: 0..5).call(me, inputs)
             }
         }
+    end
+end
 
 class Vanaah < Character
     attr_reader :token_pool
@@ -188,6 +189,10 @@ class Vanaah < Character
         @judgment_paralysis = nil
     end
 
+    def finishers
+        [DeathWalks.new, HandOfDivinity.new]
+    end
+
     def ante?(choice)
         return true if super
         @token_pool.any?{ |token| (token.name == choice) }
@@ -195,6 +200,10 @@ class Vanaah < Character
 
     def ante!(choice)
         return if super
+        if choice == "pass"
+            log_me!("passes.")
+            return
+        end
         token = @token_pool.find{ |token| token.name == choice }
         log_me!("antes #{token.name} #{token.effect}")
         @current_tokens << token
@@ -213,7 +222,7 @@ class Vanaah < Character
 
     def in_range?
         # TODO test me
-        if (flag?(:cannot_hit_higher_priority) && opponent.priority > priority) || flag?(:cannot_hit_lower_priority) && opponent.priority < priority)
+        if (flag?(:cannot_hit_higher_priority) && opponent.priority > priority) || (flag?(:cannot_hit_lower_priority) && opponent.priority < priority)
             return false
         end
         super
@@ -224,7 +233,10 @@ class Vanaah < Character
     end
 
     def opponent_effect_sources
-        super + [@death_walks_penalty, @judgment_paralysis]
+        arr = []
+        arr << @death_walks_penalty unless @death_walks_penalty.nil?
+        arr << @judgment_paralysis unless @judgment_paralysis.nil?
+        super + arr
     end
 
     def current_opponent_effects_descriptors
@@ -251,6 +263,5 @@ class Vanaah < Character
         @death_walks_penalty_timeout -= 1 unless @death_walks_penalty.nil?
         # reset Judgment paralysis
         @judgment_paralysis = nil
-
     end
 end
