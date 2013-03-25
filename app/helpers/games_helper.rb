@@ -1,7 +1,7 @@
 module GamesHelper
   def game_badges(game)
     badges = {}
-    badges["Input Required"] = :info if game.play.required_input[game.player_id(current_user)]
+    badges["Input Required"] = :info if game.play.required_input_for_player?(game.player_id(current_user))
     badges["Winner: #{game.play.winner}"] = :success if !game.play.active? && game.play.winner
     badges["Tie"] = :warning if !game.play.active? && game.play.tie
     badges

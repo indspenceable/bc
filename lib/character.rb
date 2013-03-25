@@ -173,7 +173,9 @@ class Character
         end
         if actions_to_do.count > 0
           if actions_to_do.count > 1
-            @input_manager.require_single_input!(player_id, "select_from:#{actions_to_do.keys.map{|x| "<#{x}>"}}",
+            @input_manager.require_single_input!(player_id,
+              "select_from:#{actions_to_do.keys.map{|x| "<#{x}>"}}",
+              "Choose next effect to trigger: ",
               ->(text) { actions_to_do.key?(text) })
             current_action = @input_manager.answer(player_id)
           else
@@ -386,8 +388,8 @@ class Character
   def teleport_to!(n)
     @position = Integer(n)
   end
-  def teleport_to_unoccupied_space!
-    select_from_methods(teleport_to: [0,1,2,3,4,5,6]).call(self, @input_manager)
+  def teleport_to_unoccupied_space!(str)
+    select_from_methods(str, teleport_to: [0,1,2,3,4,5,6]).call(self, @input_manager)
   end
 
   def teleport_opponent_to?(n)
@@ -466,7 +468,7 @@ class Character
   end
 
   def select_and_discard_a_token!
-    select_from_methods(discard_token: token_names).call(self, @input_manager)
+    select_from_methods("Select a token to discard.", discard_token: token_names).call(self, @input_manager)
   end
 
   # This must be overwritten if your character does not use a @token_discard

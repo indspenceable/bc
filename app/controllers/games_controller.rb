@@ -42,7 +42,7 @@ class GamesController < LoggedInController
   def required_input_count
     #TODO make a column for this.
     render json: Game.where(active: true).where('p0_id = ? OR p1_id = ?', current_user.id, current_user.id).
-      select{|game| game.play.required_input[game.player_id current_user]}.length
+      select{|game| game.play.required_input_for_player?(game.player_id current_user)}.length
   end
 
   def update
@@ -56,7 +56,7 @@ class GamesController < LoggedInController
   def game_state_hash
     {
       'gameState' => current_game.play.game_state(current_game.player_id(current_user)),
-      'requiredInput' => current_game.play.required_input[current_game.player_id(current_user)]
+      'requiredInput' => current_game.play.all_required_input(current_game.player_id(current_user))
     }
   end
 
