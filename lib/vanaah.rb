@@ -21,10 +21,8 @@ class Judgment < Style
     def initialize
         super("judgment", 0..1, 1, -1)
     end
-    def reveal!(me)
-            # Nearest opponent cannot move
-            me.judgment_paralysis = JudgmentParalysis.new
-    end
+    # Nearest opponent cannot move (technically on "reveal")
+    flag :judgment_paralysis
 end
 
 class Paladin < Style
@@ -159,7 +157,7 @@ end
 
 class Vanaah < Character
     attr_reader :token_pool
-    attr_accessor :current_tokens, :death_walks_penalty, :judgment_paralysis
+    attr_accessor :current_tokens, :death_walks_penalty
     def self.character_name
         "vanaah"
     end
@@ -186,7 +184,7 @@ class Vanaah < Character
         # For timing the recycle of the death walks -4 priority token
         @death_walks_penalty_timeout = 1
         # For blocking movement
-        @judgment_paralysis = nil
+        @judgment_paralysis = JudgmentParalysis.new
     end
 
     def finishers
@@ -228,21 +226,21 @@ class Vanaah < Character
         super
     end
 
-    def effect_sources  
-        super + @current_tokens
+    def character_specific_effect_sources  
+        @current_tokens
     end
 
     def opponent_effect_sources
         arr = []
         arr << @death_walks_penalty unless @death_walks_penalty.nil?
-        arr << @judgment_paralysis unless @judgment_paralysis.nil?
+        arr << @judgment_paralysis if flag?(:judgment_paralysis)
         super + arr
     end
 
     def current_opponent_effects_descriptors
         rtn = []
         rtn << {title: "Death Walks Penalty", content: "-4 priority"} unless @death_walks_penalty.nil?
-        rtn << {title: "Judgment Movement Restriction", content: "Cannot move this beat"} unless @judgment_paralysis.nil?
+        rtn << {title: "Judgment Movement Restriction", content: "Cannot move this beat"} if flag?(:judgment_paralysis)
         rtn + super
     end
 
@@ -261,7 +259,5 @@ class Vanaah < Character
             @death_walks_penalty_timeout = 1
         end
         @death_walks_penalty_timeout -= 1 unless @death_walks_penalty.nil?
-        # reset Judgment paralysis
-        @judgment_paralysis = nil
     end
 end
