@@ -337,6 +337,7 @@ class Character
   end
 
   def effect_sources
+    return [] if opponent.pulsed?
     sources = []
     sources << @style if @style
     sources << @base if @base
