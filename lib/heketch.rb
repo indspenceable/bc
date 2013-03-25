@@ -177,8 +177,8 @@ class Heketch < Character
     [MillionKnives.new, LivingNightmare.new]
   end
 
-  def effect_sources
-    sources = super
+  def character_specific_effect_sources
+    sources = []
     sources += @bonuses
     sources << RegainDarkForce.new if distance > 2
     sources

@@ -342,6 +342,7 @@ class Character
     sources << @base if @base
     sources << @finisher if @played_finisher
     sources += @opponent.opponent_effect_sources
+    sources += character_specific_effect_sources
     sources
   end
   # effect sources provided by your opponent, like trap penalty

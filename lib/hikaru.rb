@@ -190,8 +190,8 @@ class Hikaru < Character
     [WrathOfElements.new, FourWinds.new]
   end
 
-  def effect_sources
-    sources = super
+  def character_specific_effect_sources
+    sources = []
     sources += @current_tokens unless sources.any?{|s| s.flag? :no_token_bonus }
     sources
   end
