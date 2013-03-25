@@ -323,7 +323,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     }
   }
 
-  var setHeader = function(pn, character, finisher) {
+  var setHeader = function(pn, character, finisher, specialActionAvailable) {
     $root(pn).find('.character-portrait').empty().append($('<img/>').css('height', '50px').attr('src', '/images/character_icons/'+character+'.png'))
     $root(pn).find('.character-name').empty().text(capitaliseFirstLetter(character)).popover({
       title: capitaliseFirstLetter(character),
@@ -339,6 +339,11 @@ var init = function(player_id, game_id, chimeEnabled) {
         placement: 'bottom',
         content: loadCard(finisher, $('#template-card').clone()).html()
       })
+    }
+    if (specialActionAvailable) {
+      $root(pn).find('.js-special-action-available').show()
+    } else {
+      $root(pn).find('.js-special-action-available').hide()
     }
   }
 
@@ -432,7 +437,8 @@ var init = function(player_id, game_id, chimeEnabled) {
     for (var pn = 0; pn <= 1; pn++) {
       setHeader(pn,
         gameState.players[pn].character_name,
-        gameState.players[pn].finisher_name)
+        gameState.players[pn].finisher_name,
+        gameState.players[pn].special_action_available)
       fillCards(pn,
         gameState.players[pn].current_base,
         gameState.players[pn].current_style,
@@ -446,7 +452,6 @@ var init = function(player_id, game_id, chimeEnabled) {
       $root(pn).filter('.life').text("P" + pn + ": " + gameState.players[pn].life + " Life")
       fillCurrentEffects(pn, gameState.players[pn].current_effects)
       fillTokenPool(pn, gameState.players[pn].token_pool)
-      $('.p' + pn + 'header').find('.character-desc').text(characterUAs[gameState.players[pn].character_name])
       setExtraData(pn, gameState.players[pn].extra_data)
     }
     // Show the event log.
@@ -589,6 +594,8 @@ var init = function(player_id, game_id, chimeEnabled) {
     $('.js-undo').tooltip({trigger: 'hover', title: "Undo"}).on('click', function(){
       submitData('undo')
     })
+
+    $('.js-special-action-available').tooltip({trigger: 'hover', title: 'Special Action is Available.'})
 
     $(window).focus(function() {windowActive=true})
     $(window).blur(function() {windowActive=false})
