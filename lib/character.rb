@@ -42,7 +42,7 @@ class Character
   end
 
   def finisher_name(player_id=@player_id)
-    return @temp_finisher.name if @temp_finisher
+    return @temp_finisher.name if @temp_finisher && (player_id == @player_id)
     @finisher ? @finisher.name : ""
   end
 

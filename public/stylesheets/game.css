@@ -81,7 +81,7 @@
   background-color: #ecc;
 }
 
-.select-me.card {
+.select-me .card {
   background-color: #cec;
   cursor: pointer;
 }

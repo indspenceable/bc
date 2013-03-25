@@ -291,12 +291,6 @@ var init = function(player_id, game_id, chimeEnabled) {
         content: loadCard(bases[index], $template.clone()).html()
         })
       base.appendTo($bases)
-      if (/^attack_pair/.test(requiredInput)) {
-        base.addClass('select-me')
-        base.click(function() {
-          setBase($(this).text())
-        })
-      }
     }
     for (var index in styles) {
       var style = $('<div/>').addClass('card mini-card style').text(styles[index]).popover({
@@ -306,12 +300,6 @@ var init = function(player_id, game_id, chimeEnabled) {
         content: loadCard(styles[index], $template.clone()).html()
         })
       style.appendTo($styles)
-      if (/^attack_pair/.test(requiredInput) && (requiredInput == "attack_pair_select" || styles[index] != "specialaction")) {
-        style.addClass('select-me')
-        style.click(function() {
-          setStyle($(this).text())
-        })
-      }
     }
     for (var index in discard1Cards) {
       $('<div/>').addClass('card mini-card').text(discard1Cards[index]).popover({
@@ -556,12 +544,13 @@ var init = function(player_id, game_id, chimeEnabled) {
     })
 
 
-    // $('body').on('click', '.select-me.js-bases .card', function() {
-    //   setBase($(this).text())
-    // })
-    // $('body').on('click', '.select-me.js-styles .card', function() {
-    //   setStyle($(this).text())
-    // })
+    $('body').on('click', '.select-me.js-bases .card', function() {
+      setBase($(this).text())
+    })
+    $('body').on('click', '.select-me.js-styles .card', function() {
+      setStyle($(this).text())
+    })
+
     $('body').on('click', '.js-submit-attack-pair', function() {
       submitAttackPair()
     })
