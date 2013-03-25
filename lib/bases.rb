@@ -67,3 +67,12 @@ class Dash < Base
     }
   end
 end
+
+class SpecialAction < Style
+  def initialize
+    super('specialaction', 0, 0, 0)
+  end
+  def effect
+    ""
+  end
+end
