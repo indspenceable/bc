@@ -24,7 +24,7 @@ class Character
     ]
 
     @life = 20
-    @special_action_available = true
+    # @special_action_available = true
 
     #TODO make this work with press.
     @damage_taken_this_beat = 0
@@ -376,7 +376,7 @@ class Character
     (@temp_discard1 + @temp_discard2).each do |c|
       @hand.delete(c)
     end
-    # @hand << SpecialAction.new
+    @special_action_available = true
     @temp_discard1 = nil
     @temp_discard2 = nil
     @temp_finisher = nil
