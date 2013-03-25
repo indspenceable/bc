@@ -2,16 +2,16 @@ require 'spec_helper'
 require "game_play"
 
 def answer_input(g, pn)
-  if g.required_input[pn] == "attack_pair_select"
+  if g.required_input(pn) == "attack_pair_select"
     attack_pair(g,pn)
-  elsif g.required_input[pn] =~ /select_from/
+  elsif g.required_input(pn) =~ /select_from/
     select_from(g,pn)
-  elsif g.required_input[pn] == "select_base_clash"
+  elsif g.required_input(pn) == "select_base_clash"
     select_base(g,pn)
-  elsif g.required_input[pn] == "select_finisher"
+  elsif g.required_input(pn) == "select_finisher"
     g.input!(pn, rand(2).to_s)
   else
-    raise "Unknown input #{g.required_input[pn]}"
+    raise "Unknown input <<< #{g.required_input(pn)} >>>"
   end
 end
 
@@ -28,7 +28,7 @@ def select_base(g, pn)
 end
 
 def select_from(g, pn)
-  opts = g.required_input[pn].scan(/<[^>]*>/).map do |s|
+  opts = g.required_input(pn).scan(/<[^>]*>/).map do |s|
     s[1, s.length-2]
   end
   selected = opts.shuffle.pop
@@ -63,8 +63,7 @@ describe GamePlay do
           while g.active?
             [nil, 0, 1].each{|i| g.game_state(i)}
 
-            req = g.required_input
-            if req[0]
+            if g.required_input_for_player?(0)
               answer_input(g, 0)
             else
               answer_input(g, 1)

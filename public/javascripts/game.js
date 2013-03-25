@@ -38,6 +38,8 @@ var init = function(player_id, game_id, chimeEnabled) {
 
   var cardDefinitions = {
     emptyCard: makeCard('', '', '', {}),
+    specialaction: makeCard("N/A", "N/A", "N/A", {"Pulse": "when paired with Dash, Burst", "Cancel": "when paired with anything else."}),
+
     dash: makeCard("N/A", "N/A", 9, {"After Activating": "Move 1, 2, or 3 spaces. If you switch sides with an opponent, they cannot hit you this turn."}),
     grasp: makeCard(1, 2, 5, {"On Hit": "Move opponent 1 space."}),
     drive: makeCard(1, 3, 4, {"Before Activating": "Advance 1 or 2 spaces."}),
@@ -217,20 +219,29 @@ var init = function(player_id, game_id, chimeEnabled) {
       currentAnswer.appendTo($btnGroup)
     }
     var $answers = $('.js-answers')
-    $answers.empty()
-    $answers.append($btnGroup)
+    // $answers.empty()
+    $answers.append($("<br/>")).append($btnGroup)
     $answers.show()
   }
 
-  var resetInputs = function() {
+  var resetInputs = function(question) {
     $('.js-bases, .js-styles, .js-tokens').removeClass("select-me")
     $('.free-form').hide()
-    $('.js-answers').hide()
+    $('.js-answers').text("No Input Required")
+    if (question) {
+      $('.js-answers').show().text(question)
+    }
     $('.space').removeClass('clickToMove')
   }
 
-  var setup_inputs = function(question) {
-    resetInputs();
+  var setup_inputs = function(requiredInput) {
+    var question = null
+    var pretty = null
+    if (requiredInput) {
+      question = requiredInput.question
+      pretty = requiredInput.pretty
+    }
+    resetInputs(pretty);
     if (/^attack_pair/.test(question)) {
       selectAttackPair()
     } else if (/^select_base/.test(question)) {
@@ -255,7 +266,11 @@ var init = function(player_id, game_id, chimeEnabled) {
     $('.board').find('.s' + p1).append($('<img/>').attr('src', '/images/character_icons/' + p1Name + '.png')).css('border-color', 'red')
     // $('.board').find('.s' + p1).append($("<span/>").addClass("label label-important").html($('<i/>').addClass('icon-user')))
   }
-  var fillCards = function(pn, currentBase, currentStyle, specialAction, bases, styles, discard1Cards, discard2Cards) {
+  var fillCards = function(pn, currentBase, currentStyle, specialAction, bases, styles, discard1Cards, discard2Cards, requiredInput) {
+    if (pn != player_id) {
+      requiredInput = ""
+    }
+
     if (currentBase) {
       loadCard(currentBase.toLowerCase(), $root(pn).filter('.attack-pair').find('.real.base'))
     } else {
@@ -281,20 +296,22 @@ var init = function(player_id, game_id, chimeEnabled) {
 
     var $template = $('#template-card')
     for (var index in bases) {
-      $('<div/>').addClass('card mini-card base').text(bases[index]).popover({
+      var base = $('<div/>').addClass('card mini-card base').text(bases[index]).popover({
         html: true,
         trigger: 'hover',
         title: bases[index],
         content: loadCard(bases[index], $template.clone()).html()
-        }).appendTo($bases)
+        })
+      base.appendTo($bases)
     }
     for (var index in styles) {
-      $('<div/>').addClass('card mini-card style').text(styles[index]).popover({
+      var style = $('<div/>').addClass('card mini-card style').text(styles[index]).popover({
         html: true,
         trigger: 'hover',
         title: styles[index],
         content: loadCard(styles[index], $template.clone()).html()
-        }).appendTo($styles)
+        })
+      style.appendTo($styles)
     }
     for (var index in discard1Cards) {
       $('<div/>').addClass('card mini-card').text(discard1Cards[index]).popover({
@@ -315,7 +332,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     }
   }
 
-  var setHeader = function(pn, character, finisher) {
+  var setHeader = function(pn, character, finisher, specialActionAvailable) {
     $root(pn).find('.character-portrait').empty().append($('<img/>').css('height', '50px').attr('src', '/images/character_icons/'+character+'.png'))
     $root(pn).find('.character-name').empty().text(capitaliseFirstLetter(character)).popover({
       title: capitaliseFirstLetter(character),
@@ -331,6 +348,11 @@ var init = function(player_id, game_id, chimeEnabled) {
         placement: 'bottom',
         content: loadCard(finisher, $('#template-card').clone()).html()
       })
+    }
+    if (specialActionAvailable) {
+      $root(pn).find('.js-special-action-available').show()
+    } else {
+      $root(pn).find('.js-special-action-available').hide()
     }
   }
 
@@ -377,12 +399,12 @@ var init = function(player_id, game_id, chimeEnabled) {
     // short circuit unless more events have happened, or
     // there is a new question.
     if (data.gameState && data.gameState.input_number == cachedInputNumber &&
-      data.requiredInput == cachedRequiredInput) {
+      (data.requiredInput && data.requiredInput.question) == cachedRequiredInput) {
       return;
     }
     // Set the cache so we'll shortcircuit next time.
     cachedInputNumber = data.gameState.input_number;
-    cachedRequiredInput = data.requiredInput
+    cachedRequiredInput = (data.requiredInput && data.requiredInput.question)
 
     console.log(data)
 
@@ -424,7 +446,8 @@ var init = function(player_id, game_id, chimeEnabled) {
     for (var pn = 0; pn <= 1; pn++) {
       setHeader(pn,
         gameState.players[pn].character_name,
-        gameState.players[pn].finisher_name)
+        gameState.players[pn].finisher_name,
+        gameState.players[pn].special_action_available)
       fillCards(pn,
         gameState.players[pn].current_base,
         gameState.players[pn].current_style,
@@ -432,12 +455,12 @@ var init = function(player_id, game_id, chimeEnabled) {
         gameState.players[pn].bases,
         gameState.players[pn].styles,
         gameState.players[pn].discard1,
-        gameState.players[pn].discard2)
+        gameState.players[pn].discard2,
+        requiredInput)
       // Display player life
       $root(pn).filter('.life').text("P" + pn + ": " + gameState.players[pn].life + " Life")
       fillCurrentEffects(pn, gameState.players[pn].current_effects)
       fillTokenPool(pn, gameState.players[pn].token_pool)
-      $('.p' + pn + 'header').find('.character-desc').text(characterUAs[gameState.players[pn].character_name])
       setExtraData(pn, gameState.players[pn].extra_data)
     }
     // Show the event log.
@@ -539,6 +562,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     $('body').on('click', '.select-me.js-styles .card', function() {
       setStyle($(this).text())
     })
+
     $('body').on('click', '.js-submit-attack-pair', function() {
       submitAttackPair()
     })
@@ -580,6 +604,8 @@ var init = function(player_id, game_id, chimeEnabled) {
     $('.js-undo').tooltip({trigger: 'hover', title: "Undo"}).on('click', function(){
       submitData('undo')
     })
+
+    $('.js-special-action-available').tooltip({trigger: 'hover', title: 'Special Action is Available.'})
 
     $(window).focus(function() {windowActive=true})
     $(window).blur(function() {windowActive=false})

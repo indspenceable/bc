@@ -44,7 +44,7 @@ class Mechanical < Style
 
   def end_of_beat!
     {
-      "advance" => select_from_methods(advance: [0,1,2,3])
+      "advance" => select_from_methods("(Mechanical) Advance 1, 2, or 3 spaces", advance: [0,1,2,3])
     }
   end
 end
@@ -55,7 +55,7 @@ class Grapnel < Style
 
   def on_hit!
     {
-      "pull" => select_from_methods(pull: [0,1,2,3])
+      "pull" => select_from_methods("(Grapnel) Pull up to 3 spaces.", pull: [0,1,2,3])
     }
   end
 end
@@ -83,7 +83,7 @@ class RocketPress < Finisher
   end
   def before_activating!
     {
-      "advance" => select_from_methods(advance: [2,3,4,5,6])
+      "advance" => select_from_methods("(Rocket Press) Advance 2 or more spaces.", advance: [2,3,4,5,6])
     }
   end
 end
@@ -143,8 +143,8 @@ class Cadenza < Character
     [RocketPress.new, FeedbackField.new]
   end
 
-  def effect_sources
-    super + @bonuses
+  def character_specific_effect_sources
+    @bonuses
   end
 
   def charge_battery!
@@ -161,7 +161,7 @@ class Cadenza < Character
   def receive_damage!(damage)
     super
     if damage > 0 && next_available_iron_body && exceeds_stun_guard?(damage)
-      select_from_methods(iron_body: ['yes', 'pass']).call(self, @input_manager)
+      select_from_methods("Spend an iron body token to gain infinite stun guard?", iron_body: ['yes', 'pass']).call(self, @input_manager)
     end
   end
 

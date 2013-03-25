@@ -43,7 +43,7 @@ class Pactbond < Style
   def end_of_beat!
     {
       "free_token" => ->(me, inputs) {
-        select_from_methods(free_token: %w(almighty endless immortality inevitable corruption)).call(me, inputs)
+        select_from_methods("Choose a token to get for free next round", free_token: %w(almighty endless immortality inevitable corruption)).call(me, inputs)
       }
     }
   end
@@ -57,7 +57,7 @@ class Necrotizing < Style
     {
       #spend life points to gain power (max 3)
       "power" => ->(me, inputs) {
-        select_from_methods(necrotizing_power: 0..3).call(me, inputs)
+        select_from_methods("Spend up to 3 life to get +1 power per life spent.", necrotizing_power: 0..3).call(me, inputs)
       }
     }
   end
@@ -228,8 +228,8 @@ class Hepzibah < Character
     @pactbond_free_token = nil
   end
 
-  def effect_sources
-    super + @current_tokens + @altazziar_bonus
+  def character_specific_effect_sources
+    @current_tokens + @altazziar_bonus
   end
 
 

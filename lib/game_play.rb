@@ -18,8 +18,8 @@ MOVEMENT_METHODS = [
   :advance, :retreat, :pull, :push, :teleport_to, :teleport_opponent_to,
   :set_trap_in_range, :set_trap
 ]
-def select_from_methods(options)
-  return select_from_movement_methods(options) if options.keys.all?{|k| MOVEMENT_METHODS.include?(k)}
+def select_from_methods(pretty_string=nil, options)
+  return select_from_movement_methods(pretty_string, options) if options.keys.all?{|k| MOVEMENT_METHODS.include?(k)}
   option_list = []
   options.each do |method, arg_options|
     arg_options.each do |arg_option|
@@ -40,9 +40,15 @@ def select_from_methods(options)
     if valid_options.count > 1
       option_names = valid_options.map{|k,v| "<#{k}##{v}>"}.join('')
       # ask them for the option number they want to do
-      input.require_single_input!(me.player_id, "select_from:#{option_names}", ->(text) {
-        valid_options.include?(text.split('#'))
-      })
+      raise "Need a pretty name if there's ever a choice for this string. #{options.inspect}" unless pretty_string
+      input.require_single_input!(
+        me.player_id,
+        "select_from:#{option_names}",
+        pretty_string,
+        ->(text) {
+          valid_options.include?(text.split('#'))
+        }
+      )
       ans = input.answer(me.player_id)
       method, argument = ans.split('#')
     else
@@ -55,7 +61,7 @@ def select_from_methods(options)
   end
 end
 
-def select_from_movement_methods(options)
+def select_from_movement_methods(pretty_string=nil, options)
   option_list = []
   options.each do |method, arg_options|
     arg_options.each do |arg_option|
@@ -77,9 +83,14 @@ def select_from_movement_methods(options)
     if valid_options.count > 1
       option_names = valid_options.keys.map{|k| "<#{k}>"}.join('')
       # ask them for the option number they want to do
-      input.require_single_input!(me.player_id, "select_from_movement:#{option_names}", ->(text) {
-        valid_options.key?(Integer(text))
-      })
+      input.require_single_input!(
+        me.player_id,
+        "select_from_movement:#{option_names}",
+        pretty_string,
+        ->(text) {
+          valid_options.key?(Integer(text))
+        }
+      )
       ans = input.answer(me.player_id)
       method, argument = valid_options[Integer(ans)]
     else
@@ -165,7 +176,9 @@ class GamePlay
       @round_number = round_number + 1 # 1 based
       select_attack_pairs!
       ante!
+      @players.each(&:turn_special_action_pairs_into_special_actions!)
       reveal!
+      next if handle_pulses!
       # if either player runs out of cards, go to the next turn
       if handle_clashes! == :no_cards
         @events.log!("A player ran out of cards. Turn is cycling.")
@@ -186,7 +199,7 @@ class GamePlay
   def input!(player_id, str)
     setup_game!(@valid_inputs_thus_far + [[Integer(player_id), str]])
     @valid_inputs_thus_far = @valid_inputs_thus_far + [[Integer(player_id), str]]
-    required_input
+    #required_input
   end
   def rollback!
     @valid_inputs_thus_far.pop
@@ -196,13 +209,27 @@ class GamePlay
     setup_game!(@valid_inputs_thus_far)
   end
 
-  # returns a hash from player_id to the input they need
-  def required_input
-    @input_manager.required_input
+  def all_required_input(player_id)
+    if required_input_for_player?(player_id)
+      {
+        question: required_input(player_id),
+        pretty: pretty_required_input(player_id),
+      }
+    end
   end
+
+  # returns a hash from player_id to the input they need
+  def required_input(player_id)
+    @input_manager.required_input[player_id][0] if required_input_for_player?(player_id)
+  end
+
+  def pretty_required_input(player_id)
+    @input_manager.required_input[player_id][1] if required_input_for_player?(player_id)
+  end
+
   # are we waiting on input from this player id?
   def required_input_for_player?(player_id)
-    required_input.keys.include?(player_id)
+    @input_manager.required_input.keys.include?(player_id)
   end
   # returns a hash containing useful information about the gamestate
   # :events - a list of things that have happened
@@ -238,8 +265,8 @@ class GamePlay
   def select_characters!
     #character selection
     @input_manager.require_multi_input!(
-      ["select_character", ->(text) { GamePlay.character_names.include?(text) }],
-      ["select_character", ->(text) { GamePlay.character_names.include?(text) }],
+      [["select_character", "Please select your character."], ->(text) { GamePlay.character_names.include?(text) }],
+      [["select_character", "Please select your character."], ->(text) { GamePlay.character_names.include?(text) }],
     )
 
     @events.log!("#{@player_names[0]} chooses: #{@input_manager.answer(0)}")
@@ -267,12 +294,12 @@ class GamePlay
     finisher_names = @players.map{|p| p.finishers.map(&:name)}
     finisher_options = finisher_names.map{|f| f.map{|n| "<#{n}>"}.join('')}
     @input_manager.require_multi_input!(
-      ["attack_pair_discard_one", @players[0].valid_attack_pair_callback(nil),  ->(a) {p0a0 = a; @players[0].set_initial_discard2(a)}],
-      ["attack_pair_discard_one", @players[1].valid_attack_pair_callback(nil),  ->(a) {p1a0 = a; @players[1].set_initial_discard2(a)}],
-      ["attack_pair_discard_two", @players[0].valid_attack_pair_callback(p0a0), ->(a) {@players[0].set_initial_discard1(a)}],
-      ["attack_pair_discard_two", @players[1].valid_attack_pair_callback(p1a0), ->(a) {@players[1].set_initial_discard1(a)}],
-      ["select_from:#{finisher_options[0]}", ->(i){finisher_names[0].include?(i)}, ->(a) {@players[0].select_finisher!(a)}],
-      ["select_from:#{finisher_options[1]}", ->(i){finisher_names[1].include?(i)}, ->(a) {@players[1].select_finisher!(a)}],
+      [["attack_pair_discard_one", "Select discard 2"], @players[0].valid_attack_pair_callback(nil),  ->(a) {p0a0 = a; @players[0].set_initial_discard2(a)}],
+      [["attack_pair_discard_one", "Select discard 2"], @players[1].valid_attack_pair_callback(nil),  ->(a) {p1a0 = a; @players[1].set_initial_discard2(a)}],
+      [["attack_pair_discard_two", "Select Discard 1"], @players[0].valid_attack_pair_callback(p0a0), ->(a) {@players[0].set_initial_discard1(a)}],
+      [["attack_pair_discard_two", "Select Discard 1"], @players[1].valid_attack_pair_callback(p1a0), ->(a) {@players[1].set_initial_discard1(a)}],
+      [["select_from:#{finisher_options[0]}", "Select your finisher."], ->(i){finisher_names[0].include?(i)}, ->(a) {@players[0].select_finisher!(a)}],
+      [["select_from:#{finisher_options[1]}", "Select your finisher."], ->(i){finisher_names[1].include?(i)}, ->(a) {@players[1].select_finisher!(a)}],
     )
     @players[0].set_initial_discards!
     @players[1].set_initial_discards!
@@ -282,8 +309,8 @@ class GamePlay
 
   def select_attack_pairs!
     @input_manager.require_multi_input!(
-      ["attack_pair_select", @players[0].valid_attack_pair_callback, ->(a) {@players[0].set_attack_pair!(a)}],
-      ["attack_pair_select", @players[1].valid_attack_pair_callback, ->(a) {@players[1].set_attack_pair!(a)}]
+      [["attack_pair_select", "Select attack pair."], @players[0].valid_attack_pair_callback, ->(a) {@players[0].set_attack_pair!(a)}],
+      [["attack_pair_select", "Select attack pair."], @players[1].valid_attack_pair_callback, ->(a) {@players[1].set_attack_pair!(a)}]
     )
   end
 
@@ -304,7 +331,7 @@ class GamePlay
         # @input_manager.require_single_input!(current_player_id,
         #   "ante", current_player.ante_callback)
         # answer = @input_manager.answer(current_player_id)
-        answer = select_from_methods(ante: current_player.ante_options).call(current_player, @input_manager)
+        answer = select_from_methods("Select option to ante.", ante: current_player.ante_options).call(current_player, @input_manager)
         #TODO fix so "Player 1 passes" instead of "Player 1 antes pass"
         # @events.log!("Ante", "Player #{current_player_id} antes #{answer}")
         passed_this_round = (answer == 'ante#pass')
@@ -321,8 +348,51 @@ class GamePlay
   end
 
   def reveal!
-    @players.each(&:reveal!)
     @input_manager.stop_undos!
+    # reveal.
+    @players.each(&:reveal!)
+    # did they BOTH cancel?
+    if @players.all?(&:cancelled?)
+      @players.each(&:cancel!)
+      select_attack_pairs!
+      reveal!
+    else
+      @players.each do |p|
+        if p.cancelled?
+          p.cancel!
+          @input_manager.require_single_input!(
+            p.player_id,
+            "attack_pair_select",
+            "Select Attack Pair (Cancel)",
+            p.valid_attack_pair_callback
+          )
+          p.set_attack_pair!(@input_manager.answer(p.player_id))
+          p.reveal!
+        end
+      end
+    end
+  end
+
+  def handle_pulses!
+    if @players.all?(&:pulsed?)
+      @events.log!("both players pulsed")
+      @players[0].pulse!(true)
+      @players[1].pulse!(true)
+      @players.each(&:recycle!)
+      true
+    elsif @players[0].pulsed?
+      @players[1].recycle!
+      @players[0].pulse!
+      @players[0].recycle!
+      true
+    elsif @players[1].pulsed?
+      @players[0].recycle!
+      @players[1].pulse!
+      @players[1].recycle!
+      true
+    else
+      false
+    end
   end
 
   def passive_abilities!
@@ -356,8 +426,8 @@ class GamePlay
       end
       return :no_cards if (@players[0].no_bases? || @players[1].no_bases?)
       @input_manager.require_multi_input!(
-        ["select_base_clash", @players[0].base_options_callback],
-        ["select_base_clash", @players[1].base_options_callback]
+        [["select_base_clash", "Select a new base."], @players[0].base_options_callback],
+        [["select_base_clash", "Select a new base."], @players[1].base_options_callback]
       )
       @players[0].select_new_base!(@input_manager.answer(0))
       @players[1].select_new_base!(@input_manager.answer(1))
@@ -442,7 +512,8 @@ class GamePlay
       :discard1 => @players[player_id].discard1(as_seen_by_id),
       :discard2 => @players[player_id].discard2(as_seen_by_id),
       :character_name => @players[player_id].name,
-      :finisher_name => @players[player_id].finisher_name,
+      :finisher_name => @players[player_id].finisher_name(as_seen_by_id),
+      :special_action_available => @players[player_id].special_action_available,
     }
   end
 end

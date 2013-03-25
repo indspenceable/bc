@@ -81,10 +81,8 @@
   background-color: #ecc;
 }
 
-.select-me {
-  background-color: #cec;
-}
 .select-me .card {
+  background-color: #cec;
   cursor: pointer;
 }
 .js-finalize-attack-pair {

@@ -6,7 +6,7 @@ class Grasp < Base
   end
   def on_hit!
     {
-      "move_opponent" => select_from_methods(pull: [1], push: [1])
+      "move_opponent" => select_from_methods("(Grasp) Move opponent 1 space.", pull: [1], push: [1])
     }
   end
 end
@@ -17,7 +17,7 @@ class Drive < Base
   end
   def before_activating!
     {
-      'advance' => select_from_methods(advance: [1, 2])
+      'advance' => select_from_methods("(Drive) Advance 1 or 2 spaces.", advance: [1, 2])
     }
   end
 end
@@ -46,7 +46,7 @@ class Burst < Base
   end
   def start_of_beat!
     {
-      "retreat" => select_from_methods(retreat: [1, 2])
+      "retreat" => select_from_methods("(Burst) Retreat 1 or 2 spaces", retreat: [1, 2])
     }
   end
 end
@@ -58,11 +58,21 @@ class Dash < Base
     {
       "move" => ->(me, inpt) {
         direction = me.position - me.opponent.position
-        select_from_methods(retreat: [1, 2, 3], advance: [1, 2, 3]).call(me, inpt)
+        select_from_methods("(Dash) Move 1, 2, or 3 spaces.",
+          retreat: [1, 2, 3], advance: [1, 2, 3]).call(me, inpt)
         if (me.position - me.opponent.position) * direction < 0
           me.dash_dodge!
         end
       }
     }
+  end
+end
+
+class SpecialAction < Style
+  def initialize
+    super('specialaction', 0, 0, 0)
+  end
+  def effect
+    ""
   end
 end

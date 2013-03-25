@@ -18,8 +18,8 @@ class Teleport < Style
   def end_of_beat!
     {
       "move_and_move_trap" => ->(me, inpts){
-        me.teleport_to_unoccupied_space!
-        me.move_trap_anywhere!
+        me.teleport_to_unoccupied_space!("(Teleport) Teleport anywhere.")
+        me.move_trap_anywhere!("(Teleport) Move trap anywhere anywhere.")
       }
     }
   end
@@ -59,7 +59,7 @@ class Lure < Style
   end
   def on_hit!
     {
-      "pull" => select_from_methods(pull: [0,1,2,3,4,5])
+      "pull" => select_from_methods("(Lure) Pull opponent any number of spaces.", pull: [0,1,2,3,4,5])
     }
   end
 end
@@ -139,16 +139,16 @@ class Khadath < Character
     end
   end
 
-  def effect_sources
-    super + Array(@hunters_bonus)
+  def character_specific_effect_sources
+    Array(@hunters_bonus)
   end
 
   # def trap_blocks_ranged_attacks!
   #   @block_ranged_attacks = true
   # end
 
-  def move_trap_anywhere!
-    select_from_methods(set_trap: [0,1,2,3,4,5,6]).call(self, @input_manager)
+  def move_trap_anywhere!(str)
+    select_from_methods(str, set_trap: [0,1,2,3,4,5,6]).call(self, @input_manager)
   end
   def set_trap?(n)
     return false if flag? :no_moving_trap_this_beat
@@ -159,7 +159,7 @@ class Khadath < Character
   end
 
   def place_trap_in_range!
-    select_from_methods(set_trap_in_range: [0,1,2,3,4,5,6]).call(self, @input_manager)
+    select_from_methods("Place trap in range.", set_trap_in_range: [0,1,2,3,4,5,6]).call(self, @input_manager)
   end
   def set_trap_in_range?(n)
     return false if flag? :no_moving_trap_this_beat

@@ -10,7 +10,7 @@ class PointBlank < Style
   end
   def on_damage!
     {
-      "push" => select_from_methods(push: [0,1,2])
+      "push" => select_from_methods("Push the opponent up to 2 spaces.", push: [0,1,2])
     }
   end
 end
@@ -21,12 +21,12 @@ class Gunner < Style
   end
   def before_activating!
     {
-      "extra_range" => select_from_methods(extra_range: Rukyuk.token_names)
+      "extra_range" => select_from_methods("Discard a token to get extra range?", extra_range: Rukyuk.token_names)
     }
   end
   def after_activating!
     {
-      "movement" => select_from_methods(advance: [1,2], retreat: [1,2])
+      "movement" => select_from_methods("Move 1 or 2 spaces.", advance: [1,2], retreat: [1,2])
     }
   end
 end
@@ -40,7 +40,7 @@ class Crossfire < Style
   end
   def on_hit!
     {
-      "extra_damage" => select_from_methods(extra_power: Rukyuk.token_names)
+      "extra_damage" => select_from_methods("Discard a token to get +2 Power?", extra_power: Rukyuk.token_names)
     }
   end
 end
@@ -51,7 +51,7 @@ class Sniper < Style
   end
   def after_activating!
     {
-      "movement" => select_from_methods(advance: [1,2,3], retreat: [1,2,3])
+      "movement" => select_from_methods("Move 1, 2, or 3 spaces.", advance: [1,2,3], retreat: [1,2,3])
     }
   end
 end
@@ -72,7 +72,7 @@ class Reload < Base
   def after_activating!
     {
       "teleport" => ->(me, inputs) {
-        me.teleport_to_unoccupied_space!
+        me.teleport_to_unoccupied_space!("(Reload) Teleport anywhere.")
       }
     }
   end
@@ -155,12 +155,12 @@ class ForceGrenade < Finisher
 
   def on_hit!
     {
-      "push" => select_from_methods(push: [0,1,2,3,4,5,6])
+      "push" => select_from_methods("Push the opponent any number of spaces.", push: [0,1,2,3,4,5,6])
     }
   end
   def after_activating!
     {
-      "retreat" => select_from_methods(retreat: [0,1,2,3,4,5,6])
+      "retreat" => select_from_methods("Retreat any number of spaces.", retreat: [0,1,2,3,4,5,6])
     }
   end
 end
@@ -173,7 +173,7 @@ class FullyAutomatic < Finisher
 
   def on_hit!
     {
-      "repeat_attack" => select_from_methods(repeat_attack: Rukyuk.token_names)
+      "repeat_attack" => select_from_methods("Spend a token to repeat this attack.", repeat_attack: Rukyuk.token_names)
     }
   end
 end
@@ -246,8 +246,8 @@ class Rukyuk < Character
     execute_attack!
   end
 
-  def effect_sources
-    sources = super
+  def character_specific_effect_sources
+    sources = []
     # We can't call flag? here... boo.
     sources += Array(@current_token) unless sources.any?{|s| s.flag?(:no_ammo_benefit)}
     sources += @bonuses

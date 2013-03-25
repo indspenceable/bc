@@ -68,7 +68,7 @@ class Quicksilver < Style
   end
   def end_of_beat!
     {
-      'advance' => select_from_methods(advance: [0, 1], retreat: [1])
+      'advance' => select_from_methods("Move up to 1 space.", advance: [0, 1], retreat: [1])
     }
   end
   def effect
@@ -98,7 +98,7 @@ class Overload < Base
 
   def start_of_beat!
     {
-      "extra_style" => select_from_methods(select_extra_style: %w(bladed exoskeletal mutating quicksilver whip))
+      "extra_style" => select_from_methods("(Overload) Select an additional style to apply to this attack.", select_extra_style: %w(bladed exoskeletal mutating quicksilver whip))
     }
   end
 end
@@ -130,7 +130,7 @@ class TheAugustStrain < Finisher
   end
   def on_hit!
     {
-      "perma_style" => select_from_methods(select_perma_style: %w(bladed exoskeletal mutating quicksilver whip))
+      "perma_style" => select_from_methods("Select an additional style to add to all attacks for the rest of the game.", select_perma_style: %w(bladed exoskeletal mutating quicksilver whip))
     }
   end
 end
@@ -155,8 +155,8 @@ class Kehrolyn < Character
     [HydraFork.new, TheAugustStrain.new]
   end
 
-  def effect_sources
-    sources = super
+  def character_specific_effect_sources
+    sources = []
     sources << @perma_style if @perma_style
     sources << current_form
     sources += @bonuses

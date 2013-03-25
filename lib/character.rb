@@ -1,6 +1,9 @@
 class Character
-  attr_reader :player_id, :player_name, :hand, :life, :finisher, :damage_dealt_this_beat, :damage_dealt_this_attack
+  attr_reader :player_id, :player_name, :hand, :life, :finisher,
+    :damage_dealt_this_beat, :damage_dealt_this_attack, :special_action_available
+
   attr_accessor :opponent, :position, :current_effects
+
   def initialize player_id, player_name, input_manager, events
     @player_id = player_id
     @player_name = player_name
@@ -17,7 +20,7 @@ class Character
       Strike.new,
       Shot.new,
       Burst.new,
-      Dash.new
+      Dash.new,
     ]
 
     @life = 20
@@ -38,7 +41,8 @@ class Character
     @token_pool.map(&:name).uniq
   end
 
-  def finisher_name
+  def finisher_name(player_id=@player_id)
+    return @temp_finisher.name if @temp_finisher && (player_id == @player_id)
     @finisher ? @finisher.name : ""
   end
 
@@ -61,11 +65,11 @@ class Character
   end
 
   def discard1(seen_by)
-    p = (seen_by == @player_id &&@temp_discard1) || @discard1 || []
+    p = (seen_by == @player_id && @temp_discard1) || @discard1 || []
     p.map(&:name)
   end
   def discard2(seen_by)
-    p = (seen_by == @player_id &&@temp_discard2) || @discard2 || []
+    p = (seen_by == @player_id && @temp_discard2) || @discard2 || []
     p.map(&:name)
   end
 
@@ -75,7 +79,7 @@ class Character
 
   def bases(seen_by=@player_id)
     # if we haven't revealed, but this not another player
-    c_hand = (seen_by == @player_id) ? @hand - [@base, @style] : @hand
+    c_hand = (seen_by == @player_id) ? @hand - [@temp_base, @temp_style] : @hand
     c_hand -= @temp_discard2 if @temp_discard2 && seen_by == @player_id
     c_hand -= @temp_discard1 if @temp_discard1 && seen_by == @player_id
     c_hand.select do |card|
@@ -83,7 +87,7 @@ class Character
     end
   end
   def styles(seen_by=@player_id)
-    c_hand = (seen_by == @player_id) ? @hand - [@base, @style] : @hand
+    c_hand = (seen_by == @player_id) ? @hand - [@temp_base, @temp_style] : @hand
     c_hand -= @temp_discard2 if @temp_discard2 && seen_by == @player_id
     c_hand -= @temp_discard1 if @temp_discard1 && seen_by == @player_id
     c_hand.select do |card|
@@ -93,13 +97,14 @@ class Character
   def current_base_name(seen_by=@player_id)
     # either its the current player, or we've revealed, and theres a base, then
     # return its name
-    (seen_by == @player_id || @revealed) && @base && @base.name
-
+    return @temp_base.name if (seen_by == @player_id) && @temp_base
+    @base && @base.name
   end
   def current_style_name(seen_by=@player_id)
     # either its the current player, or we've revealed, and theres a style, then
     # return its name
-    (seen_by == @player_id || @revealed) && @style && @style.name
+    return @temp_style.name if (seen_by == @player_id) && @temp_style
+    @style && @style.name
   end
   def special_action_name(seen_by=@player_id)
     #always show the finisher, if they've played it.
@@ -126,13 +131,59 @@ class Character
     @style = nil
   end
 
+  def cancel!
+    @played_cancel = false
+  end
+  def pulse!(both_players_pulsed = false)
+    log_me!("uses pulse")
+    if both_players_pulsed
+      log_me!("both players did it!")
+      #retreat as far as possible
+      (6..1).each do |i|
+        retreat!(i) and break if retreat?(i)
+      end
+    else
+      log_me!("Only i did it.")
+      #only you pulsed, so prompt for push/retreat
+      select_from_methods("Push the opponent any number of spaces.", push: [0, 1,2,3,4,5]).call(self, @input_manager)
+      select_from_methods("Retreat any number of spaces.", retreat: [0, 1,2,3,4,5]).call(self, @input_manager)
+    end
+    @hand << @base
+    @base = @style = nil
+    @played_pulse = true
+  end
+  def cancelled?
+    @played_cancel
+  end
+  def pulsed?
+    @played_pulse
+  end
+
+  def turn_special_action_pairs_into_special_actions!
+    if @temp_style.is_a?(SpecialAction)
+      @played_cancel = !%(dash burst).include?(@temp_base.name)
+      @played_pulse = %(dash burst).include?(@temp_base.name)
+      @temp_base = @temp_style = nil
+      @special_action_available = false
+    else
+      @played_cancel = @played_pulse = false
+    end
+  end
+
   # order doens't matter on reveal.
   def reveal!
+    @style = @temp_style
+    @base = @temp_base
+    @temp_base = @temp_style = nil
     @hand.delete(@base) if @base
     @hand.delete(@style) if @style
     @revealed = true
     if @played_finisher
       log_me!("reveals #{@finisher.name}")
+    elsif @played_pulse
+      log_me!("reveals a pulse.")
+    elsif @played_cancel
+      log_me!("cancels.")
     else
       log_me!("reveals #{@style.name} #{@base.name}")
     end
@@ -173,7 +224,9 @@ class Character
         end
         if actions_to_do.count > 0
           if actions_to_do.count > 1
-            @input_manager.require_single_input!(player_id, "select_from:#{actions_to_do.keys.map{|x| "<#{x}>"}}",
+            @input_manager.require_single_input!(player_id,
+              "select_from:#{actions_to_do.keys.map{|x| "<#{x}>"}}",
+              "Choose next effect to trigger: ",
               ->(text) { actions_to_do.key?(text) })
             current_action = @input_manager.answer(player_id)
           else
@@ -270,7 +323,7 @@ class Character
   def recycle!
     @stunned = false
     # Don't cycle cards on turns we play finishers.
-    unless @played_finisher
+    unless @played_finisher || @played_pulse
       @hand += @discard2
       @discard2 = @discard1
       @discard1 = [@style, @base]
@@ -282,14 +335,17 @@ class Character
     @dodge = false
     @base = @style = nil
     @played_finisher = false
+    @played_pulse = false
   end
 
   def effect_sources
+    return [] if opponent.pulsed?
     sources = []
     sources << @style if @style
     sources << @base if @base
     sources << @finisher if @played_finisher
     sources += @opponent.opponent_effect_sources
+    sources += character_specific_effect_sources
     sources
   end
   # effect sources provided by your opponent, like trap penalty
@@ -308,28 +364,33 @@ class Character
     b1 = bases.find{|b| b.name == $2}
     @temp_discard1 = [s1, b1]
   end
+
+  #also sets the finisher
   def set_initial_discards!
+    @finisher = @temp_finisher
     @discard2 = @temp_discard2
     @discard1 = @temp_discard1
     (@temp_discard1 + @temp_discard2).each do |c|
       @hand.delete(c)
     end
+    @hand << SpecialAction.new
     @temp_discard1 = nil
     @temp_discard2 = nil
+    @temp_finisher = nil
     log_me!("discards #{@discard2.map(&:name).join(' ')} to discard 2.")
     log_me!("discards #{@discard1.map(&:name).join(' ')} to discard 1.")
     log_me!("selects #{@finisher.name} for their finisher.")
   end
 
   def select_finisher!(n)
-    @finisher = finishers.find{|f| f.name == n}
+    @temp_finisher = finishers.find{|f| f.name == n}
   end
 
   def set_attack_pair!(choice)
     @revealed = false
     choice =~ /([a-z]*)_([a-z]*)/
-    @style = styles.find{|s| s.name == $1}
-    @base = bases.find{|b| b.name == $2}
+    @temp_style = styles.find{|s| s.name == $1}
+    @temp_base = bases.find{|b| b.name == $2}
   end
 
   def retreat?(n_s, triggered_by_opponent=false)
@@ -387,8 +448,8 @@ class Character
   def teleport_to!(n)
     @position = Integer(n)
   end
-  def teleport_to_unoccupied_space!
-    select_from_methods(teleport_to: [0,1,2,3,4,5,6]).call(self, @input_manager)
+  def teleport_to_unoccupied_space!(str)
+    select_from_methods(str, teleport_to: [0,1,2,3,4,5,6]).call(self, @input_manager)
   end
 
   def teleport_opponent_to?(n)
@@ -467,7 +528,7 @@ class Character
   end
 
   def select_and_discard_a_token!
-    select_from_methods(discard_token: token_names).call(self, @input_manager)
+    select_from_methods("Select a token to discard.", discard_token: token_names).call(self, @input_manager)
   end
 
   # This must be overwritten if your character does not use a @token_discard
@@ -512,8 +573,8 @@ class Character
   def ante!(choice)
     if choice == "finisher"
       log_me!("antes their finisher: #{@finisher.name}.")
-      @style = nil
-      @base = nil
+      @temp_style = nil
+      @temp_base = nil
       @played_finisher = true
       @special_action_available = false
       true

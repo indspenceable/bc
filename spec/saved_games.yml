@@ -296,6 +296,54 @@
       - sinuous_dash
     - - 1
       - planardivider
+    - - 0
+      - hunters_strike
+    - - 0
+      - evacuation_grasp
+    - - 0
+      - dimensionalexile
+    - - 1
+      - urgent_paradigmshift
+    - - 0
+      - blight_drive
+    - - 0
+      - '4'
+    - - 1
+      - paradigmshift_select_paradigm
+    - - 1
+      - assume_paradigm#pain
+    - - 1
+      - '5'
+    - - 1
+      - assume_paradigm#pass
+    - - 1
+      - warped_shot
+    - - 0
+      - lure_strike
+    - - 0
+      - '4'
+    - - 1
+      - sinuous_dash
+    - - 0
+      - teleport_shot
+    - - 1
+      - dash_move
+    - - 1
+      - '0'
+    - - 1
+      - assume_paradigm#fluidity
+    - - 1
+      - sinuous_teleport
+    - - 1
+      - '3'
+    - - 1
+      - '3'
+    - - 0
+      - '2'
+    - - 0
+      - '4'
+    - - 1
+      - sturdy_drive
 - - 0
   - - - 1
       - zaamassal
@@ -794,6 +842,204 @@
       - openthegate
     - - 0
       - urgent_paradigmshift
+    - - 1
+      - hydraulic_dash
+    - - 1
+      - ante#pass
+    - - 1
+      - '0'
+    - - 0
+      - urgent_advance
+    - - 0
+      - assume_paradigm#fluidity
+    - - 0
+      - '2'
+    - - 0
+      - assume_paradigm#pass
+    - - 0
+      - '3'
+    - - 0
+      - warped_strike
+    - - 1
+      - grapnel_strike
+    - - 1
+      - ante#pass
+    - - 1
+      - grasp
+    - - 0
+      - dash
+    - - 0
+      - '3'
+    - - 0
+      - warped_assume_distortion
+    - - 0
+      - assume_paradigm#distortion
+    - - 0
+      - '4'
+    - - 0
+      - malicious_shot
+    - - 1
+      - battery_drive
+    - - 1
+      - ante#pass
+    - - 1
+      - '2'
+    - - 1
+      - iron_body#pass
+    - - 0
+      - assume_paradigm#pass
+    - - 0
+      - sinuous_burst
+    - - 1
+      - hydraulic_shot
+    - - 1
+      - ante#pass
+    - - 0
+      - '6'
+    - - 0
+      - assume_paradigm#pass
+    - - 0
+      - '0'
+    - - 1
+      - mechanical_dash
+    - - 0
+      - warped_paradigmshift
+    - - 1
+      - ante#pass
+    - - 1
+      - '1'
+    - - 0
+      - assume_paradigm#fluidity
+    - - 0
+      - '2'
+    - - 0
+      - assume_paradigm#distortion
+    - - 1
+      - '3'
+    - - 1
+      - clockwork_drive
+    - - 0
+      - urgent_dash
+    - - 1
+      - ante#pass
+    - - 0
+      - '4'
+    - - 0
+      - dash_move
+    - - 0
+      - '2'
+    - - 0
+      - assume_paradigm#pass
+    - - 1
+      - '1'
+    - - 1
+      - hydraulic_shot
+    - - 0
+      - sturdy_burst
+    - - 1
+      - ante#pass
+    - - 0
+      - strike
+    - - 1
+      - strike
+    - - 0
+      - assume_paradigm#pass
+    - - 0
+      - malicious_burst
+    - - 1
+      - battery_dash
+    - - 1
+      - ante#pass
+    - - 0
+      - '1'
+    - - 1
+      - '2'
+    - - 0
+      - assume_paradigm#pass
+    - - 0
+      - sinuous_dash
+    - - 1
+      - mechanical_shot
+    - - 1
+      - ante#pass
+    - - 0
+      - dash_move
+    - - 0
+      - '3'
+    - - 0
+      - assume_paradigm#fluidity
+    - - 0
+      - sinuous_teleport
+    - - 0
+      - '3'
+    - - 0
+      - '3'
+    - - 1
+      - '2'
+    - - 1
+      - hydraulic_drive
+    - - 0
+      - warped_grasp
+    - - 1
+      - ante#pass
+    - - 0
+      - '5'
+    - - 0
+      - '1'
+    - - 1
+      - iron_body#yes
+    - - 0
+      - assume_paradigm#pass
+    - - 1
+      - drive_advance
+    - - 1
+      - '3'
+    - - 0
+      - malicious_strike
+    - - 1
+      - clockwork_press
+    - - 1
+      - ante#pass
+    - - 0
+      - assume_paradigm#pain
+    - - 0
+      - sinuous_dash
+    - - 1
+      - battery_dash
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 0
+      - dash_move
+    - - 0
+      - '3'
+    - - 0
+      - assume_paradigm#pass
+    - - 1
+      - '2'
+    - - 0
+      - '4'
+    - - 0
+      - warped_paradigmshift
+    - - 1
+      - hydraulic_drive
+    - - 0
+      - ante#finisher
+    - - 1
+      - ante#ironbody
+    - - 0
+      - assume_paradigm_multi#resilience
+    - - 0
+      - assume_paradigm_multi#pain
+    - - 0
+      - assume_paradigm_multi#fluidity
+    - - 1
+      - iron_body#pass
+    - - 1
+      - hydraulic_advance
+    - - 1
+      - '5'
 - - 1
   - - - 0
       - zaamassal
@@ -1232,6 +1478,12 @@
       - fourwinds
     - - 0
       - geomantic_drive
+    - - 1
+      - mechanical_shot
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#water
 - - 1
   - - - 0
       - khadath
@@ -2027,6 +2279,122 @@
       - strike
     - - 0
       - snare
+    - - 1
+      - '5'
+    - - 1
+      - assume_paradigm#resilience
+    - - 1
+      - malicious_paradigmshift
+    - - 0
+      - lure_strike
+    - - 1
+      - ante#pass
+    - - 1
+      - burst
+    - - 0
+      - burst
+    - - 0
+      - shot
+    - - 1
+      - drive
+    - - 1
+      - '4'
+    - - 1
+      - resilience_lose_soak
+    - - 1
+      - assume_paradigm#pass
+    - - 0
+      - '3'
+    - - 1
+      - sinuous_dash
+    - - 0
+      - blight_grasp
+    - - 1
+      - ante#pass
+    - - 0
+      - '2'
+    - - 1
+      - sinuous_assume_fluidity
+    - - 1
+      - assume_paradigm#fluidity
+    - - 1
+      - '6'
+    - - 1
+      - sinuous_teleport
+    - - 1
+      - '4'
+    - - 1
+      - '4'
+    - - 0
+      - evacuation_dash
+    - - 1
+      - urgent_paradigmshift
+    - - 1
+      - ante#finisher
+    - - 0
+      - '2'
+    - - 1
+      - planardivider_move_anywhere
+    - - 1
+      - '1'
+    - - 1
+      - '1'
+    - - 1
+      - '6'
+    - - 1
+      - assume_paradigm#fluidity
+    - - 1
+      - '2'
+    - - 1
+      - sturdy_paradigmshift
+    - - 0
+      - lure_strike
+    - - 1
+      - fluidity_movement
+    - - 1
+      - '3'
+    - - 1
+      - assume_paradigm#distortion
+    - - 1
+      - assume_paradigm#pass
+    - - 0
+      - blight_drive
+    - - 1
+      - malicious_burst
+    - - 0
+      - ante#pass
+    - - 0
+      - '4'
+    - - 1
+      - '1'
+    - - 0
+      - '5'
+    - - 1
+      - assume_paradigm#pass
+    - - 0
+      - teleport_burst
+    - - 1
+      - urgent_strike
+    - - 0
+      - ante#pass
+    - - 1
+      - '2'
+    - - 1
+      - assume_paradigm#pass
+    - - 0
+      - '0'
+    - - 0
+      - '3'
+    - - 0
+      - hunters_shot
+    - - 1
+      - warped_paradigmshift
+    - - 0
+      - ante#finisher
+    - - 1
+      - assume_paradigm#fluidity
+    - - 1
+      - '4'
 - - 0
   - - - 0
       - kehrolyn
@@ -2201,3 +2569,966 @@
 - - 0
   - - - 0
       - rukyuk
+    - - 1
+      - zaamassal
+    - - 1
+      - sturdy_dash
+    - - 1
+      - malicious_burst
+    - - 1
+      - planardivider
+    - - 0
+      - pointblank_shot
+    - - 0
+      - trick_reload
+    - - 0
+      - forcegrenade
+    - - 0
+      - sniper_grasp
+    - - 1
+      - urgent_drive
+    - - 0
+      - ante#explosiveshell
+    - - 0
+      - '6'
+    - - 0
+      - '0'
+    - - 0
+      - gunner_drive
+    - - 1
+      - sturdy_dash
+    - - 0
+      - ante#flashshell
+    - - 1
+      - sturdy_assume_resilience
+    - - 1
+      - assume_paradigm#resilience
+    - - 1
+      - dash_move
+    - - 1
+      - '3'
+    - - 0
+      - gunner_extra_range
+    - - 0
+      - extra_range#apshell
+    - - 0
+      - '1'
+    - - 0
+      - '0'
+    - - 0
+      - trick_strike
+    - - 1
+      - warped_strike
+    - - 0
+      - ante#impact
+    - - 1
+      - warped_retreat
+    - - 1
+      - warped_assume_distortion
+    - - 1
+      - assume_paradigm#distortion
+    - - 0
+      - crossfire_reload
+    - - 1
+      - malicious_burst
+    - - 0
+      - ante#swiftshell
+    - - 1
+      - '5'
+    - - 0
+      - '0'
+    - - 1
+      - assume_paradigm#pain
+    - - 1
+      - sturdy_dash
+    - - 0
+      - sniper_grasp
+    - - 0
+      - ante#swiftshell
+    - - 0
+      - drive
+    - - 1
+      - shot
+    - - 0
+      - '1'
+    - - 0
+      - '0'
+    - - 1
+      - assume_paradigm#resilience
+    - - 1
+      - sinuous_grasp
+    - - 0
+      - gunner_grasp
+    - - 0
+      - ante#apshell
+    - - 1
+      - sinuous_assume_fluidity
+    - - 1
+      - assume_paradigm#fluidity
+    - - 0
+      - extra_range#pass
+    - - 0
+      - '6'
+    - - 0
+      - '2'
+    - - 1
+      - '3'
+    - - 0
+      - pointblank_shot
+    - - 1
+      - warped_strike
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#flashshell
+    - - 1
+      - ante#pass
+    - - 1
+      - assume_paradigm#distortion
+    - - 0
+      - '6'
+    - - 1
+      - urgent_dash
+    - - 0
+      - sniper_burst
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#explosiveshell
+    - - 1
+      - ante#pass
+    - - 0
+      - '0'
+    - - 1
+      - '5'
+    - - 1
+      - dash_move
+    - - 1
+      - '2'
+    - - 1
+      - assume_paradigm#haste
+    - - 0
+      - '4'
+    - - 0
+      - trick_drive
+    - - 1
+      - sturdy_drive
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#longshot
+    - - 1
+      - ante#finisher
+    - - 1
+      - '5'
+    - - 1
+      - '0'
+    - - 1
+      - assume_paradigm#distortion
+    - - 0
+      - '2'
+    - - 0
+      - crossfire_reload
+    - - 1
+      - sinuous_grasp
+    - - 0
+      - ante#impact
+    - - 1
+      - '3'
+    - - 1
+      - assume_paradigm#pass
+    - - 0
+      - '6'
+    - - 1
+      - '3'
+    - - 0
+      - gunner_dash
+    - - 1
+      - warped_burst
+    - - 0
+      - ante#pass
+    - - 1
+      - warped_retreat
+    - - 1
+      - '1'
+    - - 0
+      - extra_range#pass
+    - - 0
+      - gunner_movement
+    - - 0
+      - '4'
+    - - 0
+      - '2'
+    - - 1
+      - assume_paradigm#pass
+    - - 0
+      - pointblank_grasp
+    - - 1
+      - sturdy_dash
+    - - 0
+      - ante#swiftshell
+    - - 1
+      - dash_move
+    - - 1
+      - '5'
+    - - 1
+      - assume_paradigm#pass
+    - - 1
+      - urgent_strike
+    - - 0
+      - sniper_burst
+    - - 0
+      - ante#apshell
+    - - 0
+      - '0'
+    - - 1
+      - '4'
+    - - 1
+      - assume_paradigm#pass
+    - - 0
+      - gunner_dash
+    - - 1
+      - warped_shot
+    - - 0
+      - ante#pass
+    - - 0
+      - extra_range#pass
+    - - 0
+      - gunner_movement
+    - - 0
+      - '2'
+    - - 0
+      - '6'
+    - - 1
+      - assume_paradigm#pass
+    - - 0
+      - pointblank_strike
+    - - 1
+      - malicious_burst
+    - - 0
+      - ante#longshot
+    - - 0
+      - ante#pass
+    - - 1
+      - '3'
+    - - 1
+      - assume_paradigm#pass
+- - 0
+  - - - 0
+      - rukyuk
+    - - 1
+      - kehrolyn
+    - - 1
+      - exoskeletal_strike
+    - - 1
+      - whip_dash
+    - - 1
+      - hydrafork
+    - - 0
+      - pointblank_dash
+    - - 0
+      - trick_reload
+    - - 0
+      - forcegrenade
+    - - 1
+      - quicksilver_drive
+    - - 0
+      - sniper_grasp
+    - - 0
+      - ante#flashshell
+    - - 0
+      - '6'
+    - - 0
+      - '0'
+    - - 1
+      - '5'
+    - - 0
+      - crossfire_shot
+    - - 1
+      - mutating_shot
+    - - 0
+      - ante#explosiveshell
+    - - 0
+      - extra_power#apshell
+    - - 1
+      - mutating_lose_life
+    - - 1
+      - mutating_advance
+    - - 1
+      - '4'
+    - - 1
+      - '3'
+    - - 0
+      - gunner_dash
+    - - 1
+      - whip_grasp
+    - - 0
+      - ante#pass
+    - - 0
+      - extra_range#pass
+    - - 0
+      - dash_move
+    - - 0
+      - '4'
+    - - 0
+      - '6'
+    - - 1
+      - quicksilver_drive
+    - - 0
+      - pointblank_drive
+    - - 0
+      - ante#impact
+    - - 1
+      - '4'
+    - - 1
+      - '4'
+    - - 0
+      - crossfire_reload
+    - - 1
+      - mutating_overload
+    - - 0
+      - ante#swiftshell
+    - - 1
+      - select_extra_style#bladed
+    - - 1
+      - mutating_lose_life
+    - - 1
+      - mutating_advance
+    - - 1
+      - '3'
+    - - 1
+      - '3'
+    - - 0
+      - gunner_dash
+    - - 1
+      - exoskeletal_strike
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 0
+      - extra_range#pass
+    - - 0
+      - dash_move
+    - - 0
+      - '2'
+    - - 0
+      - '0'
+    - - 0
+      - sniper_strike
+    - - 1
+      - quicksilver_grasp
+    - - 0
+      - ante#longshot
+    - - 1
+      - ante#finisher
+    - - 0
+      - '1'
+    - - 0
+      - pointblank_drive
+    - - 1
+      - quicksilver_drive
+    - - 0
+      - ante#flashshell
+    - - 1
+      - '2'
+    - - 1
+      - '3'
+    - - 0
+      - gunner_grasp
+    - - 1
+      - bladed_dash
+    - - 0
+      - ante#impact
+    - - 0
+      - ante#pass
+    - - 1
+      - '2'
+    - - 0
+      - extra_range#pass
+    - - 0
+      - '4'
+    - - 1
+      - '3'
+    - - 0
+      - trick_strike
+    - - 1
+      - whip_grasp
+    - - 0
+      - ante#swiftshell
+    - - 0
+      - ante#pass
+    - - 1
+      - whip_hit_or_pull
+    - - 1
+      - '2'
+    - - 1
+      - quicksilver_drive
+    - - 0
+      - crossfire_burst
+    - - 0
+      - ante#finisher
+    - - 0
+      - ante#pass
+    - - 0
+      - concede
+- - 1
+  - - - 0
+      - cadenza
+    - - 1
+      - kehrolyn
+    - - 1
+      - mutating_dash
+    - - 1
+      - bladed_grasp
+    - - 1
+      - theauguststrain
+    - - 0
+      - clockwork_press
+    - - 0
+      - battery_dash
+    - - 0
+      - rocketpress
+    - - 0
+      - grapnel_drive
+    - - 1
+      - exoskeletal_shot
+    - - 0
+      - ante#pass
+    - - 0
+      - '3'
+    - - 0
+      - iron_body#pass
+    - - 0
+      - clockwork_shot
+    - - 1
+      - whip_drive
+    - - 0
+      - ante#ironbody
+    - - 1
+      - '4'
+    - - 0
+      - battery_burst
+    - - 1
+      - bladed_burst
+    - - 0
+      - ante#pass
+    - - 1
+      - '5'
+    - - 0
+      - '2'
+    - - 0
+      - iron_body#pass
+    - - 0
+      - hydraulic_drive
+    - - 1
+      - mutating_strike
+    - - 0
+      - ante#pass
+    - - 0
+      - drive_advance
+    - - 0
+      - '6'
+    - - 0
+      - iron_body#pass
+    - - 0
+      - grapnel_dash
+    - - 1
+      - whip_dash
+    - - 0
+      - ante#pass
+    - - 0
+      - grasp
+    - - 1
+      - overload
+    - - 1
+      - select_extra_style#exoskeletal
+    - - 1
+      - whip_hit_or_pull
+- - 1
+  - - - 0
+      - cadenza
+    - - 1
+      - hepzibah
+    - - 0
+      - clockwork_shot
+    - - 0
+      - battery_press
+    - - 0
+      - feedbackfield
+    - - 1
+      - pactbond_burst
+    - - 1
+      - anathema_dash
+    - - 1
+      - sealthepact
+    - - 1
+      - necrotizing_drive
+    - - 0
+      - hydraulic_dash
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 0
+      - '6'
+    - - 0
+      - clockwork_shot
+    - - 1
+      - darkheart_burst
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#immortality
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 1
+      - '3'
+    - - 1
+      - darkheart_discard_token
+    - - 0
+      - grapnel_grasp
+    - - 1
+      - anathema_bloodlight
+    - - 1
+      - ante#almighty
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#immortality
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#corruption
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 0
+      - drive
+    - - 1
+      - shot
+    - - 0
+      - strike
+    - - 1
+      - dash
+    - - 1
+      - '5'
+    - - 0
+      - hydraulic_press
+    - - 1
+      - pactbond_grasp
+    - - 1
+      - ante#endless
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#almighty
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 1
+      - free_token#immortality
+    - - 0
+      - clockwork_shot
+    - - 1
+      - darkheart_burst
+    - - 1
+      - ante#endless
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 1
+      - '3'
+    - - 1
+      - darkheart_gain_life
+    - - 1
+      - anathema_dash
+    - - 0
+      - grapnel_grasp
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 1
+      - '0'
+    - - 1
+      - accursed_shot
+    - - 0
+      - mechanical_burst
+    - - 1
+      - ante#finisher
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 0
+      - '3'
+    - - 0
+      - clockwork_shot
+    - - 1
+      - pactbond_drive
+    - - 1
+      - ante#corruption
+    - - 0
+      - ante#ironbody
+    - - 1
+      - ante#almighty
+    - - 1
+      - ante#pass
+    - - 1
+      - '2'
+- - 0
+  - - - 0
+      - hepzibah
+    - - 1
+      - kehrolyn
+    - - 0
+      - pactbond_dash
+    - - 0
+      - darkheart_grasp
+    - - 0
+      - altazziar
+    - - 1
+      - mutating_burst
+    - - 1
+      - whip_dash
+    - - 1
+      - theauguststrain
+    - - 1
+      - exoskeletal_drive
+    - - 0
+      - accursed_bloodlight
+    - - 0
+      - ante#almighty
+    - - 0
+      - ante#immortality
+    - - 0
+      - ante#inevitable
+    - - 0
+      - ante#corruption
+    - - 0
+      - ante#pass
+    - - 1
+      - '3'
+    - - 1
+      - mutating_shot
+    - - 0
+      - pactbond_dash
+    - - 0
+      - ante#endless
+    - - 0
+      - ante#immortality
+    - - 0
+      - ante#pass
+    - - 0
+      - '6'
+    - - 0
+      - free_token#endless
+    - - 0
+      - anathema_shot
+- - 1
+  - - - 0
+      - rukyuk
+    - - 1
+      - kehrolyn
+    - - 1
+      - mutating_burst
+    - - 1
+      - whip_dash
+    - - 1
+      - theauguststrain
+    - - 0
+      - pointblank_dash
+    - - 0
+      - trick_reload
+    - - 0
+      - forcegrenade
+    - - 0
+      - sniper_strike
+    - - 1
+      - exoskeletal_drive
+    - - 0
+      - ante#flashshell
+    - - 0
+      - '0'
+    - - 0
+      - crossfire_drive
+- - 1
+  - - - 0
+      - cadenza
+    - - 1
+      - hepzibah
+    - - 1
+      - pactbond_dash
+    - - 1
+      - necrotizing_strike
+    - - 1
+      - altazziar
+    - - 0
+      - clockwork_shot
+    - - 0
+      - battery_press
+    - - 0
+      - rocketpress
+    - - 0
+      - hydraulic_dash
+    - - 1
+      - anathema_drive
+    - - 1
+      - ante#inevitable
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#almighty
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#corruption
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 0
+      - '0'
+    - - 1
+      - '3'
+    - - 1
+      - pactbond_dash
+    - - 0
+      - mechanical_shot
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#corruption
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#endless
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 1
+      - '5'
+    - - 1
+      - free_token#corruption
+    - - 0
+      - '3'
+    - - 0
+      - clockwork_drive
+    - - 1
+      - darkheart_shot
+    - - 1
+      - ante#corruption
+    - - 0
+      - ante#ironbody
+    - - 1
+      - ante#immortality
+    - - 1
+      - ante#endless
+    - - 1
+      - ante#pass
+    - - 1
+      - darkheart_discard_token
+    - - 0
+      - '4'
+    - - 0
+      - hydraulic_press
+    - - 1
+      - anathema_grasp
+    - - 1
+      - ante#corruption
+    - - 0
+      - ante#ironbody
+    - - 1
+      - ante#immortality
+    - - 1
+      - ante#endless
+    - - 1
+      - ante#pass
+    - - 1
+      - '6'
+    - - 1
+      - pactbond_dash
+    - - 0
+      - battery_dash
+    - - 1
+      - ante#pass
+    - - 0
+      - strike
+    - - 1
+      - burst
+    - - 1
+      - free_token#immortality
+    - - 0
+      - clockwork_drive
+    - - 1
+      - necrotizing_dash
+    - - 1
+      - ante#immortality
+    - - 1
+      - ante#endless
+    - - 1
+      - ante#pass
+    - - 1
+      - '3'
+    - - 0
+      - '2'
+    - - 0
+      - mechanical_dash
+    - - 1
+      - accursed_grasp
+    - - 1
+      - ante#pass
+    - - 0
+      - '6'
+    - - 0
+      - '6'
+    - - 0
+      - grapnel_grasp
+    - - 1
+      - darkheart_bloodlight
+    - - 1
+      - ante#almighty
+    - - 1
+      - ante#corruption
+    - - 1
+      - ante#immortality
+    - - 1
+      - ante#endless
+    - - 1
+      - ante#pass
+    - - 0
+      - grasp_move_opponent
+    - - 0
+      - '2'
+    - - 0
+      - '2'
+    - - 0
+      - hydraulic_drive
+    - - 1
+      - concede
+    - - 1
+      - concede
+- - 0
+  - - - 0
+      - hepzibah
+    - - 1
+      - rukyuk
+    - - 1
+      - pointblank_burst
+    - - 1
+      - trick_reload
+    - - 1
+      - fullyautomatic
+    - - 0
+      - pactbond_dash
+    - - 0
+      - darkheart_burst
+    - - 0
+      - sealthepact
+    - - 1
+      - sniper_grasp
+    - - 0
+      - accursed_shot
+    - - 0
+      - ante#almighty
+    - - 1
+      - ante#explosiveshell
+    - - 0
+      - ante#immortality
+    - - 0
+      - ante#inevitable
+    - - 0
+      - ante#pass
+    - - 1
+      - '0'
+    - - 1
+      - '6'
+    - - 1
+      - gunner_drive
+    - - 0
+      - necrotizing_drive
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#inevitable
+    - - 1
+      - ante#swiftshell
+    - - 0
+      - ante#endless
+    - - 0
+      - ante#almighty
+    - - 0
+      - ante#pass
+    - - 0
+      - bloodlight
+    - - 1
+      - strike
+    - - 0
+      - dash
+    - - 1
+      - burst
+    - - 0
+      - '3'
+    - - 1
+      - extra_range#flashshell
+    - - 1
+      - '4'
+    - - 1
+      - crossfire_dash
+    - - 0
+      - anathema_drive
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 1
+      - '2'
+    - - 0
+      - '1'
+    - - 1
+      - sniper_reload
+    - - 0
+      - darkheart_shot
+    - - 1
+      - ante#apshell
+    - - 0
+      - ante#pass
+    - - 1
+      - sniper_movement
+    - - 1
+      - '3'
+    - - 1
+      - '6'
+    - - 1
+      - trick_shot
+    - - 0
+      - pactbond_dash
+    - - 1
+      - ante#explosiveshell
+    - - 0
+      - ante#pass
+    - - 0
+      - '4'
+    - - 0
+      - free_token#immortality
+    - - 0
+      - anathema_grasp
+    - - 1
+      - pointblank_drive
+    - - 0
+      - ante#almighty
+    - - 1
+      - ante#impact
+    - - 0
+      - ante#endless
+    - - 0
+      - ante#pass
+    - - 1
+      - '5'

@@ -8,6 +8,7 @@ class Geomantic < Style
   def start_of_beat!
     {
       "ante_extra_token" => select_from_methods(
+        "(Geomantic) Ante an extra token.",
         # the question should be helpful to the UI
         # in this case, we'll probably have a case in the UI for ante
         # but we don't yet :)
@@ -147,7 +148,7 @@ class FourWinds < Finisher
 
   def before_activating!
     {
-      "advance" => select_from_methods(advance: [0,1])
+      "advance" => select_from_methods("(Four Winds) you may advance 1 space.", advance: [0,1])
     }
   end
   def on_hit!
@@ -190,8 +191,8 @@ class Hikaru < Character
     [WrathOfElements.new, FourWinds.new]
   end
 
-  def effect_sources
-    sources = super
+  def character_specific_effect_sources
+    sources = []
     sources += @current_tokens unless sources.any?{|s| s.flag? :no_token_bonus }
     sources
   end
@@ -259,7 +260,7 @@ class Hikaru < Character
   end
 
   def recover_token!
-    select_from_methods(recover: %w(earth fire water wind)).call(self, @input_manager)
+    select_from_methods("Select token to recover.", recover: %w(earth fire water wind)).call(self, @input_manager)
   end
 
   # Checks if hikaru can recover the given token
