@@ -32,7 +32,8 @@ var init = function(player_id, game_id, chimeEnabled) {
     heketch: "Hekecth starts the duel with a dark force token. He can ante this to immediately teleport adjacent to the opponent, and gain 3 priority. His styles also allow him to spend his token for other benefits. At End of Beat, Heketch regains his token if there are at least 2 spaces between him and his opponent. He may never have more than one dark force token.",
     zaamassal: "Zaamassal has 5 paradigms he can assume, according to his styles and unique base. Each paradigm has it's own benefits. Every time he assumes a paradigm, he loses his current paradigm. If Zaamassal gets stunned, he loses his current paradigm.",
     hepzibah: "Hepzibah can ante her 5 Dark Force tokens each round to gain bonuses, but she loses one life per token anted.",
-    kehrolyn: "Each beat, Kehrolyn applies the style in her discard1 to her current attackpair."
+    kehrolyn: "Each beat, Kehrolyn applies the style in her discard1 to her current attackpair.",
+    demitras: "Demitras begins with 2 Crescendo Tokens, he has +1 priority for each token in this pool, and may ante any number of these tokens for +2 power each. whenever he is hit by an opponent's attack, he loses 1 Crescendo token. Whenever he hits an opponent, he gains one token, up to a maximum of 5"
   }
 
   var cardDefinitions = {
@@ -132,9 +133,19 @@ var init = function(player_id, game_id, chimeEnabled) {
     overload: makeCard(1, 3, 3, {"Start of Beat": "Choose an additional style from your hand to apply to this attack. If it has a reveal trigger, do that now."}),
 
     hydrafork: makeCard("1~3", 6, 0, {"Stun Immunity": undefined, "After Activating": "Gain 5 life."}),
-    theauguststrain: makeCard("1~2", 4, 5, {"Stun Guard": 2, "Soak": 2, "On Hit": "Remove a style from your hand from the game. Apply that style as an additional form to Kehrolyn's attack pair from now on."})
-  }
+    theauguststrain: makeCard("1~2", 4, 5, {"Stun Guard": 2, "Soak": 2, "On Hit": "Remove a style from your hand from the game. Apply that style as an additional form to Kehrolyn's attack pair from now on."}),
 
+    // Demitras
+    bloodletting: makeCard(0, -2 , 3, {"This attack ignores soak." : undefined , "On Hit" : "Gain life equal to the number of Crescendo Tokens you anted this beat."}),
+    darkside: makeCard(0,-2, 1, {"Opponents at range 4 or greater do not hit you this beat." : undefined, "On Hit" : "Retreat any number of spaces."}),
+    illusory:makeCard(0,-1, 1, {"Reveal" : "Return all Crescendo Tokens anted this beat to your token pool. You do not gain their ant effects during this beat.", "If you have 2 or fewer Crescendo Tokens, opponents with higher priority do not hit you": undefined}),
+    jousting:makeCard(0, -2, 1, {"Start of Beat" : "Advance until you are adjacent to the nearest opponent.", "On Hit" : "Advance as far as possible."}),
+    vapid:makeCard( "0~1", -1, 0, {"On Hit" : "If the opponent has a priority of 3 or less, he is stunned"}),
+    deathblow:makeCard(1, 0 , 8 , {"On Hit" : "You may spend any number of Crescendo Tokens. For each token you spend, this attack has +2 power.", "After Activating" : "You gain an additional Crescendo Token if you hit with this attack."}),
+
+    symphonyofdemise:makeCard(1,0,9,{"Before Activating" : "Move forward up to 4 spaces.", "On Hit" : "Gain Crescendo Tokens until you have 5."})
+  }
+  
   var loadCard = function(cardName, $card, overrideCardName) {
     $card.find('.name').text(overrideCardName || capitaliseFirstLetter(cardName))
     $card.find('.effects').empty()

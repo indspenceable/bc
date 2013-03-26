@@ -31,7 +31,7 @@ class Vapid	 < Style
   end
 end
 
-class DeathBlow	 < Style
+class DeathBlow	 < Base
   def initialize
   	super("deathblow", 1, 0, 8)
   end
