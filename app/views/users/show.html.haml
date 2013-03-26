@@ -11,8 +11,18 @@
       = f.submit("Update Settings", class:'btn')
 %table.table.table-striped.table-bordered.table-hover
   %tr
+    %th Current Games
+  -Game.for_user(@user).active.order("created_at").each do |game|
+    %tr
+      %td
+        - begin
+          = game_string(game)
+        - rescue
+          .label.label-warning Invalid Game.
+
+  %tr
     %th Recent Games
-  -Game.for_user(@user).order("created_at").each do |game|
+  -Game.for_user(@user).inactive.order("updated_at DESC").each do |game|
     %tr
       %td
         - begin

@@ -19,7 +19,7 @@
         - rescue
           .label.label-warning Invalid Game.
   %tr
-    %th Inactive Games
+    %th Recently Finished Games
   -Game.inactive.order("updated_at DESC").limit(10).each do |game|
     %tr
       %td
