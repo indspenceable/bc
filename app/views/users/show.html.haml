@@ -1,14 +1,15 @@
-.well
-  = form_for(@user) do |f|
-    %fieldset
-      %legend Settings
-      = f.label :email_notifications_enabled do
-        = f.check_box :email_notifications_enabled
-        Email notification on challenge
-      = f.label :chime_enabled do
-        = f.check_box :chime_enabled
-        Audio chime when new input is required
-      = f.submit("Update Settings", class:'btn')
+- if @user == current_user
+  .well
+    = form_for(@user) do |f|
+      %fieldset
+        %legend Settings
+        = f.label :email_notifications_enabled do
+          = f.check_box :email_notifications_enabled
+          Email notification on challenge
+        = f.label :chime_enabled do
+          = f.check_box :chime_enabled
+          Audio chime when new input is required
+        = f.submit("Update Settings", class:'btn')
 %table.table.table-striped.table-bordered.table-hover
   %tr
     %th Current Games
