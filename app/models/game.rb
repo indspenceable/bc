@@ -12,6 +12,7 @@ class Game < ActiveRecord::Base
 
   scope :active, where(:active => true)
   scope :inactive, where(:active => false)
+  scope :for_user, ->(user) { Game.where('p0_id = ? OR p1_id = ?', user.id, user.id) }
 
   def play(idx=nil)
     GamePlay.new(starting_player, [p0.name, p1.name], inputs, idx)
