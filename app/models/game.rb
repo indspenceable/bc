@@ -30,7 +30,7 @@ class Game < ActiveRecord::Base
         end
 
       else
-        raise "Player #{player_id} tried to cancel when it was invalid."
+        raise "Player #{player_id} tried to undo when it was invalid."
       end
     else
 
