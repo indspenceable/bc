@@ -57,11 +57,38 @@ class Game < ActiveRecord::Base
     save!
   end
 
+  def timed?
+    !configs[:timeout].nil?
+  end
+
+  def time_left
+    configs[:timeout] - (Time.now - updated_at).to_i if timed?
+  end
+
+  def timed_out?
+    time_left < 0 if timed?
+  end
+
+  def check_timeout!
+    return unless timed? && active?
+    if timed_out?
+      if play.required_input_for_player?(0) && play.required_input_for_player?(1)
+        # No timeout.
+      elsif play.required_input_for_player?(0)
+        input_and_save!(0, 'concede')
+      else
+        input_and_save!(1, 'concede')
+      end
+    end
+    true
+  end
+
   private
 
   def set_active_or_invalid
     # If the game is invalid, it's no longer active.
     self.active = play.active?
+    self.valid_play = true
     true
   rescue
     self.valid_play = false
