@@ -8,11 +8,12 @@ class Game < ActiveRecord::Base
   belongs_to :p0, :class_name => "User"
   belongs_to :p1, :class_name => "User"
 
-  before_save :set_active
+  before_save :set_active_or_invalid
   before_create :decide_starting_player
 
   scope :active, where(:active => true)
   scope :inactive, where(:active => false)
+  default_scope where(:valid_play => true)
   scope :for_user, ->(user) { Game.where('p0_id = ? OR p1_id = ?', user.id, user.id) }
 
   def play(idx=nil)
@@ -49,11 +50,21 @@ class Game < ActiveRecord::Base
     return 1 if p1 == user
   end
 
+  def check_validity
+    play && true
+  rescue
+    self.valid_play = false
+    save!
+  end
+
   private
 
-  def set_active
+  def set_active_or_invalid
     # If the game is invalid, it's no longer active.
-    self.active = play.active? rescue false
+    self.active = play.active?
+    true
+  rescue
+    self.valid_play = false
     true
   end
 
