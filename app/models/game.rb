@@ -2,7 +2,7 @@ require 'game_play'
 class Game < ActiveRecord::Base
   attr_accessible :inputs, :p0_id, :p1_id, :active
   serialize :inputs
-  serialize :configs
+  serialize :configs, Hash
 
   validate :p0_id, :p1_id, presence: true
   belongs_to :p0, :class_name => "User"
