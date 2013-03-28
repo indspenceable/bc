@@ -62,7 +62,11 @@ class Game < ActiveRecord::Base
   end
 
   def time_left
-    configs[:timeout] - (Time.now - updated_at).to_i if timed?
+    if timed? && active?
+      unless play.required_input_for_player?(0) && play.required_input_for_player?(1)
+        configs[:timeout] - (Time.now - updated_at).to_i
+      end
+    end
   end
 
   def timed_out?
