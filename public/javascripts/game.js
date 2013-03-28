@@ -138,12 +138,13 @@ var init = function(player_id, game_id, chimeEnabled) {
     // Demitras
     bloodletting: makeCard(0, -2 , 3, {"This attack ignores soak." : undefined , "On Hit" : "Gain life equal to the number of Crescendo Tokens you anted this beat."}),
     darkside: makeCard(0,-2, 1, {"Opponents at range 4 or greater do not hit you this beat." : undefined, "On Hit" : "Retreat any number of spaces."}),
-    illusory:makeCard(0,-1, 1, {"Reveal" : "Return all Crescendo Tokens anted this beat to your token pool. You do not gain their ant effects during this beat.", "If you have 2 or fewer Crescendo Tokens, opponents with higher priority do not hit you": undefined}),
+    illusory:makeCard(0,-1, 1, {"Reveal" : "Return all Crescendo Tokens anted this beat to your token pool. You do not gain their ante effects during this beat.", "If you have 2 or fewer Crescendo Tokens, opponents with higher priority do not hit you.": undefined}),
     jousting:makeCard(0, -2, 1, {"Start of Beat" : "Advance until you are adjacent to the nearest opponent.", "On Hit" : "Advance as far as possible."}),
     vapid:makeCard( "0~1", -1, 0, {"On Hit" : "If the opponent has a priority of 3 or less, he is stunned"}),
     deathblow:makeCard(1, 0 , 8 , {"On Hit" : "You may spend any number of Crescendo Tokens. For each token you spend, this attack has +2 power.", "After Activating" : "You gain an additional Crescendo Token if you hit with this attack."}),
 
-    symphonyofdemise:makeCard(1,0,9,{"Before Activating" : "Move forward up to 4 spaces.", "On Hit" : "Gain Crescendo Tokens until you have 5."})
+    symphonyofdemise:makeCard(1,0,9,{"Before Activating" : "Move forward up to 4 spaces.", "On Hit" : "Gain Crescendo Tokens until you have 5."}),
+    accelerando:makeCard(2, 2, 4, {"Ignores stun guard": undefined, "Before Activating": "Advance any number of spaces.", "On Hit": "Discard any number of tokens for +2 power each."})
   }
   
   var loadCard = function(cardName, $card, overrideCardName) {

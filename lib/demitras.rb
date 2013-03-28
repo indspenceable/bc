@@ -17,11 +17,19 @@ class Illusory < Style
   def initialize
     super("illusory", 0, -1, 1)
   end
+  def method_name
+    
+  end
 end
 
 class Jousting < Style
   def initialize
     super("jousting", 0, -2, 1)
+  end
+  def on_hit!
+    {
+    'advance_to_end' => ->(me, inputs) {me.advance_to_end!}
+    }
   end
 end
 
@@ -52,6 +60,12 @@ class SymphonyOfDemise < Finisher
   end
 end
 
+class Accelerando < Finisher
+  def initialize 
+    super("accelerando", 2, 2, 4)
+  end 
+end
+
 class Demitras < Character
   def initialize *args
     super
@@ -68,6 +82,11 @@ class Demitras < Character
   	'demitras'
   end
   def finishers
-    [SymphonyOfDemise.new ]
+    [SymphonyOfDemise.new, Accelerando.new]
+  end
+  def advance_to_end
+    (0..6).each do |i|
+      return me.advance!(i) if me.advance?(i)
+    end
   end
 end
