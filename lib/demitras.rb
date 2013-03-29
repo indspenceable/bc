@@ -5,6 +5,9 @@ class BloodLetting < Style
   def initialize
     super("bloodletting", 0, -2, 3)
   end
+  def ignore_soak?
+    true
+  end
 end
 
 class DarkSide < Style
@@ -31,9 +34,14 @@ class Jousting < Style
   def initialize
     super("jousting", 0, -2, 1)
   end
+  def start_of_beat!
+    {
+    "advance" => ->(me, inputs) { me.advance_until_adjacent! }
+    }
+  end
   def on_hit!
     {
-    'advance_to_end' => ->(me, inputs) {me.advance_to_end}
+    'advance_to_end' => ->(me, inputs) { (6..0).each {|i| return me.advance!(i) if me.advance?(i)} }
     }
   end
 end
@@ -59,6 +67,12 @@ class Crescendo < Token
   end
 end
 
+class CrescendoPoolEffect < Token
+  def initalize
+    super("crescendopooleffect", 0, 0, 1)
+  end
+end
+
 class SymphonyOfDemise < Finisher
   def initialize
     super("symphonyofdemise", 1, 0, 9)
@@ -81,8 +95,9 @@ class Demitras < Character
 	  Illusory.new,
 	  Jousting.new,
 	  Vapid.new
-	]
-    @current_tokens = []
+	  ]
+    #Available Tokens
+    @token_pool = [Crescendo.new, Crescendo.new]
   end
 
 
@@ -90,11 +105,27 @@ class Demitras < Character
   	'demitras'
   end
 
+  def recycle!
+    super
+    @token_discard += @current_tokens
+    @current_tokens = []
+  end
+
+  def ante?(choice)
+    return true if choice == "pass"
+    return true if super
+    @token_pool.any?{ |token| (token.name == choice) }
+  end
 
   def finishers
     [SymphonyOfDemise.new, Accelerando.new]
   end
 
+  def advance_until_adjacent!
+    if distance > 1
+      advance!(distance-1)
+    end
+  end
 
   def character_specific_effect_sources
     sources = []
@@ -103,10 +134,4 @@ class Demitras < Character
   end
 
 
-  def advance_to_end 
-    #not working
-    (6..0).each do |i| 
-      return me.advance(i) if me.advance?(i)
-    end
-  end
 end
