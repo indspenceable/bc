@@ -11,6 +11,11 @@ class DarkSide < Style
   def initialize
     super("darkside", 0, -2, 1)
   end
+  def on_hit!
+    {
+      'retreat' => select_from_methods("You may retreat to any space", retreat: [0,1,2,3,4,5,6])
+    }
+  end
 end
 
 class Illusory < Style
@@ -28,7 +33,7 @@ class Jousting < Style
   end
   def on_hit!
     {
-    'advance_to_end' => ->(me, inputs) {me.advance_to_end!}
+    'advance_to_end' => ->(me, inputs) {me.advance_to_end}
     }
   end
 end
@@ -77,16 +82,31 @@ class Demitras < Character
 	  Jousting.new,
 	  Vapid.new
 	]
+    @current_tokens = []
   end
+
+
   def self.character_name
   	'demitras'
   end
+
+
   def finishers
     [SymphonyOfDemise.new, Accelerando.new]
   end
-  def advance_to_end
-    (0..6).each do |i|
-      return me.advance!(i) if me.advance?(i)
+
+
+  def character_specific_effect_sources
+    sources = []
+    sources += @current_tokens
+    sources
+  end
+
+
+  def advance_to_end 
+    #not working
+    (6..0).each do |i| 
+      return me.advance(i) if me.advance?(i)
     end
   end
 end
