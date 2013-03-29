@@ -264,9 +264,9 @@ class Heketch < Character
     @merciless_dodge = has_dark_force?
   end
 
-  def blocked_spaces
+  def blocked_spaces(direct_movement)
     return (0..6).to_a if (@stop_all_opponent_movement || @merciless_stop_movement)
-    []
+    super
   end
 
   def recycle!

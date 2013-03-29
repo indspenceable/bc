@@ -279,9 +279,9 @@ class Zaamassal < Character
     super
   end
 
-  def blocked_spaces
+  def blocked_spaces(direct_movement)
     return (0..6).to_a if flag?(:stop_movement_if_adjacent) && (distance == 1)
-    []
+    super
   end
 
   def stunned!
