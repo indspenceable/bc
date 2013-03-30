@@ -142,6 +142,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     glorious: makeCard(0, 2, 0, {"Before Activating": "Advance up to 1 space.", "This attack cannot hit foes with higher priority.": undefined}),
     vengeance: makeCard(0, 2, 0, {"Stun Guard": 4, "This attack cannot hit foes with lower priority.": undefined}),
     scythe: makeCard("1~2", 3, 3, {"Before Activating": "Advance 1 space.", "On Hit": "Pull opponent up to 1 space."}),
+    divinerush: makeCard(0, 2, 2, {"Token": undefined}),
 
     deathwalks: makeCard("1~2", 5, 6, {"On Hit": "Stuns the opponent. The opponent has -4 priority next beat."}),
     handofdivinity: makeCard(5, 7, 3, {"On Hit": "Advance any number of spaces.", "Soak": 3})

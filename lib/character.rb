@@ -340,14 +340,22 @@ class Character
 
   def effect_sources
     return [] if opponent.pulsed?
+    sources = base_effect_sources
+    sources += @opponent.opponent_effect_sources
+
+    sources
+  end
+
+  def base_effect_sources
+    return [] if opponent.pulsed?
     sources = []
     sources << @style if @style
     sources << @base if @base
     sources << @finisher if @played_finisher
-    sources += @opponent.opponent_effect_sources
     sources += character_specific_effect_sources
     sources
   end
+
   # effect sources provided by your opponent, like trap penalty
   def opponent_effect_sources
     []
@@ -394,7 +402,7 @@ class Character
   end
 
   def retreat?(n_s, triggered_by_opponent=false)
-    return false if (triggered_by_opponent && flag?(:ignore_movement)) || flag?(:cannot_move)
+    return false if ((triggered_by_opponent && flag?(:ignore_movement)) || flag?(:cannot_move))
     n = Integer(n_s)
     if position < @opponent.position
       traversed_spaces = position.downto(position - n_s).to_a
@@ -413,7 +421,7 @@ class Character
   end
 
   def advance?(n_s, triggered_by_opponent=false)
-    return false if (triggered_by_opponent && flag?(:ignore_movement)) || flag?(:cannot_move)
+    return false if ((triggered_by_opponent && flag?(:ignore_movement)) || flag?(:cannot_move))
     n = Integer(n_s)
     jump = n_s < distance ? 0 : 1
     if position > @opponent.position
@@ -535,6 +543,7 @@ class Character
   def discard_token!(choice)
     token_to_discard = @token_pool.find{ |token| token.name == choice }
     @token_discard << token_to_discard
+    log_me!("discards #{token_to_discard.name}")
     @token_pool.delete(token_to_discard)
   end
 
