@@ -24,7 +24,7 @@ class Character
     ]
 
     @life = 20
-    @special_action_available = true
+    # @special_action_available = true
 
     #TODO make this work with press.
     @damage_taken_this_beat = 0
@@ -77,20 +77,23 @@ class Character
   def pass_by!
   end
 
+  def hand(seen_by)
+    rtn = @hand
+    rtn -= [@temp_base, @temp_style] if (seen_by == @player_id)
+    rtn -= @temp_discard2 if @temp_discard2 && seen_by == @player_id
+    rtn -= @temp_discard1 if @temp_discard1 && seen_by == @player_id
+    rtn += [SpecialAction.new] if @special_action_available
+    rtn
+  end
+
   def bases(seen_by=@player_id)
     # if we haven't revealed, but this not another player
-    c_hand = (seen_by == @player_id) ? @hand - [@temp_base, @temp_style] : @hand
-    c_hand -= @temp_discard2 if @temp_discard2 && seen_by == @player_id
-    c_hand -= @temp_discard1 if @temp_discard1 && seen_by == @player_id
-    c_hand.select do |card|
+    hand(seen_by).select do |card|
       card.is_a?(Base)
     end
   end
   def styles(seen_by=@player_id)
-    c_hand = (seen_by == @player_id) ? @hand - [@temp_base, @temp_style] : @hand
-    c_hand -= @temp_discard2 if @temp_discard2 && seen_by == @player_id
-    c_hand -= @temp_discard1 if @temp_discard1 && seen_by == @player_id
-    c_hand.select do |card|
+    hand(seen_by).select do |card|
       card.is_a?(Style)
     end
   end
@@ -381,7 +384,7 @@ class Character
     (@temp_discard1 + @temp_discard2).each do |c|
       @hand.delete(c)
     end
-    @hand << SpecialAction.new
+    @special_action_available = true
     @temp_discard1 = nil
     @temp_discard2 = nil
     @temp_finisher = nil
@@ -410,7 +413,7 @@ class Character
       traversed_spaces = position.upto(position + n_s).to_a
     end
     return false if traversed_spaces.any?{|x| x < 0 || x > 6 }
-    return false if (@opponent.blocked_spaces & traversed_spaces).any?
+    return false if (@opponent.blocked_spaces(false) & traversed_spaces).any?
 
     #return the square we'll end up in
     if position < @opponent.position
@@ -430,7 +433,7 @@ class Character
       traversed_spaces = position.upto(position + n_s + jump).to_a
     end
     return false if traversed_spaces.any?{|x| x < 0 || x > 6 }
-    return false if (@opponent.blocked_spaces & traversed_spaces).any?
+    return false if (@opponent.blocked_spaces(false) & traversed_spaces).any?
 
     #return the square we'll end up in.
     if position > @opponent.position
@@ -440,7 +443,7 @@ class Character
     end
   end
 
-  def blocked_spaces
+  def blocked_spaces(direct_movement)
     []
   end
 
@@ -449,7 +452,7 @@ class Character
     (opponent.position != Integer(n)) &&
     (n >= 0) &&
     (n <= 6) &&
-    (!@opponent.blocked_spaces.include?(n)) &&
+    (!@opponent.blocked_spaces(true).include?(n)) &&
     # Return the square we'll end up in.
     n
   end
@@ -645,6 +648,7 @@ class Character
         previous_answer =~ /([a-z]*)_([a-z]*)/
         return false if $2 == base_name || $1 == style_name
       end
+      return false if (style_name == "specialaction") && !@special_action_available
       bases.map(&:name).include?(base_name) && styles.map(&:name).include?(style_name)
     end
   end

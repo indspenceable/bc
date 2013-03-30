@@ -16,14 +16,10 @@
       %td
         - begin
           = game_string(game)
-        - rescue
-          .label.label-warning Invalid Game.
   %tr
-    %th Inactive Games
-  -Game.inactive.order("created_at").each do |game|
+    %th Recently Finished Games
+  -Game.inactive.order("updated_at DESC").limit(10).each do |game|
     %tr
       %td
         - begin
           = game_string(game)
-        - rescue
-          .label.label-warning Invalid Game.

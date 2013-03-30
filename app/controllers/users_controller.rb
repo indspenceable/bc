@@ -1,7 +1,7 @@
 class UsersController < LoggedInController
   def show
     @user = User.find(params[:id])
-    return redirect_to :landing unless @user == current_user
+    # return redirect_to :landing unless @user == current_user
   end
 
   def update
