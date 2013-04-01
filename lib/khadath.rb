@@ -215,18 +215,15 @@ class Khadath < Character
     @dodge_trapped_opponents = nil
   end
 
-  def blocked_spaces
-    if @trap
+  def blocked_spaces(direct_movement)
+    if !direct_movement && @trap
       if @trap < @opponent.position
-        [@trap-1] + super
+        return [@trap-1] + super
       elsif @trap > @opponent.position
-        [@trap+1] + super
-      else
-        super
+        return [@trap+1] + super
       end
-    else
-      super
     end
+    super
   end
 
   # effect sources provided by your opponent, like trap penalty

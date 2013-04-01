@@ -405,7 +405,7 @@ class Character
       traversed_spaces = position.upto(position + n_s).to_a
     end
     return false if traversed_spaces.any?{|x| x < 0 || x > 6 }
-    return false if (@opponent.blocked_spaces & traversed_spaces).any?
+    return false if (@opponent.blocked_spaces(false) & traversed_spaces).any?
 
     #return the square we'll end up in
     if position < @opponent.position
@@ -425,7 +425,7 @@ class Character
       traversed_spaces = position.upto(position + n_s + jump).to_a
     end
     return false if traversed_spaces.any?{|x| x < 0 || x > 6 }
-    return false if (@opponent.blocked_spaces & traversed_spaces).any?
+    return false if (@opponent.blocked_spaces(false) & traversed_spaces).any?
 
     #return the square we'll end up in.
     if position > @opponent.position
@@ -435,7 +435,7 @@ class Character
     end
   end
 
-  def blocked_spaces
+  def blocked_spaces(direct_movement)
     []
   end
 
@@ -443,7 +443,7 @@ class Character
     (opponent.position != Integer(n)) &&
     (n >= 0) &&
     (n <= 6) &&
-    (!@opponent.blocked_spaces.include?(n)) &&
+    (!@opponent.blocked_spaces(true).include?(n)) &&
     # Return the square we'll end up in.
     n
   end
