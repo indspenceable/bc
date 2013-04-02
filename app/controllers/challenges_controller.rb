@@ -15,7 +15,7 @@ class ChallengesController < ApplicationController
 
     if @challenge.save
       if receiver.email_notifications_enabled? && Rails.env.production?
-        UserMailer.challenge(receiver, issuer, challenge).deliver
+        UserMailer.challenge(receiver, issuer, @challenge).deliver
       end
       redirect_to challenge_path(@challenge)
     else
