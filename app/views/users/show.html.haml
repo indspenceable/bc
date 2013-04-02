@@ -1,16 +1,18 @@
 %h3= @user.name
 %table.table.table-striped.table-bordered.table-hover
   -if @user == current_user
-    %tr
-      %th Incoming Challenges
-    - Challenge.incoming_for(@user).order("created_at").each do |challenge|
+    - if Challenge.incoming_for(@user).order("created_at").any?
       %tr
-        %td= link_to "From #{challenge.issuing_user.name}", challenge
-    %tr
-      %th Outgoing Challenges
-    - Challenge.outgoing_by(@user).order("created_at").each do |challenge|
+        %th Incoming Challenges
+      - Challenge.incoming_for(@user).order("created_at").each do |challenge|
+        %tr
+          %td= link_to "From #{challenge.issuing_user.name}", challenge
+    - if Challenge.outgoing_by(@user).order("created_at").any?
       %tr
-        %td= link_to "To #{challenge.receiving_user.name}", challenge
+        %th Outgoing Challenges
+      - Challenge.outgoing_by(@user).order("created_at").each do |challenge|
+        %tr
+          %td= link_to "To #{challenge.receiving_user.name}", challenge
   %tr
     %th Current Games
   -Game.for_user(@user).active.order("created_at").each do |game|
@@ -23,7 +25,7 @@
 
   %tr
     %th Recent Games
-  -Game.for_user(@user).inactive.order("updated_at DESC").each do |game|
+  -Game.for_user(@user).inactive.order("updated_at DESC").limit(20).each do |game|
     %tr
       %td
         - begin
