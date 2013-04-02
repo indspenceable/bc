@@ -11,6 +11,7 @@ Battlecon::Application.routes.draw do
   get '/games/required_input_count', :as => 'required_input_count'
   resources :games, only: [:show, :update, :index]
   resources :users, only: [:show, :update]
+  resources :challenges
 
   if Rails.env.development?
     get '/login' => 'sessions#dev_login'
