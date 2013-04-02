@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130402030329) do
+ActiveRecord::Schema.define(:version => 20130402081925) do
 
   create_table "challenges", :force => true do |t|
     t.integer  "from_id"
@@ -21,6 +21,10 @@ ActiveRecord::Schema.define(:version => 20130402030329) do
     t.datetime "created_at",                   :null => false
     t.datetime "updated_at",                   :null => false
   end
+
+  add_index "challenges", ["from_id", "to_id", "inactive"], :name => "index_challenges_on_from_id_and_to_id_and_inactive"
+  add_index "challenges", ["from_id"], :name => "index_challenges_on_from_id"
+  add_index "challenges", ["to_id"], :name => "index_challenges_on_to_id"
 
   create_table "games", :force => true do |t|
     t.text      "inputs"
