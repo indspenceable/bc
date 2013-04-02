@@ -14,6 +14,9 @@ class ChallengesController < ApplicationController
     @challenge.receiving_user = reciever
 
     if @challenge.save
+      if receiving_user.email_notifications_enabled? && Rails.env.production?
+        UserMailer.challenge(receiving_user, issuing_user, challenge).deliver
+      end
       redirect_to challenge_path(@challenge)
     else
       flash[:error] = @challenge.errors.full_messages.join('<br>').html_safe

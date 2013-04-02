@@ -23,7 +23,8 @@
                 })
               })
     %fieldset
-      %legend Settings
+      -if Challenge.configs.any?
+        %legend Settings
       - Challenge.configs.each do |config|
         = f.label config do
           = f.check_box config
