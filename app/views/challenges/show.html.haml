@@ -13,5 +13,5 @@
           = f.check_box config, disabled: true
           = config.to_s.humanize
       - if current_user == @challenge.receiving_user
-        = f.submit("Accept Challenge", class:'btn')
-        = f.submit("Reject Challenge", class:'btn')
+        = f.submit("Accept Challenge", class:'btn btn-primary')
+        = f.submit("Reject Challenge", class:'btn btn-danger')
