@@ -1,0 +1,17 @@
+.well
+  = form_for(@challenge) do |f|
+    %fieldset
+      %legend Challenge
+      = f.text_field :issuer_name, class: 'js-opponent', placeholder: 'Opponent', disabled: true
+      Vs
+      = f.text_field :opponent, class: 'js-opponent', placeholder: 'Opponent', disabled: true
+    %fieldset
+      -if Challenge.configs.any?
+        %legend Settings
+      - Challenge.configs.each do |config|
+        = f.label config do
+          = f.check_box config, disabled: true
+          = config.to_s.humanize
+      - if current_user == @challenge.receiving_user
+        = f.submit("Accept Challenge", class:'btn')
+        = f.submit("Reject Challenge", class:'btn')

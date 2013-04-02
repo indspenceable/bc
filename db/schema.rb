@@ -11,17 +11,26 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130328020844) do
+ActiveRecord::Schema.define(:version => 20130402030329) do
 
-  create_table "games", :force => true do |t|
-    t.text     "inputs"
+  create_table "challenges", :force => true do |t|
+    t.integer  "from_id"
+    t.integer  "to_id"
+    t.boolean  "inactive",   :default => true
+    t.text     "configs"
     t.datetime "created_at",                   :null => false
     t.datetime "updated_at",                   :null => false
-    t.boolean  "active"
-    t.integer  "p0_id"
-    t.integer  "p1_id"
-    t.text     "configs"
-    t.boolean  "valid_play", :default => true
+  end
+
+  create_table "games", :force => true do |t|
+    t.text      "inputs"
+    t.timestamp "created_at",                   :null => false
+    t.timestamp "updated_at",                   :null => false
+    t.boolean   "active"
+    t.integer   "p0_id"
+    t.integer   "p1_id"
+    t.text      "configs"
+    t.boolean   "valid_play", :default => true
   end
 
   add_index "games", ["active", "p0_id", "p1_id"], :name => "index_games_on_active_and_p0_id_and_p1_id"

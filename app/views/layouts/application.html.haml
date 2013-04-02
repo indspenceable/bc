@@ -53,26 +53,29 @@
           %ul.nav.pull-right
             - if current_user
               %li
-                = link_to games_path do
-                  Games
-                  %span.badge.badge-info#input-count{:style => "display: none"}
-              :javascript
-                var requiredInputCount = function() {
-                  $.get('#{required_input_count_path}', function(count) {
-                    var $i = $('#input-count')
-                    $i.text(count)
-                    if (count > 0){
-                      $i.show()
-                    }else{
-                      $i.hide()
-                    }
-                    setTimeout(requiredInputCount, 5000)
-                  })
-                }
-                $(requiredInputCount)
+                = link_to "Recent Games", games_path
               %li.divider-vertical
               %li
-                = link_to(current_user.name, current_user, class: '#my-profile')
+                = link_to current_user do
+                  Home
+                  %span.badge.badge-info#input-count{:style => "display: none"}
+                :javascript
+                  var requiredInputCount = function() {
+                    $.get('#{required_input_count_path}', function(count) {
+                      var $i = $('#input-count')
+                      $i.text(count)
+                      if (count > 0){
+                        $i.show()
+                      }else{
+                        $i.hide()
+                      }
+                      setTimeout(requiredInputCount, 1000)
+                    })
+                  }
+                  $(requiredInputCount)
+              %li.divider-vertical
+              %li
+                = link_to("Challenge", new_challenge_path)
               %li.divider-vertical
               %li.logged-in
                 %a#personaLogout{href: '#'} Logout

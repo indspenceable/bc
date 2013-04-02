@@ -4,27 +4,6 @@ class GamesController < LoggedInController
   def index
   end
 
-  def challenge
-    opponent = User.find(params[:opponent_id])
-    raise "Can't play against yourself!" if opponent.id == current_user.id
-    # is there a game vs this opponent?
-    game = Game.active_between(current_user, opponent)
-    unless game
-      # We need to create a game
-      game = Game.create!(
-        :p0_id => current_user.id,
-        :p1_id => opponent.id,
-        :active => true,
-        :inputs => [])
-
-      # Deliver an email if it's enabled, and we're in production.
-      if opponent.email_notifications_enabled? && Rails.env.production?
-        UserMailer.challenge(opponent, current_user, game).deliver
-      end
-    end
-    redirect_to game_path(game)
-  end
-
   def show
     respond_to do |format|
       format.json { render json: game_state_hash }

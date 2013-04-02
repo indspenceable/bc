@@ -1,0 +1,32 @@
+.well
+  = form_for(@challenge) do |f|
+    %fieldset
+      %legend Challenge
+      .input-append
+        = f.text_field :opponent, class: 'js-opponent', placeholder: 'Opponent'
+        .btn-group
+          .btn.dropdown-toggle{data: {toggle: "dropdown"}}
+            %span.caret
+          %ul.dropdown-menu.pull-right.js-select-opponent
+            - User.except(current_user).each do |user|
+              %li= link_to user.name, '#'
+            :javascript
+              $(function() {
+                //Typeahead
+                $('.js-opponent').typeahead({
+                  source: #{User.except(current_user).map(&:name).to_json}
+                })
+                // Dropdown
+                $('.js-select-opponent').find('a').click(function() {
+                  $('.js-opponent').val($(this).text())
+                  return true;
+                })
+              })
+    %fieldset
+      -if Challenge.configs.any?
+        %legend Settings
+      - Challenge.configs.each do |config|
+        = f.label config do
+          = f.check_box config
+          = config.to_s.humanize
+      = f.submit("Issue Challenge", class:'btn')
