@@ -53,6 +53,9 @@
           %ul.nav.pull-right
             - if current_user
               %li
+                = link_to "Recent Games", games_path
+              %li.divider-vertical
+              %li
                 = link_to current_user do
                   Home
                   %span.badge.badge-info#input-count{:style => "display: none"}
