@@ -8,13 +8,13 @@
           .btn.dropdown-toggle{data: {toggle: "dropdown"}}
             %span.caret
           %ul.dropdown-menu.pull-right.js-select-opponent
-            - User.all.each do |user|
+            - User.except(current_user).each do |user|
               %li= link_to user.name, '#'
             :javascript
               $(function() {
                 //Typeahead
                 $('.js-opponent').typeahead({
-                  source: #{User.all.map(&:name).to_json}
+                  source: #{User.except(current_user).map(&:name).to_json}
                 })
                 // Dropdown
                 $('.js-select-opponent').find('a').click(function() {

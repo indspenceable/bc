@@ -12,9 +12,19 @@ class Challenge < ActiveRecord::Base
 
   belongs_to :receiving_user, class_name: "User", foreign_key: "to_id"
   belongs_to :issuing_user, class_name: "User", foreign_key: "from_id"
+  validates :receiving_user, presence: true
+  validates :issuing_user, presence: true
+  validate :no_challenge_between_same_two_users
+
+  def no_challenge_between_same_two_users
+    if Challenge.where(:to_id => receiving_user, from_id: issuing_user).exists? ||
+      Challenge.where(:from_id => receiving_user, to_id: issuing_user)
+      errors.add(:receiving_user, "already has an open challenge between with you.") if to_id
+    end
+  end
 
   def opponent
-    User.find(to_id).name if to_id
+    receiving_user.name rescue ""
   end
 
   def set_default_configs

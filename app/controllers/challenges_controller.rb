@@ -4,7 +4,6 @@ class ChallengesController < ApplicationController
   end
 
   def create
-
     challenge_params = params[:challenge]
     issuer = current_user
     reciever = User.find_by_name(challenge_params[:opponent])
@@ -13,8 +12,14 @@ class ChallengesController < ApplicationController
     @challenge = Challenge.new(params[:challenge])
     @challenge.issuing_user = issuer
     @challenge.receiving_user = reciever
-    @challenge.save!
-    redirect_to challenge_path(@challenge)
+
+    if @challenge.save
+      redirect_to challenge_path(@challenge)
+    else
+      flash[:error] = @challenge.errors.full_messages.join('<br>').html_safe
+      puts "@challenge.errors #{@challenge.errors}"
+      render new_challenge_path
+    end
   end
 
   def show
