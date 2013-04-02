@@ -17,6 +17,9 @@ class Challenge < ActiveRecord::Base
   validates :issuing_user, presence: true
   validate :no_challenge_between_same_two_users
 
+  scope :outgoing_by, ->(user) { where(:from_id => user.id) }
+  scope :incoming_for, ->(user) { where(:to_id => user.id) }
+
   def no_challenge_between_same_two_users
     return if inactive
     if Game.active_between(receiving_user.id, issuing_user.id)

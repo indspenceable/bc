@@ -11,6 +11,17 @@
           Audio chime when new input is required
         = f.submit("Update Settings", class:'btn')
 %table.table.table-striped.table-bordered.table-hover
+  -if @user == current_user
+    %tr
+      %th Incoming Challenges
+    - Challenge.outgoing_by(@user).order("created_at").each do |challenge|
+      %tr
+        %td= link_to "vs #{challenge.receiving_user.name}", challenge
+    %tr
+      %th Outgoing Challenges
+    - Challenge.incoming_for(@user).order("created_at").each do |challenge|
+      %tr
+        %td= link_to "vs #{challenge.issuing_user.name}", challenge
   %tr
     %th Current Games
   -Game.for_user(@user).active.order("created_at").each do |game|
