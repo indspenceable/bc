@@ -1,2 +1,17 @@
-%h1 Challenges#show
-%p Find me in app/views/challenges/show.html.haml
+.well
+  = form_for(@challenge) do |f|
+    %fieldset
+      %legend Challenge
+      .input-append
+        = f.text_field :opponent, class: 'js-opponent', placeholder: 'Opponent', disabled: true
+        .btn-group
+          .btn.dropdown-toggle.disabled{data: {toggle: "dropdown"}}
+            %span.caret
+    %fieldset
+      %legend Settings
+      - Challenge.configs.each do |config|
+        = f.label config do
+          = f.check_box config, disabled: true
+          = config.to_s.humanize
+      = f.submit("Accept Challenge", class:'btn')
+      = f.submit("Reject Challenge", class:'btn')
