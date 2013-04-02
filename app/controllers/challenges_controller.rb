@@ -27,7 +27,8 @@ class ChallengesController < ApplicationController
 
   def show
     @challenge = Challenge.find(params[:id])
-    unless current_user == @challenge.receiving_user
+    unless current_user == @challenge.receiving_user ||
+      current_user == @challenge.issuing_user
       flash[:error] = "You can't respond to that challenge."
       # return redirect_to user_path(current_user)
     end

@@ -2,11 +2,9 @@
   = form_for(@challenge) do |f|
     %fieldset
       %legend Challenge
-      .input-append
-        = f.text_field :issuer_name, class: 'js-opponent', placeholder: 'Opponent', disabled: true
-        .btn-group
-          .btn.dropdown-toggle.disabled{data: {toggle: "dropdown"}}
-            %span.caret
+      = f.text_field :issuer_name, class: 'js-opponent', placeholder: 'Opponent', disabled: true
+      Vs
+      = f.text_field :opponent, class: 'js-opponent', placeholder: 'Opponent', disabled: true
     %fieldset
       -if Challenge.configs.any?
         %legend Settings
