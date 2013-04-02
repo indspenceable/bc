@@ -6,16 +6,16 @@ class ChallengesController < ApplicationController
   def create
     challenge_params = params[:challenge]
     issuer = current_user
-    reciever = User.find_by_name(challenge_params[:opponent])
+    receiver = User.find_by_name(challenge_params[:opponent])
     challenge_params.delete(:opponent)
 
     @challenge = Challenge.new(params[:challenge])
     @challenge.issuing_user = issuer
-    @challenge.receiving_user = reciever
+    @challenge.receiving_user = receiver
 
     if @challenge.save
-      if receiving_user.email_notifications_enabled? && Rails.env.production?
-        UserMailer.challenge(receiving_user, issuing_user, challenge).deliver
+      if receiver.email_notifications_enabled? && Rails.env.production?
+        UserMailer.challenge(receiver, issuer, challenge).deliver
       end
       redirect_to challenge_path(@challenge)
     else
@@ -27,12 +27,16 @@ class ChallengesController < ApplicationController
 
   def show
     @challenge = Challenge.find(params[:id])
+    unless current_user == @challenge.receiving_user
+      flash[:error] = "You can't respond to that challenge."
+      # return redirect_to user_path(current_user)
+    end
   end
 
   def update
     @challenge = Challenge.find(params[:id])
     unless @challenge.receiving_user == current_user
-      # flash[:error] = "You can't respond to that challenge."
+      flash[:error] = "You can't respond to that challenge."
       # return redirect_to user_path(current_user)
     end
     if params[:commit] == "Accept Challenge"

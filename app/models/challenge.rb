@@ -18,14 +18,25 @@ class Challenge < ActiveRecord::Base
   validate :no_challenge_between_same_two_users
 
   def no_challenge_between_same_two_users
-    if Challenge.where(:to_id => receiving_user, from_id: issuing_user).exists? ||
-      Challenge.where(:from_id => receiving_user, to_id: issuing_user)
-      errors.add(:receiving_user, "already has an open challenge between with you.") if to_id
+    return if inactive
+    if Game.active_between(receiving_user.id, issuing_user.id)
+      errors.add(:receiving_user, "is in the middle of a game with you!")
+    end
+    if to_id
+      if Challenge.where(:to_id => receiving_user, from_id: issuing_user).exists?
+        errors.add(:receiving_user, "already has a challenge from you.")
+      end
+      if Challenge.where(:from_id => receiving_user, to_id: issuing_user).exists?
+        errors.add(:receiving_user, "has already issued a challenge to you.")
+      end
     end
   end
 
   def opponent
     receiving_user.name rescue ""
+  end
+  def issuer_name
+    issuing_user.name
   end
 
   def set_default_configs
@@ -51,6 +62,7 @@ class Challenge < ActiveRecord::Base
   end
 
   def build_game_and_mark_inactive!
+    return if inactive
     game = Game.new
     game.p0 = issuing_user
     game.p1 = receiving_user
