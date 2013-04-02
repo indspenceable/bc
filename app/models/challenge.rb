@@ -1,7 +1,8 @@
 class Challenge < ActiveRecord::Base
   # All of the configs!
   def self.configs
-    [:allow_mirror_matches, :use_finishers, :use_special_actions, :real_time]
+    # [:allow_mirror_matches, :use_finishers, :use_special_actions, :real_time]
+    []
   end
 
   attr_accessible :configs, :from_id, :to_id
