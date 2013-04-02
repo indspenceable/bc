@@ -1,14 +1,14 @@
 %table.table.table-striped.table-bordered.table-hover
-  %tr
-    %th
-      .btn-group
-        %a.btn.dropdown-toggle{'data-toggle' => 'dropdown', href: '#'}
-          Challenge
-          %span.caret
-        %ul.dropdown-menu
-          - User.except(current_user).each do |user|
-            %li
-              = link_to user.name, challenge_path(opponent_id: user.id)
+  / %tr
+  /   %th
+  /     .btn-group
+  /       %a.btn.dropdown-toggle{'data-toggle' => 'dropdown', href: '#'}
+  /         Challenge
+  /         %span.caret
+  /       %ul.dropdown-menu
+  /         - User.except(current_user).each do |user|
+  /           %li
+  /             = link_to user.name, challenge_path(opponent_id: user.id)
   %tr
     %th Active Games
   -Game.active.order("created_at").reject(&:check_timeout!).each do |game|

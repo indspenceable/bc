@@ -1,16 +1,18 @@
-- if @user == current_user
-  .well
-    = form_for(@user) do |f|
-      %fieldset
-        %legend Settings
-        = f.label :email_notifications_enabled do
-          = f.check_box :email_notifications_enabled
-          Email notification on challenge
-        = f.label :chime_enabled do
-          = f.check_box :chime_enabled
-          Audio chime when new input is required
-        = f.submit("Update Settings", class:'btn')
+%h3= @user.name
 %table.table.table-striped.table-bordered.table-hover
+  -if @user == current_user
+    - if Challenge.incoming_for(@user).order("created_at").any?
+      %tr
+        %th Incoming Challenges
+      - Challenge.incoming_for(@user).order("created_at").each do |challenge|
+        %tr
+          %td= link_to "From #{challenge.issuing_user.name}", challenge
+    - if Challenge.outgoing_by(@user).order("created_at").any?
+      %tr
+        %th Outgoing Challenges
+      - Challenge.outgoing_by(@user).order("created_at").each do |challenge|
+        %tr
+          %td= link_to "To #{challenge.receiving_user.name}", challenge
   %tr
     %th Current Games
   -Game.for_user(@user).active.order("created_at").each do |game|
@@ -23,10 +25,22 @@
 
   %tr
     %th Recent Games
-  -Game.for_user(@user).inactive.order("updated_at DESC").each do |game|
+  -Game.for_user(@user).inactive.order("updated_at DESC").limit(20).each do |game|
     %tr
       %td
         - begin
           = game_string(game)
         - rescue
           .label.label-warning Invalid Game.
+- if @user == current_user
+  .well
+    = form_for(@user) do |f|
+      %fieldset
+        %legend Settings
+        = f.label :email_notifications_enabled do
+          = f.check_box :email_notifications_enabled
+          Email notification on challenge
+        = f.label :chime_enabled do
+          = f.check_box :chime_enabled
+          Audio chime when new input is required
+        = f.submit("Update Settings", class:'btn')
