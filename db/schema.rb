@@ -16,9 +16,10 @@ ActiveRecord::Schema.define(:version => 20130402030329) do
   create_table "challenges", :force => true do |t|
     t.integer  "from_id"
     t.integer  "to_id"
+    t.boolean  "inactive",   :default => true
     t.text     "configs"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
   end
 
   create_table "games", :force => true do |t|

@@ -4,12 +4,16 @@ class ChallengesController < ApplicationController
   end
 
   def create
+
     challenge_params = params[:challenge]
-    challenge_params[:from_id] = current_user.id
-    challenge_params[:to_id] = User.find_by_name(challenge_params[:opponent]).id
+    issuer = current_user
+    reciever = User.find_by_name(challenge_params[:opponent])
     challenge_params.delete(:opponent)
+
     @challenge = Challenge.new(params[:challenge])
-    @challenge.save
+    @challenge.issuing_user = issuer
+    @challenge.receiving_user = reciever
+    @challenge.save!
     redirect_to challenge_path(@challenge)
   end
 
@@ -18,6 +22,22 @@ class ChallengesController < ApplicationController
   end
 
   def update
-    raise "DERP"
+    @challenge = Challenge.find(params[:id])
+    unless @challenge.receiving_user == current_user
+      # flash[:error] = "You can't respond to that challenge."
+      # return redirect_to user_path(current_user)
+    end
+    if params[:commit] == "Accept Challenge"
+      return redirect_to @challenge.build_game_and_mark_inactive!
+
+    elsif params[:commit] == "Reject Challenge"
+      flash[:notice] = "Challenge rejected."
+      @challenge.inactive = true
+      @challenge.save!
+      return redirect_to user_path(current_user)
+    else
+      flash[:error] = "Unrecognized response."
+      return redirect_to challenge_path(@challenge)
+    end
   end
 end

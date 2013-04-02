@@ -8,6 +8,10 @@ class Challenge < ActiveRecord::Base
   attr_accessible *self.configs
   serialize :configs, Hash
   after_initialize :set_default_configs
+  default_scope where(:inactive => false)
+
+  belongs_to :receiving_user, class_name: "User", foreign_key: "to_id"
+  belongs_to :issuing_user, class_name: "User", foreign_key: "from_id"
 
   def opponent
     User.find(to_id).name if to_id
@@ -33,6 +37,18 @@ class Challenge < ActiveRecord::Base
     define_method("#{config}=") do |v|
       self.configs[config] = v
     end
+  end
+
+  def build_game_and_mark_inactive!
+    game = Game.new
+    game.p0 = issuing_user
+    game.p1 = receiving_user
+    game.inputs = []
+    game.configs = configs
+    game.save!
+    self.inactive = true
+    save!
+    game
   end
 
 end
