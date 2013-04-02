@@ -3,7 +3,7 @@
     %fieldset
       %legend Challenge
       .input-append
-        = f.text_field :opponent, class: 'js-opponent', placeholder: 'Opponent'
+        = f.text_field :opponent, class: 'js-opponent', placeholder: 'Opponent', autocomplete: 'off'
         .btn-group
           .btn.dropdown-toggle{data: {toggle: "dropdown"}}
             %span.caret
