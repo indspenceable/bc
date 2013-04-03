@@ -108,8 +108,8 @@ class GamePlay
     @players
   end
 
-  def initialize(starting_player, player_names, inputs=[], idx=nil)
-    @starting_player = starting_player
+  def initialize(configs, player_names, inputs=[], idx=nil)
+    @configs = configs
     @player_names = player_names
     @valid_inputs_thus_far = inputs
     setup_game!(@valid_inputs_thus_far, idx)
@@ -128,7 +128,7 @@ class GamePlay
       0 => 1,
       1 => 5
     }
-    @last_active_player_id = @starting_player
+    @last_active_player_id = @configs[:starting_player]
     @active = true
     cause, winner = catch :halt do
       play_15_turns!
@@ -263,14 +263,28 @@ class GamePlay
 
   # phases of the game
   def select_characters!
+    remaining_character_names = GamePlay.character_names
     #character selection
-    @input_manager.require_multi_input!(
-      [["select_character", "Please select your character."], ->(text) { GamePlay.character_names.include?(text) }],
-      [["select_character", "Please select your character."], ->(text) { GamePlay.character_names.include?(text) }],
-    )
 
-    @events.log!("#{@player_names[0]} chooses: #{@input_manager.answer(0)}")
-    @events.log!("#{@player_names[1]} chooses: #{@input_manager.answer(1)}")
+    while true
+
+      input_str = "select_character:#{remaining_character_names.map{|s|"<#{s}>"}.join('')}"
+      @input_manager.require_multi_input!(
+        [[input_str, "Please select your character."], ->(text) { remaining_character_names.include?(text) }],
+        [[input_str, "Please select your character."], ->(text) { remaining_character_names.include?(text) }],
+      )
+
+      @events.log!("#{@player_names[0]} chooses: #{@input_manager.answer(0)}")
+      @events.log!("#{@player_names[1]} chooses: #{@input_manager.answer(1)}")
+
+      break unless @configs[:ban_mirror_matches] && (@input_manager.answer(0)==@input_manager.answer(1))
+      remaining_character_names.delete(@input_manager.answer(0))
+      @events.log!("Mirror matches are banned. Repick!")
+      if remaining_character_names.empty?
+        @events.log!("Wow, you guys picked the same characters every time. Refilling the character list.")
+        remaining_character_names = GamePlay.character_names if remaining_character_names.empty?
+      end
+    end
 
     @players = [nil, nil]
     @players[0] = GamePlay.character_list[

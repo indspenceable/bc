@@ -43,10 +43,15 @@ describe GamePlay do
     GamePlay.character_names.each do |c2|
       it "doesn't raise errors when you give valid input in a #{c1} #{c2} game." do
         COUNT.times do |i|
-          g = GamePlay.new(i%2, ['p0', 'p1'])
+          configs = {
+            starting_player: i%2,
+            ban_mirror_matches: rand(2) == 0 && c1 != c2
+          }
+          g = GamePlay.new(configs, ['p0', 'p1'])
 
           g.input!(0, c1)
           g.input!(1, c2)
+
           p0 = g.instance_variable_get(:@players)[0]
           p1 = g.instance_variable_get(:@players)[1]
 

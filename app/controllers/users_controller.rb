@@ -1,11 +1,11 @@
 class UsersController < LoggedInController
   def show
-    @user = User.find(params[:id])
+    @user = User.from_param(params[:id])
     # return redirect_to :landing unless @user == current_user
   end
 
   def update
-    @user = User.find(params[:id])
+    @user = User.from_param(params[:id])
     return redirect_to :landing unless @user == current_user
     respond_to do |format|
       if @user.update_attributes(params[:user])

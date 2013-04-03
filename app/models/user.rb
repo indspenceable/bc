@@ -6,6 +6,13 @@ class User < ActiveRecord::Base
   validates :name, uniqueness: true, presence: true
   validates :email, uniqueness: true, presence: true
 
+  def to_param
+    name
+  end
+  def self.from_param v
+    find_by_name(v)
+  end
+
   scope :except, ->(user) { where('NOT id = ?', user.id) }
   def games
     Game.where("p0_id = ? OR p1_id = ?", self.id, self.id)
