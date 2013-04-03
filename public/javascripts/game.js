@@ -164,8 +164,14 @@ var init = function(player_id, game_id, chimeEnabled) {
     }[str] || str)
   }
 
-  var chooseCharacter = function() {
+  var chooseCharacter = function(question) {
     $('.js-in-game').hide()
+    var matches = question.match(/<[^>]*>/g)
+    $('.js-choose-character').find('.char-button').hide()
+    for (var i in matches) {
+      var currentMatch = matches[i].substring(1, matches[i].length-1)
+      $('.js-choose-character').find('.char-button.' + currentMatch).show()
+    }
     $('.js-choose-character').show()
   }
   var selectAttackPair = function() {
@@ -234,8 +240,8 @@ var init = function(player_id, game_id, chimeEnabled) {
       selectAttackPair()
     } else if (/^select_base/.test(question)) {
       selectBase()
-    } else if (question == "select_character") {
-      chooseCharacter()
+    } else if (/^select_character:/.test(question)) {
+      chooseCharacter(question)
     } else if (question == "ante") {
       freeFormInput()
     } else if (/^select_from/.test(question)) {

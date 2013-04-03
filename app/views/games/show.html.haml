@@ -29,7 +29,7 @@
   .row
     .span12
       - GamePlay.character_names.each do |name|
-        %a.btn{charactername: name}
+        %a.btn.char-button{class: name, charactername: name}
           %div
             = image_tag "/images/character_icons/#{name}.png", :style => "height: 100px"
           = name

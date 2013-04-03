@@ -2,7 +2,7 @@ class Challenge < ActiveRecord::Base
   # All of the configs!
   def self.configs
     # [:allow_mirror_matches, :use_finishers, :use_special_actions, :real_time]
-    []
+    [:ban_mirror_matches]
   end
 
   attr_accessible :configs, :from_id, :to_id
@@ -48,7 +48,7 @@ class Challenge < ActiveRecord::Base
 
   def self.default_configs
     {
-      allow_mirror_matches: true,
+      ban_mirror_matches: false,
       real_time: false,
       use_finishers: true,
       use_special_actions: true
