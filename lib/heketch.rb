@@ -314,7 +314,7 @@ class Heketch < Character
 
   def heal_half_damage!
     life_to_gain = (@damage_dealt_this_attack - (@damage_dealt_this_attack/2))
-    log_me!("Gained #{life_to_gain}")
-    @life += life_to_gain
+    # log_me!("Gained #{life_to_gain}")
+    gain_life!(life_to_gain)
   end
 end
