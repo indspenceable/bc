@@ -17,10 +17,10 @@ class Game < ActiveRecord::Base
   scope :for_user, ->(user) { Game.where('p0_id = ? OR p1_id = ?', user.id, user.id) }
 
   def play(idx=nil)
-    GamePlay.new(configs[:starting_player], [p0.name, p1.name], inputs, idx)
+    GamePlay.new(configs, [p0.name, p1.name], inputs, idx)
   end
   def input_and_save!(player_id, action)
-    g = GamePlay.new(configs[:starting_player], [p0.name, p1.name], inputs)
+    g = GamePlay.new(configs, [p0.name, p1.name], inputs)
     # CANCEL BUTTON
     if action == "undo"
       if g.can_undo?(player_id) && g.active?

@@ -107,8 +107,8 @@ class GamePlay
     @players
   end
 
-  def initialize(starting_player, player_names, inputs=[], idx=nil)
-    @starting_player = starting_player
+  def initialize(configs, player_names, inputs=[], idx=nil)
+    @configs = configs
     @player_names = player_names
     @valid_inputs_thus_far = inputs
     setup_game!(@valid_inputs_thus_far, idx)
@@ -127,7 +127,7 @@ class GamePlay
       0 => 1,
       1 => 5
     }
-    @last_active_player_id = @starting_player
+    @last_active_player_id = @configs[:starting_player]
     @active = true
     cause, winner = catch :halt do
       play_15_turns!
