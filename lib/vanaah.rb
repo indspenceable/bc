@@ -80,7 +80,7 @@ class Scythe < Base
     {
       # advance 1
       "advance" => ->(me, inputs) {
-        select_from_methods(advance: [0]).call(me, inputs)
+        select_from_methods(advance: [1]).call(me, inputs)
       }
     }
   end
