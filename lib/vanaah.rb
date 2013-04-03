@@ -50,9 +50,7 @@ class Glorious < Style
   def before_activating!
     {
       #advance 0-1
-      "advance" => ->(me, inputs) {
-        select_from_methods(advance: [0, 1]).call(me, inputs)
-      }
+      "advance" => select_from_methods(advance: [0, 1])
     }
   end
 
@@ -79,17 +77,13 @@ class Scythe < Base
   def before_activating!
     {
       # advance 1
-      "advance" => ->(me, inputs) {
-        select_from_methods(advance: [1]).call(me, inputs)
-      }
+      "advance" => select_from_methods(advance: [1])
     }
   end
   def on_hit!
     {
       # pull 0-1
-      "pull" => ->(me, inputs) {
-        select_from_methods(pull: [0,1]).call(me, inputs)
-      }
+      "pull" => select_from_methods(pull: [0,1])
     }
   end
 end
@@ -99,7 +93,7 @@ class DivineRush < Token
     super("divinerush", 0, 2, 2)
   end
   def effect
-    "+2 power, +2 priority" 
+    "+2 power, +2 priority"
   end
 end
 
@@ -148,9 +142,7 @@ class HandOfDivinity < Finisher
   def on_hit!
     {
       # advance any number of spaces (5 is the max that could ever be advanced)
-      "advance" => ->(me, inputs) {
-        select_from_methods(advance: 0..5).call(me, inputs)
-      }
+      "advance" => select_from_methods(advance: 0..5)
     }
   end
 end
@@ -242,9 +234,9 @@ class Vanaah < Character
     else
       []
     end
-  end    
+  end
 
-  def character_specific_effect_sources  
+  def character_specific_effect_sources
     @token_discard
   end
 
