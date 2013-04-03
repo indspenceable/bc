@@ -80,7 +80,7 @@ class Scythe < Base
     {
       # advance 1
       "advance" => ->(me, inputs) {
-        me.advance!(1) if me.advance?(1)
+        select_from_methods(advance: [0]).call(me, inputs)
       }
     }
   end
@@ -176,7 +176,7 @@ class Vanaah < Character
     @token_pool = [
       DivineRush.new
     ]
-    @forced_token_discard = []
+    @token_bonuses = []
     @token_discard = []
     # For timing the recycle of the death walks -4 priority token
     @death_walks_penalty_timeout = 1
@@ -206,12 +206,13 @@ class Vanaah < Character
     token = @token_pool.find{ |token| token.name == choice }
     log_me!("antes #{token.name} #{token.effect}")
     @token_discard << token
+    @token_bonuses << token
     @token_pool.delete_if{ |token| token.name == choice }
   end
 
   def discard_token!(choice)
     token_to_discard = @token_pool.find{ |token| token.name == choice }
-    @forced_token_discard << token_to_discard
+    @token_discard << token_to_discard
     log_me!("discards #{token_to_discard.name}")
     @token_pool.delete(token_to_discard)
   end
@@ -235,6 +236,14 @@ class Vanaah < Character
     super
   end
 
+  def blocked_spaces(direct_movement)
+    if base_flag?(:judgment_paralysis)
+      (0..6).to_a
+    else
+      []
+    end
+  end    
+
   def character_specific_effect_sources  
     @token_discard
   end
@@ -242,14 +251,14 @@ class Vanaah < Character
   def opponent_effect_sources
     arr = []
     arr << @death_walks_penalty unless @death_walks_penalty.nil?
-    arr << @judgment_paralysis if (base_effect_sources.any?{|s| s.flag? :judgment_paralysis})
+    arr << @judgment_paralysis if base_flag?(:judgment_paralysis)
     super + arr
   end
 
   def current_opponent_effects_descriptors
     rtn = []
     rtn << {title: "Death Walks Penalty", content: "-4 priority"} unless @death_walks_penalty.nil?
-    rtn << {title: "Judgment Movement Restriction", content: "Cannot move this beat"} if (base_effect_sources.any?{|s| s.flag? :judgment_paralysis})
+    rtn << {title: "Judgment Movement Restriction", content: "Cannot move this beat"} if base_flag?(:judgment_paralysis)
     rtn + super
   end
 
@@ -267,9 +276,7 @@ class Vanaah < Character
     unless @token_discard.empty?
       @discard1 << @token_discard.pop
     end
-    unless @forced_token_discard.empty?
-      @discard1 << @forced_token_discard.pop
-    end
+    @token_bonuses = []
     # Death Walks penalty lasts 1 turn
     if @death_walks_penalty_timeout == 0
       @death_walks_penalty = nil
