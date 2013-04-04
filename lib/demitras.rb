@@ -120,6 +120,7 @@ class Demitras < Character
     @number_of_tokens_in_pool = 2  
   end
 
+
   def ante?(choice)
     return true if choice == "pass"
     return true if super
