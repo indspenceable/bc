@@ -506,7 +506,7 @@ class Character
       @position += n
     end
     #TODO - this looks like a bug.
-    log_me!("retreats #{n_s} to space #{@position + 1}") if log_event
+    log_me!("retreats #{n_s} to space #{@position}") if log_event
   end
 
   def pull?(n)
