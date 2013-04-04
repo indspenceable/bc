@@ -138,7 +138,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     // Vanaah
     reaping: makeCard("0~1", 0, 1, {"On Hit": "Opponent discards a token. If he cannot, then regain Divine Rush."}),
     judgment: makeCard("0~1", 1, -1, {"The nearest opponent cannot move this beat.": undefined}),
-    paladin: makeCard("0~1", 1, -2, {"End of Beat": "Move directly to a space adjacent to an opponent."}),
+    paladin: makeCard("0~1", 1, -2, {"Stun Guard": 3, "End of Beat": "Move directly to a space adjacent to an opponent."}),
     glorious: makeCard(0, 2, 0, {"Before Activating": "Advance up to 1 space.", "This attack cannot hit foes with higher priority.": undefined}),
     vengeance: makeCard(0, 2, 0, {"Stun Guard": 4, "This attack cannot hit foes with lower priority.": undefined}),
     scythe: makeCard("1~2", 3, 3, {"Before Activating": "Advance 1 space.", "On Hit": "Pull opponent up to 1 space."}),
