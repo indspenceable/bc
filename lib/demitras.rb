@@ -73,6 +73,15 @@ class CrescendoPoolEffect < Token
   end
 end
 
+class PrioBonusFromTokenPool < Token
+  def initialize amt
+    super("tokenpoolbonus", 0, 0, amt)
+  end
+  def effect
+    "Passive +#{@priority} priority bonus from token pool."
+  end
+end
+
 class SymphonyOfDemise < Finisher
   def initialize
     super("symphonyofdemise", 1, 0, 9)
@@ -96,8 +105,9 @@ class Demitras < Character
 	  Jousting.new,
 	  Vapid.new
 	  ]
-    #Available Tokens
-    @token_pool = [Crescendo.new, Crescendo.new]
+    # of Available Tokens
+    @number_of_tokens_in_pool = 2
+
   end
 
 
@@ -107,14 +117,12 @@ class Demitras < Character
 
   def recycle!
     super
-    @token_discard += @current_tokens
-    @current_tokens = []
+    @number_of_tokens_in_pool = 2  
   end
 
   def ante?(choice)
     return true if choice == "pass"
     return true if super
-    @token_pool.any?{ |token| (token.name == choice) }
   end
 
   def finishers
@@ -129,7 +137,7 @@ class Demitras < Character
 
   def character_specific_effect_sources
     sources = []
-    sources += @current_tokens
+    sources << PrioBonusFromTokenPool.new(@number_of_tokens_in_pool)
     sources
   end
 
