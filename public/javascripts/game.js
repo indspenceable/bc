@@ -38,7 +38,7 @@ var init = function(player_id, game_id, chimeEnabled) {
 
   var cardDefinitions = {
     emptyCard: makeCard('', '', '', {}),
-    specialaction: makeCard("N/A", "N/A", "N/A", {"Pulse": "when paired with Dash, Burst", "Cancel": "when paired with anything else."}),
+    specialaction: makeCard("N/A", "N/A", "N/A", {"Pulse": "(When paired with Dash, Burst.) Your opponent plays their cards as though they were blank, and no effects trigger this beat. Push your opponent any number of spaces, then retreat any number of spaces. End of Beat character UAs don't happen.", "Cancel": "(when paired Grasp, Drive, Strike, Shot, your character-unique base) Before reveal effects trigger, choose a new attackpair. If both players chose this special action, do it simultaniously. You will not get another chance to ante. Resolve this choice even if your opponent plays a pulse."}),
 
     dash: makeCard("N/A", "N/A", 9, {"After Activating": "Move 1, 2, or 3 spaces. If you switch sides with an opponent, they cannot hit you this turn."}),
     grasp: makeCard(1, 2, 5, {"On Hit": "Move opponent 1 space."}),
