@@ -631,6 +631,7 @@ class Character
   def lose_life!(n)
     log_me!("loses #{n} life.")
     @life -= n
+    @life = 1 if @life < 1
   end
   def gain_life!(n)
     log_me!("gains #{n} life.")
