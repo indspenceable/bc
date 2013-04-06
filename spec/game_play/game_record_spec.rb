@@ -9,7 +9,7 @@ describe GamePlay do
     it "Should successfully play this game." do
       configs, orders =  g
       Game
-      gp = GamePlay.new(configs[:starting_player], %w(a b))
+      gp = GamePlay.new(configs, %w(a b))
       orders.each do |pl, order|
         gp.input!(pl, order)
         [nil, 0, 1].each{|i| gp.game_state(i)}
