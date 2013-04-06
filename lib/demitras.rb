@@ -14,6 +14,9 @@ class DarkSide < Style
   def initialize
     super("darkside", 0, -2, 1)
   end
+
+  flag :darksidedodge
+
   def on_hit!
     {
       'retreat' => select_from_methods("You may retreat to any space", retreat: [0,1,2,3,4,5,6])
@@ -49,6 +52,11 @@ end
 class Vapid	 < Style
   def initialize
     super("vapid", (0..1), -1, 0)
+  end
+  def on_hit!
+    {
+      'stun_slow_opponent' => -> {opponent.stunned! if opponent.priority <= 3}
+    }
   end
 end
 
@@ -113,6 +121,11 @@ class Demitras < Character
 
   def self.character_name
   	'demitras'
+  end
+
+  def dodges?
+    return true if super
+    return (distance > 3) if flag? :darksidedodge
   end
 
   def recycle!
