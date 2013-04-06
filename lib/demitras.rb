@@ -53,25 +53,17 @@ class Vapid	 < Style
   def initialize
     super("vapid", (0..1), -1, 0)
   end
+
   def on_hit!
     {
-      'stun_slow_opponent' => -> {opponent.stunned! if opponent.priority <= 3}
+      'stun_slow_opponent' => ->(me, inputs) { me.stun_slow_opponent}
     }
-  end
+  end 
 end
 
 class DeathBlow	 < Base
   def initialize
   	super("deathblow", 1, 0, 8)
-  end
-end
-
-class Crescendo < Token
-  def initialize
-  	super("crescendo", 0, 2, 0)
-  end
-  def effect
-  	"+1 priority per token in pool. Ante for +2 power for each token anted"
   end
 end
 
@@ -83,10 +75,19 @@ end
 
 class PrioBonusFromTokenPool < Token
   def initialize amt
-    super("tokenpoolbonus", 0, 0, amt)
+    super("Crescendo Priority Bonus", 0, 0, amt)
   end
   def effect
-    "Passive +#{@priority} priority bonus from token pool."
+    "Passive +#{@priority} priority bonus from Crescendo Tokens in pool."
+  end
+end
+
+class Crescendo < Token
+  def initialize amt
+    super("tokenpoolbonus", 0, amt * 2, 0)
+  end
+  def effect
+    "Ante for +2 power per token."
   end
 end
 
@@ -149,11 +150,13 @@ class Demitras < Character
     end
   end
 
+  def stun_slow_opponent
+     opponent.stunned! if opponent.priority <= 3
+  end
+
   def character_specific_effect_sources
     sources = []
     sources << PrioBonusFromTokenPool.new(@number_of_tokens_in_pool)
     sources
   end
-
-
 end
