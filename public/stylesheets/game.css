@@ -2,9 +2,16 @@
   /*background-color: #ccc;*/
 }
 .space {
-  text-align: center;
   margin-bottom: 5px;
 }
+.space:before    {position: absolute;}
+.space.s0:hover:before {content: "0"; color: #aaa;}
+.space.s1:hover:before {content: "1"; color: #aaa;}
+.space.s2:hover:before {content: "2"; color: #aaa;}
+.space.s3:hover:before {content: "3"; color: #aaa;}
+.space.s4:hover:before {content: "4"; color: #aaa;}
+.space.s5:hover:before {content: "5"; color: #aaa;}
+.space.s6:hover:before {content: "6"; color: #aaa;}
 
 .space.clickToMove {
   cursor: pointer;

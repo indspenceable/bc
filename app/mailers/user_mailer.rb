@@ -4,10 +4,10 @@ end
 
 class UserMailer < ActionMailer::Base
   default from: "#{ENV['GMAIL_USERNAME']}@gmail.com"
-  def challenge(user, challenger, game)
+  def challenge(user, challenger, challenge)
     @user = user
     @challenger = challenger
-    @game = game
+    @challenge = challenge
     mail(:to => user.email,
          :subject => "You've been issued a challenge!") do |format|
       format.html

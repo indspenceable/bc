@@ -33,12 +33,13 @@ var init = function(player_id, game_id, chimeEnabled) {
     zaamassal: "Zaamassal has 5 paradigms he can assume, according to his styles and unique base. Each paradigm has it's own benefits. Every time he assumes a paradigm, he loses his current paradigm. If Zaamassal gets stunned, he loses his current paradigm.",
     hepzibah: "Hepzibah can ante her 5 Dark Force tokens each round to gain bonuses, but she loses one life per token anted.",
     kehrolyn: "Each beat, Kehrolyn applies the style in her discard1 to her current attackpair.",
-    demitras: "Demitras begins with 2 Crescendo Tokens, he has +1 priority for each token in this pool, and may ante any number of these tokens for +2 power each. whenever he is hit by an opponent's attack, he loses 1 Crescendo token. Whenever he hits an opponent, he gains one token, up to a maximum of 5"
+    demitras: "Demitras begins with 2 Crescendo Tokens, he has +1 priority for each token in this pool, and may ante any number of these tokens for +2 power each. whenever he is hit by an opponent's attack, he loses 1 Crescendo token. Whenever he hits an opponent, he gains one token, up to a maximum of 5",
+    vanaah: "Vanaah has a Divine Rush token that she can ante to gain +2 power and +2 priority. After using the token, the token is discarded with the attack pair and is returned with the attack pair after two beats."
   }
 
   var cardDefinitions = {
     emptyCard: makeCard('', '', '', {}),
-    specialaction: makeCard("N/A", "N/A", "N/A", {"Pulse": "when paired with Dash, Burst", "Cancel": "when paired with anything else."}),
+    specialaction: makeCard("N/A", "N/A", "N/A", {"Pulse": "(When paired with Dash, Burst.) Your opponent plays their cards as though they were blank, and no effects trigger this beat. Push your opponent any number of spaces, then retreat any number of spaces. End of Beat character UAs don't happen.", "Cancel": "(when paired Grasp, Drive, Strike, Shot, your character-unique base) Before reveal effects trigger, choose a new attackpair. If both players chose this special action, do it simultaniously. You will not get another chance to ante. Resolve this choice even if your opponent plays a pulse."}),
 
     dash: makeCard("N/A", "N/A", 9, {"After Activating": "Move 1, 2, or 3 spaces. If you switch sides with an opponent, they cannot hit you this turn."}),
     grasp: makeCard(1, 2, 5, {"On Hit": "Move opponent 1 space."}),
@@ -113,7 +114,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     openthegate: makeCard("1~2", 3, 7, {"On Hit": "Opponent is stunend. Zaamassal may assume 3 paradigms."}),
     planardivider: makeCard(1, 2, 5, {"Before Activating": "Move to any unoccupied space.", "On Hit": "Move the opponent to any unoccupied space. +1 Power for each space between you and the opponent. Assume any paradigm."}),
 
-    //Hepz
+    // Hepz
     anathema: makeCard(0, -1, -1, {"+1 power, +1 priority for each token you anted this beat (max: 3).": undefined}),
     darkheart: makeCard(0, 0, -1, {"On Hit": "Gain 2 life. The opponent must discard a token, if they have any."}),
     pactbond: makeCard(0, 0, -1, {"Reveal": "Gain life equal to the number of tokens you anted this beat (max: 2).", "End of Beat": "Choose a token to ante for free next turn."}),
@@ -145,8 +146,20 @@ var init = function(player_id, game_id, chimeEnabled) {
 
     symphonyofdemise:makeCard(1,0,9,{"Before Activating" : "Move forward up to 4 spaces.", "On Hit" : "Gain Crescendo Tokens until you have 5."}),
     accelerando:makeCard(2, 2, 4, {"Ignores stun guard": undefined, "Before Activating": "Advance any number of spaces.", "On Hit": "Discard any number of tokens for +2 power each."})
+
+    // Vanaah
+    reaping: makeCard("0~1", 0, 1, {"On Hit": "Opponent discards a token. If he cannot, then regain Divine Rush."}),
+    judgment: makeCard("0~1", 1, -1, {"The nearest opponent cannot move this beat.": undefined}),
+    paladin: makeCard("0~1", 1, -2, {"Stun Guard": 3, "End of Beat": "Move directly to a space adjacent to an opponent."}),
+    glorious: makeCard(0, 2, 0, {"Before Activating": "Advance up to 1 space.", "This attack cannot hit foes with higher priority.": undefined}),
+    vengeance: makeCard(0, 2, 0, {"Stun Guard": 4, "This attack cannot hit foes with lower priority.": undefined}),
+    scythe: makeCard("1~2", 3, 3, {"Before Activating": "Advance 1 space.", "On Hit": "Pull opponent up to 1 space."}),
+    divinerush: makeCard(0, 2, 2, {"Token": undefined}),
+
+    deathwalks: makeCard("1~2", 5, 6, {"On Hit": "Stuns the opponent. The opponent has -4 priority next beat."}),
+    handofdivinity: makeCard(5, 7, 3, {"On Hit": "Advance any number of spaces.", "Soak": 3})
   }
-  
+
   var loadCard = function(cardName, $card, overrideCardName) {
     $card.find('.name').text(overrideCardName || capitaliseFirstLetter(cardName))
     $card.find('.effects').empty()
@@ -176,8 +189,14 @@ var init = function(player_id, game_id, chimeEnabled) {
     }[str] || str)
   }
 
-  var chooseCharacter = function() {
+  var chooseCharacter = function(question) {
     $('.js-in-game').hide()
+    var matches = question.match(/<[^>]*>/g)
+    $('.js-choose-character').find('.char-button').hide()
+    for (var i in matches) {
+      var currentMatch = matches[i].substring(1, matches[i].length-1)
+      $('.js-choose-character').find('.char-button.' + currentMatch).show()
+    }
     $('.js-choose-character').show()
   }
   var selectAttackPair = function() {
@@ -246,8 +265,8 @@ var init = function(player_id, game_id, chimeEnabled) {
       selectAttackPair()
     } else if (/^select_base/.test(question)) {
       selectBase()
-    } else if (question == "select_character") {
-      chooseCharacter()
+    } else if (/^select_character:/.test(question)) {
+      chooseCharacter(question)
     } else if (question == "ante") {
       freeFormInput()
     } else if (/^select_from/.test(question)) {

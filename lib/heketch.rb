@@ -264,9 +264,9 @@ class Heketch < Character
     @merciless_dodge = has_dark_force?
   end
 
-  def blocked_spaces
+  def blocked_spaces(direct_movement)
     return (0..6).to_a if (@stop_all_opponent_movement || @merciless_stop_movement)
-    []
+    super
   end
 
   def recycle!
@@ -314,7 +314,7 @@ class Heketch < Character
 
   def heal_half_damage!
     life_to_gain = (@damage_dealt_this_attack - (@damage_dealt_this_attack/2))
-    log_me!("Gained #{life_to_gain}")
-    @life += life_to_gain
+    # log_me!("Gained #{life_to_gain}")
+    gain_life!(life_to_gain)
   end
 end

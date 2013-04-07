@@ -1,5 +1,9 @@
 ---
-- - 1
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
   - - - 0
       - hikaru
     - - 1
@@ -142,7 +146,11 @@
       - ante#wind
     - - 0
       - '3'
-- - 1
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
   - - - 0
       - rukyuk
     - - 1
@@ -285,7 +293,11 @@
       - extra_range#apshell
     - - 0
       - '2'
-- - 1
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
   - - - 1
       - zaamassal
     - - 0
@@ -344,7 +356,185 @@
       - '4'
     - - 1
       - sturdy_drive
-- - 0
+    - - 0
+      - hunters_grasp
+    - - 1
+      - fluidity_movement
+    - - 1
+      - '3'
+    - - 1
+      - '1'
+    - - 1
+      - assume_paradigm#resilience
+    - - 1
+      - urgent_strike
+    - - 0
+      - evacuation_dash
+    - - 0
+      - '5'
+    - - 1
+      - '2'
+    - - 1
+      - urgent_assume_haste
+    - - 1
+      - assume_paradigm#haste
+    - - 1
+      - warped_burst
+    - - 0
+      - blight_strike
+    - - 0
+      - '3'
+    - - 1
+      - burst_retreat
+    - - 1
+      - '0'
+    - - 1
+      - assume_paradigm#distortion
+    - - 1
+      - sinuous_drive
+    - - 0
+      - teleport_shot
+    - - 1
+      - '1'
+    - - 1
+      - assume_paradigm#pass
+    - - 1
+      - '3'
+    - - 0
+      - '4'
+    - - 0
+      - '2'
+    - - 0
+      - lure_burst
+    - - 1
+      - urgent_dash
+    - - 0
+      - '6'
+    - - 1
+      - '4'
+    - - 1
+      - dash_move
+    - - 1
+      - '5'
+    - - 1
+      - assume_paradigm#haste
+    - - 1
+      - malicious_strike
+    - - 0
+      - blight_grasp
+    - - 0
+      - '4'
+    - - 1
+      - assume_paradigm#pass
+    - - 1
+      - warped_burst
+    - - 0
+      - teleport_drive
+    - - 1
+      - burst_retreat
+    - - 1
+      - '2'
+    - - 0
+      - '4'
+    - - 0
+      - '4'
+    - - 0
+      - '5'
+    - - 1
+      - urgent_paradigmshift
+    - - 0
+      - lure_burst
+    - - 1
+      - ante#pass
+    - - 0
+      - '6'
+    - - 1
+      - paradigmshift_select_paradigm
+    - - 1
+      - assume_paradigm#fluidity
+    - - 1
+      - fluidity_movement
+    - - 1
+      - '2'
+    - - 1
+      - '3'
+    - - 1
+      - assume_paradigm#pass
+    - - 1
+      - '2'
+    - - 1
+      - sinuous_shot
+    - - 0
+      - blight_shot
+    - - 1
+      - ante#pass
+    - - 0
+      - '3'
+    - - 1
+      - '2'
+    - - 1
+      - assume_paradigm#fluidity
+    - - 1
+      - sinuous_teleport
+    - - 1
+      - '0'
+    - - 1
+      - '0'
+    - - 1
+      - warped_drive
+    - - 0
+      - teleport_snare
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 1
+      - drive_advance
+    - - 1
+      - '1'
+    - - 1
+      - '0'
+    - - 1
+      - assume_paradigm#pass
+    - - 1
+      - '0'
+    - - 0
+      - '3'
+    - - 1
+      - urgent_paradigmshift
+    - - 0
+      - evacuation_drive
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 1
+      - paradigmshift_select_paradigm
+    - - 1
+      - assume_paradigm#pain
+    - - 1
+      - '1'
+    - - 1
+      - assume_paradigm#pass
+    - - 1
+      - specialaction_burst
+    - - 0
+      - specialaction_strike
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 0
+      - hunters_dash
+    - - 1
+      - '4'
+    - - 1
+      - '1'
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 0
+    :ban_mirror_matches: false
   - - - 1
       - zaamassal
     - - 0
@@ -585,7 +775,11 @@
       - warped_assume_distortion
     - - 1
       - assume_paradigm#distortion
-- - 0
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 0
+    :ban_mirror_matches: false
   - - - 1
       - hikaru
     - - 0
@@ -738,7 +932,11 @@
       - '1'
     - - 1
       - recover#fire
-- - 0
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 0
+    :ban_mirror_matches: false
   - - - 0
       - rukyuk
     - - 1
@@ -823,7 +1021,11 @@
       - concede
     - - 1
       - concede
-- - 1
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
   - - - 0
       - zaamassal
     - - 1
@@ -1040,7 +1242,11 @@
       - hydraulic_advance
     - - 1
       - '5'
-- - 1
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
   - - - 0
       - zaamassal
     - - 1
@@ -1259,7 +1465,11 @@
       - ante#ironbody
     - - 1
       - ante#pass
-- - 1
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
   - - - 1
       - rukyuk
     - - 0
@@ -1440,7 +1650,11 @@
       - '2'
     - - 1
       - '6'
-- - 0
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 0
+    :ban_mirror_matches: false
   - - - 0
       - hikaru
     - - 1
@@ -1459,7 +1673,11 @@
       - wrathofelements
     - - 0
       - geomantic_shot
-- - 1
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
   - - - 0
       - hikaru
     - - 1
@@ -1484,7 +1702,11 @@
       - ante#pass
     - - 0
       - ante#water
-- - 1
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
   - - - 0
       - khadath
     - - 1
@@ -1567,7 +1789,11 @@
       - critical_burst
     - - 1
       - concede
-- - 0
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 0
+    :ban_mirror_matches: false
   - - - 0
       - hikaru
     - - 1
@@ -1674,7 +1900,11 @@
       - advancing_advance
     - - 0
       - '1'
-- - 1
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
   - - - 0
       - rukyuk
     - - 1
@@ -1925,7 +2155,11 @@
       - repeat_attack#apshell
     - - 0
       - repeat_attack#flashshell
-- - 1
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
   - - - 0
       - cadenza
     - - 1
@@ -2074,7 +2308,11 @@
       - ante#ironbody
     - - 0
       - iron_body#pass
-- - 0
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 0
+    :ban_mirror_matches: false
   - - - 0
       - zaamassal
     - - 1
@@ -2157,10 +2395,98 @@
       - assume_paradigm#pass
     - - 1
       - concede
-- - 1
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
   - - - 0
       - kehrolyn
-- - 1
+    - - 1
+      - hepzibah
+    - - 0
+      - mutating_burst
+    - - 0
+      - whip_dash
+    - - 0
+      - hydrafork
+    - - 1
+      - darkheart_dash
+    - - 1
+      - pactbond_grasp
+    - - 1
+      - altazziar
+    - - 0
+      - exoskeletal_shot
+    - - 1
+      - anathema_shot
+    - - 1
+      - ante#almighty
+    - - 1
+      - ante#inevitable
+    - - 1
+      - ante#endless
+    - - 1
+      - ante#corruption
+    - - 1
+      - ante#pass
+    - - 1
+      - darkheart_drive
+    - - 0
+      - mutating_drive
+    - - 1
+      - ante#inevitable
+    - - 1
+      - ante#almighty
+    - - 1
+      - ante#pass
+    - - 0
+      - '3'
+    - - 1
+      - '4'
+    - - 1
+      - darkheart_gain_life
+    - - 1
+      - pactbond_dash
+    - - 0
+      - whip_grasp
+    - - 1
+      - ante#almighty
+    - - 1
+      - ante#endless
+    - - 1
+      - ante#pass
+    - - 1
+      - '0'
+    - - 1
+      - free_token#almighty
+    - - 0
+      - exoskeletal_burst
+    - - 1
+      - necrotizing_shot
+    - - 1
+      - ante#almighty
+    - - 1
+      - ante#endless
+    - - 1
+      - ante#pass
+    - - 0
+      - '4'
+    - - 1
+      - necrotizing_power#3
+    - - 0
+      - quicksilver_shot
+    - - 1
+      - specialaction_grasp
+    - - 1
+      - ante#almighty
+    - - 0
+      - ante#pass
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
   - - - 0
       - khadath
     - - 1
@@ -2395,178 +2721,11 @@
       - assume_paradigm#fluidity
     - - 1
       - '4'
-- - 0
-  - - - 0
-      - kehrolyn
-    - - 1
-      - khadath
-    - - 1
-      - teleport_dash
-    - - 1
-      - hunters_drive
-    - - 1
-      - dimensionalexile
-    - - 0
-      - mutating_overload
-    - - 0
-      - bladed_dash
-    - - 0
-      - hydrafork
-    - - 0
-      - whip_shot
-    - - 1
-      - blight_burst
-    - - 1
-      - blight_place_trap
-    - - 1
-      - '2'
-    - - 1
-      - evacuation_shot
-    - - 0
-      - mutating_burst
-    - - 0
-      - quicksilver_dash
-    - - 1
-      - teleport_drive
-    - - 0
-      - '1'
-    - - 1
-      - '4'
-    - - 0
-      - quicksilver_advance
-    - - 0
-      - '2'
-    - - 0
-      - mutating_advance
-    - - 0
-      - '3'
-    - - 1
-      - '0'
-    - - 1
-      - '2'
-    - - 1
-      - hunters_snare
-    - - 0
-      - exoskeletal_shot
-    - - 1
-      - dash
-    - - 0
-      - overload
-    - - 0
-      - select_extra_style#whip
-    - - 1
-      - '4'
-    - - 0
-      - '5'
-    - - 0
-      - whip_drive
-    - - 1
-      - evacuation_snare
-    - - 0
-      - mutating_grasp
-    - - 1
-      - blight_grasp
-    - - 1
-      - '5'
-    - - 1
-      - '5'
-    - - 0
-      - quicksilver_dash
-    - - 1
-      - teleport_shot
-    - - 0
-      - '2'
-    - - 0
-      - mutating_lose_life
-    - - 0
-      - mutating_advance
-    - - 0
-      - '2'
-    - - 0
-      - '2'
-    - - 1
-      - '6'
-    - - 1
-      - '3'
-    - - 1
-      - hunters_snare
-    - - 0
-      - bladed_shot
-    - - 0
-      - burst
-    - - 1
-      - drive
-    - - 0
-      - '1'
-    - - 1
-      - '5'
-    - - 0
-      - '1'
-    - - 0
-      - mutating_shot
-    - - 1
-      - lure_grasp
-    - - 1
-      - grasp_move_opponent
-    - - 1
-      - '0'
-    - - 1
-      - '0'
-    - - 0
-      - exoskeletal_drive
-    - - 1
-      - blight_shot
-    - - 0
-      - ante#pass
-    - - 1
-      - '1'
-    - - 0
-      - quicksilver_dash
-    - - 1
-      - hunters_snare
-    - - 0
-      - ante#pass
-    - - 0
-      - '3'
-    - - 0
-      - '3'
-    - - 0
-      - bladed_strike
-    - - 1
-      - teleport_dash
-    - - 0
-      - ante#finisher
-    - - 1
-      - '1'
-    - - 1
-      - '0'
-    - - 1
-      - '2'
-    - - 0
-      - '2'
-    - - 0
-      - whip_burst
-    - - 1
-      - blight_strike
-    - - 1
-      - '3'
-    - - 0
-      - '2'
-    - - 0
-      - exoskeletal_drive
-    - - 1
-      - hunters_drive
-    - - 1
-      - '3'
-    - - 1
-      - lure_dash
-    - - 0
-      - quicksilver_grasp
-    - - 1
-      - '5'
-    - - 0
-      - '1'
-- - 0
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 0
+    :ban_mirror_matches: false
   - - - 0
       - rukyuk
     - - 1
@@ -2813,7 +2972,11 @@
       - '3'
     - - 1
       - assume_paradigm#pass
-- - 0
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 0
+    :ban_mirror_matches: false
   - - - 0
       - rukyuk
     - - 1
@@ -2972,7 +3135,11 @@
       - ante#pass
     - - 0
       - concede
-- - 1
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
   - - - 0
       - cadenza
     - - 1
@@ -3045,7 +3212,11 @@
       - select_extra_style#exoskeletal
     - - 1
       - whip_hit_or_pull
-- - 1
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
   - - - 0
       - cadenza
     - - 1
@@ -3182,7 +3353,11 @@
       - ante#pass
     - - 1
       - '2'
-- - 0
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 0
+    :ban_mirror_matches: false
   - - - 0
       - hepzibah
     - - 1
@@ -3231,7 +3406,83 @@
       - free_token#endless
     - - 0
       - anathema_shot
-- - 1
+    - - 1
+      - whip_burst
+    - - 0
+      - ante#corruption
+    - - 0
+      - ante#almighty
+    - - 0
+      - ante#inevitable
+    - - 0
+      - ante#pass
+    - - 1
+      - '1'
+    - - 0
+      - necrotizing_bloodlight
+    - - 1
+      - exoskeletal_grasp
+    - - 0
+      - ante#almighty
+    - - 0
+      - ante#inevitable
+    - - 0
+      - ante#corruption
+    - - 0
+      - ante#pass
+    - - 0
+      - necrotizing_power#3
+    - - 0
+      - pactbond_dash
+    - - 1
+      - quicksilver_dash
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#endless
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#immortality
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 1
+      - '3'
+    - - 0
+      - '2'
+    - - 1
+      - '3'
+    - - 0
+      - free_token#almighty
+    - - 0
+      - anathema_drive
+    - - 1
+      - mutating_strike
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#almighty
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#endless
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#corruption
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 0
+      - '4'
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
   - - - 0
       - rukyuk
     - - 1
@@ -3258,7 +3509,115 @@
       - '0'
     - - 0
       - crossfire_drive
-- - 1
+    - - 1
+      - quicksilver_shot
+    - - 0
+      - ante#swiftshell
+    - - 0
+      - shot
+    - - 1
+      - grasp
+    - - 0
+      - extra_power#apshell
+    - - 1
+      - '4'
+    - - 1
+      - whip_dash
+    - - 0
+      - pointblank_drive
+    - - 0
+      - ante#explosiveshell
+    - - 1
+      - '1'
+    - - 0
+      - '3'
+    - - 0
+      - '0'
+    - - 1
+      - '1'
+    - - 0
+      - gunner_reload
+    - - 1
+      - exoskeletal_overload
+    - - 0
+      - ante#longshot
+    - - 1
+      - select_extra_style#bladed
+    - - 0
+      - gunner_movement
+    - - 0
+      - '5'
+    - - 0
+      - '6'
+    - - 0
+      - sniper_grasp
+    - - 1
+      - quicksilver_grasp
+    - - 0
+      - ante#apshell
+    - - 0
+      - strike
+    - - 1
+      - drive
+    - - 1
+      - '3'
+    - - 0
+      - '2'
+    - - 1
+      - '3'
+    - - 1
+      - bladed_grasp
+    - - 0
+      - pointblank_dash
+    - - 0
+      - ante#pass
+    - - 0
+      - '6'
+    - - 1
+      - '4'
+    - - 0
+      - gunner_grasp
+    - - 1
+      - whip_burst
+    - - 0
+      - ante#flashshell
+    - - 1
+      - '3'
+    - - 0
+      - extra_range#pass
+    - - 0
+      - '4'
+    - - 0
+      - '3'
+    - - 1
+      - quicksilver_overload
+    - - 0
+      - sniper_reload
+    - - 0
+      - ante#swiftshell
+    - - 1
+      - ante#pass
+    - - 1
+      - select_extra_style#mutating
+    - - 0
+      - sniper_movement
+    - - 0
+      - '0'
+    - - 0
+      - '0'
+    - - 1
+      - quicksilver_advance
+    - - 1
+      - '3'
+    - - 0
+      - pointblank_strike
+    - - 1
+      - concede
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
   - - - 0
       - cadenza
     - - 1
@@ -3415,7 +3774,11 @@
       - concede
     - - 1
       - concede
-- - 0
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 0
+    :ban_mirror_matches: false
   - - - 0
       - hepzibah
     - - 1
@@ -3532,3 +3895,2496 @@
       - ante#pass
     - - 1
       - '5'
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 0
+    :ban_mirror_matches: false
+  - - - 0
+      - hikaru
+    - - 1
+      - hepzibah
+    - - 1
+      - pactbond_dash
+    - - 0
+      - focused_strike
+    - - 0
+      - trance_palmstrike
+    - - 0
+      - fourwinds
+    - - 1
+      - necrotizing_strike
+    - - 1
+      - altazziar
+    - - 1
+      - darkheart_shot
+    - - 0
+      - advancing_dash
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#almighty
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 0
+      - '6'
+    - - 0
+      - sweeping_drive
+    - - 1
+      - accursed_bloodlight
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#almighty
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#corruption
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#immortality
+    - - 0
+      - ante#fire
+    - - 1
+      - ante#pass
+    - - 0
+      - '4'
+    - - 0
+      - geomantic_burst
+    - - 1
+      - pactbond_dash
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#almighty
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#immortality
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#endless
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 0
+      - geomantic_ante_extra_token
+    - - 0
+      - ante#pass
+    - - 0
+      - '2'
+    - - 1
+      - '3'
+    - - 1
+      - free_token#endless
+    - - 0
+      - trance_dash
+    - - 1
+      - darkheart_strike
+    - - 1
+      - ante#immortality
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#endless
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 0
+      - '4'
+    - - 1
+      - necrotizing_burst
+    - - 0
+      - specialaction_grasp
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#immortality
+    - - 0
+      - ante#fire
+    - - 1
+      - ante#endless
+    - - 1
+      - ante#pass
+    - - 0
+      - advancing_drive
+    - - 1
+      - '4'
+    - - 0
+      - '3'
+    - - 0
+      - geomantic_burst
+    - - 1
+      - accursed_bloodlight
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#almighty
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#endless
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#immortality
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 0
+      - geomantic_ante_extra_token
+    - - 0
+      - ante#earth
+    - - 0
+      - '2'
+    - - 0
+      - trance_palmstrike
+    - - 1
+      - concede
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
+  - - - 0
+      - rukyuk
+    - - 1
+      - hepzibah
+    - - 0
+      - pointblank_drive
+    - - 0
+      - trick_reload
+    - - 0
+      - fullyautomatic
+    - - 1
+      - anathema_grasp
+    - - 1
+      - darkheart_burst
+    - - 1
+      - altazziar
+    - - 1
+      - pactbond_dash
+    - - 0
+      - sniper_grasp
+    - - 1
+      - ante#endless
+    - - 0
+      - ante#flashshell
+    - - 1
+      - ante#immortality
+    - - 1
+      - ante#pass
+    - - 1
+      - '3'
+    - - 0
+      - '0'
+    - - 1
+      - free_token#almighty
+    - - 0
+      - gunner_dash
+    - - 1
+      - specialaction_grasp
+    - - 1
+      - ante#endless
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 1
+      - necrotizing_shot
+    - - 0
+      - extra_range#pass
+    - - 0
+      - dash_move
+    - - 0
+      - '4'
+    - - 0
+      - '6'
+    - - 0
+      - trick_shot
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
+  - - - 0
+      - kehrolyn
+    - - 1
+      - rukyuk
+    - - 1
+      - pointblank_shot
+    - - 1
+      - trick_reload
+    - - 1
+      - forcegrenade
+    - - 0
+      - whip_overload
+    - - 0
+      - mutating_burst
+    - - 0
+      - hydrafork
+    - - 0
+      - quicksilver_shot
+    - - 1
+      - gunner_burst
+    - - 1
+      - ante#longshot
+    - - 1
+      - extra_range#pass
+    - - 1
+      - '5'
+    - - 0
+      - quicksilver_advance
+    - - 0
+      - '2'
+    - - 0
+      - mutating_advance
+    - - 0
+      - '3'
+    - - 0
+      - bladed_drive
+    - - 1
+      - pointblank_strike
+    - - 1
+      - ante#swiftshell
+    - - 0
+      - '6'
+    - - 0
+      - '6'
+    - - 1
+      - crossfire_dash
+    - - 0
+      - mutating_grasp
+    - - 1
+      - ante#pass
+    - - 1
+      - '2'
+    - - 1
+      - gunner_reload
+    - - 0
+      - whip_dash
+    - - 1
+      - ante#explosiveshell
+    - - 0
+      - '3'
+    - - 1
+      - extra_range#pass
+    - - 1
+      - gunner_movement
+    - - 1
+      - '1'
+    - - 1
+      - '6'
+    - - 0
+      - quicksilver_drive
+    - - 1
+      - pointblank_drive
+    - - 1
+      - ante#swiftshell
+    - - 1
+      - shot
+    - - 0
+      - shot
+    - - 1
+      - burst
+    - - 0
+      - burst
+    - - 1
+      - strike
+    - - 0
+      - overload
+    - - 0
+      - select_extra_style#exoskeletal
+    - - 0
+      - '4'
+    - - 0
+      - exoskeletal_shot
+    - - 1
+      - sniper_dash
+    - - 1
+      - ante#pass
+    - - 1
+      - dash_move
+    - - 1
+      - '2'
+    - - 1
+      - '0'
+    - - 0
+      - '3'
+    - - 0
+      - mutating_drive
+    - - 1
+      - gunner_drive
+    - - 1
+      - ante#flashshell
+    - - 1
+      - reload
+    - - 0
+      - dash
+    - - 0
+      - '2'
+    - - 1
+      - extra_range#pass
+    - - 1
+      - gunner_movement
+    - - 1
+      - '1'
+    - - 1
+      - '6'
+    - - 0
+      - whip_burst
+    - - 1
+      - crossfire_strike
+    - - 1
+      - ante#longshot
+    - - 0
+      - drive
+    - - 1
+      - grasp
+    - - 0
+      - '4'
+    - - 0
+      - mutating_hit_or_pull
+    - - 1
+      - specialaction_burst
+    - - 0
+      - exoskeletal_strike
+    - - 1
+      - ante#pass
+    - - 1
+      - '0'
+    - - 1
+      - '6'
+    - - 0
+      - mutating_dash
+    - - 1
+      - pointblank_shot
+    - - 1
+      - ante#explosiveshell
+    - - 0
+      - '3'
+    - - 1
+      - sniper_reload
+    - - 0
+      - whip_burst
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#flashshell
+    - - 0
+      - ante#pass
+    - - 0
+      - '2'
+    - - 1
+      - reload_teleport
+    - - 1
+      - '1'
+    - - 1
+      - '3'
+    - - 1
+      - trick_dash
+    - - 0
+      - quicksilver_shot
+    - - 1
+      - ante#impact
+    - - 0
+      - ante#pass
+    - - 1
+      - '1'
+    - - 0
+      - '3'
+    - - 0
+      - specialaction_overload
+    - - 1
+      - pointblank_strike
+    - - 1
+      - ante#apshell
+    - - 0
+      - ante#pass
+    - - 0
+      - exoskeletal_drive
+    - - 0
+      - '2'
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 0
+    :ban_mirror_matches: false
+  - - - 1
+      - hikaru
+    - - 0
+      - hepzibah
+    - - 1
+      - sweeping_dash
+    - - 0
+      - anathema_dash
+    - - 1
+      - trance_burst
+    - - 0
+      - accursed_burst
+    - - 0
+      - altazziar
+    - - 1
+      - wrathofelements
+    - - 0
+      - necrotizing_bloodlight
+    - - 1
+      - advancing_drive
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 1
+      - '2'
+    - - 0
+      - anathema_grasp
+    - - 1
+      - geomantic_palmstrike
+    - - 1
+      - ante#fire
+    - - 0
+      - ante#inevitable
+    - - 0
+      - ante#pass
+    - - 1
+      - strike
+    - - 0
+      - shot
+    - - 1
+      - ante#pass
+    - - 0
+      - pactbond_burst
+    - - 1
+      - sweeping_shot
+    - - 1
+      - ante#earth
+    - - 0
+      - ante#immortality
+    - - 0
+      - ante#almighty
+    - - 0
+      - ante#pass
+    - - 0
+      - free_token#inevitable
+    - - 0
+      - accursed_dash
+    - - 1
+      - advancing_burst
+    - - 1
+      - ante#wind
+    - - 0
+      - ante#pass
+    - - 1
+      - burst_retreat
+    - - 1
+      - '3'
+    - - 0
+      - '3'
+    - - 0
+      - anathema_bloodlight
+    - - 1
+      - focused_strike
+    - - 0
+      - ante#corruption
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#immortality
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#almighty
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#endless
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 0
+      - pactbond_shot
+    - - 1
+      - geomantic_palmstrike
+    - - 0
+      - ante#corruption
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 1
+      - palmstrike_advance
+    - - 1
+      - ante#pass
+    - - 1
+      - recover#fire
+    - - 0
+      - free_token#inevitable
+    - - 0
+      - accursed_grasp
+    - - 1
+      - trance_drive
+    - - 1
+      - ante#fire
+    - - 0
+      - ante#finisher
+    - - 0
+      - ante#endless
+    - - 0
+      - ante#pass
+    - - 1
+      - recover#wind
+    - - 0
+      - necrotizing_drive
+    - - 1
+      - focused_grasp
+    - - 1
+      - ante#finisher
+    - - 1
+      - ante#fire
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 0
+    :ban_mirror_matches: false
+  - - - 0
+      - kehrolyn
+    - - 1
+      - khadath
+    - - 1
+      - evacuation_snare
+    - - 1
+      - hunters_dash
+    - - 1
+      - dimensionalexile
+    - - 0
+      - quicksilver_burst
+    - - 0
+      - mutating_dash
+    - - 0
+      - hydrafork
+    - - 0
+      - whip_shot
+    - - 1
+      - blight_burst
+    - - 1
+      - blight_place_trap
+    - - 1
+      - '3'
+    - - 0
+      - whip_hit_or_pull
+    - - 0
+      - bladed_drive
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 0
+    :ban_mirror_matches: false
+  - - - 0
+      - heketch
+    - - 1
+      - khadath
+    - - 1
+      - teleport_dash
+    - - 1
+      - hunters_burst
+    - - 1
+      - dimensionalexile
+    - - 0
+      - merciless_dash
+    - - 0
+      - rasping_shot
+    - - 0
+      - livingnightmare
+    - - 0
+      - psycho_drive
+    - - 1
+      - lure_grasp
+    - - 0
+      - ante#pass
+    - - 0
+      - spend_token_to_repeat#yes
+    - - 0
+      - '4'
+    - - 1
+      - blight_strike
+    - - 0
+      - assassin_knives
+    - - 1
+      - '3'
+    - - 0
+      - '3'
+    - - 0
+      - rasping_strike
+    - - 1
+      - hunters_shot
+    - - 1
+      - teleport_burst
+    - - 0
+      - critical_dash
+    - - 0
+      - '0'
+    - - 1
+      - '6'
+    - - 1
+      - '5'
+    - - 1
+      - lure_strike
+    - - 0
+      - psycho_knives
+    - - 0
+      - ante#pass
+    - - 0
+      - spend_token_to_repeat#yes
+    - - 1
+      - hunters_drive
+    - - 0
+      - assassin_burst
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 0
+      - '3'
+    - - 1
+      - '4'
+    - - 1
+      - evacuation_burst
+    - - 0
+      - merciless_dash
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 1
+      - evacuation_place_trap_and_retrat
+    - - 0
+      - dash_move
+    - - 0
+      - '0'
+    - - 0
+      - psycho_knives
+    - - 1
+      - blight_dash
+    - - 0
+      - ante#dark_force
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 1
+      - '3'
+    - - 0
+      - critical_drive
+    - - 1
+      - hunters_drive
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 1
+      - '6'
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
+  - - - 0
+      - hepzibah
+    - - 1
+      - heketch
+    - - 1
+      - assassin_burst
+    - - 1
+      - rasping_shot
+    - - 1
+      - millionknives
+    - - 0
+      - accursed_strike
+    - - 0
+      - darkheart_burst
+    - - 0
+      - sealthepact
+    - - 1
+      - psycho_dash
+    - - 0
+      - pactbond_shot
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#immortality
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#almighty
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 1
+      - '0'
+    - - 1
+      - spend_token_to_repeat#no
+    - - 0
+      - free_token#almighty
+    - - 0
+      - anathema_grasp
+    - - 1
+      - assassin_knives
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#almighty
+    - - 1
+      - ante#dark_force
+    - - 1
+      - '2'
+    - - 0
+      - ante#corruption
+    - - 0
+      - ante#endless
+    - - 0
+      - ante#pass
+    - - 0
+      - '0'
+    - - 1
+      - critical_drive
+    - - 0
+      - darkheart_bloodlight
+    - - 0
+      - ante#almighty
+    - - 0
+      - ante#corruption
+    - - 0
+      - ante#endless
+    - - 0
+      - ante#immortality
+    - - 0
+      - ante#pass
+    - - 1
+      - '2'
+    - - 0
+      - darkheart_gain_life
+    - - 1
+      - merciless_strike
+    - - 0
+      - specialaction_shot
+    - - 0
+      - ante#inevitable
+    - - 0
+      - ante#almighty
+    - - 0
+      - ante#corruption
+    - - 0
+      - ante#endless
+    - - 0
+      - ante#pass
+    - - 0
+      - pactbond_strike
+    - - 0
+      - free_token#almighty
+    - - 1
+      - assassin_knives
+    - - 0
+      - accursed_dash
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 0
+      - '3'
+    - - 1
+      - critical_dash
+    - - 0
+      - anathema_drive
+    - - 0
+      - ante#almighty
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#endless
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#immortality
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 1
+      - '4'
+    - - 0
+      - '5'
+    - - 1
+      - psycho_burst
+    - - 0
+      - necrotizing_strike
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#inevitable
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#almighty
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#endless
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 1
+      - psycho_advance
+    - - 1
+      - '2'
+    - - 0
+      - necrotizing_power#3
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 0
+    :ban_mirror_matches: false
+  - - - 0
+      - rukyuk
+    - - 1
+      - kehrolyn
+    - - 1
+      - mutating_burst
+    - - 1
+      - quicksilver_grasp
+    - - 1
+      - hydrafork
+    - - 0
+      - crossfire_drive
+    - - 0
+      - trick_reload
+    - - 0
+      - fullyautomatic
+    - - 0
+      - pointblank_shot
+    - - 1
+      - exoskeletal_dash
+    - - 0
+      - ante#swiftshell
+    - - 1
+      - '3'
+    - - 1
+      - '3'
+    - - 1
+      - whip_drive
+    - - 0
+      - sniper_dash
+    - - 0
+      - ante#pass
+    - - 0
+      - dash_move
+    - - 0
+      - '4'
+    - - 0
+      - '2'
+    - - 1
+      - '1'
+    - - 1
+      - quicksilver_overload
+    - - 0
+      - specialaction_burst
+    - - 0
+      - ante#pass
+    - - 0
+      - '0'
+    - - 0
+      - '6'
+    - - 0
+      - crossfire_strike
+    - - 1
+      - exoskeletal_dash
+    - - 0
+      - ante#apshell
+    - - 1
+      - '1'
+    - - 1
+      - '2'
+    - - 0
+      - gunner_drive
+    - - 1
+      - mutating_shot
+    - - 0
+      - ante#flashshell
+    - - 0
+      - drive_advance
+    - - 0
+      - '4'
+    - - 0
+      - extra_range#pass
+    - - 0
+      - '6'
+    - - 0
+      - sniper_grasp
+    - - 1
+      - whip_burst
+    - - 0
+      - ante#explosiveshell
+    - - 1
+      - '0'
+    - - 0
+      - '5'
+    - - 1
+      - exoskeletal_drive
+    - - 0
+      - crossfire_reload
+    - - 0
+      - ante#longshot
+    - - 1
+      - '3'
+    - - 0
+      - trick_dash
+    - - 1
+      - quicksilver_overload
+    - - 0
+      - ante#pass
+    - - 1
+      - select_extra_style#bladed
+    - - 0
+      - '0'
+    - - 1
+      - '2'
+    - - 1
+      - bladed_dash
+    - - 0
+      - pointblank_grasp
+    - - 0
+      - ante#swiftshell
+    - - 1
+      - '3'
+    - - 1
+      - '2'
+    - - 0
+      - sniper_drive
+    - - 1
+      - mutating_shot
+    - - 0
+      - ante#pass
+    - - 0
+      - '3'
+    - - 0
+      - '6'
+    - - 1
+      - whip_drive
+    - - 0
+      - gunner_strike
+    - - 0
+      - ante#apshell
+    - - 1
+      - '4'
+    - - 1
+      - whip_hit_or_pull
+    - - 0
+      - crossfire_dash
+    - - 1
+      - quicksilver_grasp
+    - - 0
+      - ante#pass
+    - - 0
+      - reload
+    - - 1
+      - overload
+    - - 1
+      - select_extra_style#bladed
+    - - 1
+      - '3'
+    - - 1
+      - exoskeletal_dash
+    - - 0
+      - concede
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 0
+    :ban_mirror_matches: false
+  - - - 0
+      - cadenza
+    - - 1
+      - hikaru
+    - - 1
+      - sweeping_dash
+    - - 1
+      - trance_burst
+    - - 1
+      - fourwinds
+    - - 0
+      - grapnel_grasp
+    - - 0
+      - hydraulic_shot
+    - - 0
+      - rocketpress
+    - - 1
+      - focused_shot
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
+  - - - 0
+      - hikaru
+    - - 1
+      - rukyuk
+    - - 1
+      - trick_dash
+    - - 1
+      - crossfire_reload
+    - - 1
+      - forcegrenade
+    - - 0
+      - sweeping_palmstrike
+    - - 0
+      - trance_burst
+    - - 0
+      - wrathofelements
+    - - 0
+      - advancing_dash
+    - - 1
+      - pointblank_burst
+    - - 1
+      - ante#longshot
+    - - 0
+      - ante#pass
+    - - 0
+      - '5'
+    - - 1
+      - '3'
+    - - 1
+      - trick_grasp
+    - - 0
+      - geomantic_palmstrike
+    - - 0
+      - ante#water
+    - - 1
+      - ante#swiftshell
+    - - 0
+      - geomantic_ante_extra_token
+    - - 0
+      - ante#fire
+    - - 1
+      - '3'
+    - - 1
+      - crossfire_dash
+    - - 0
+      - trance_drive
+    - - 0
+      - ante#earth
+    - - 1
+      - ante#apshell
+    - - 1
+      - '2'
+    - - 0
+      - '1'
+    - - 0
+      - recover#fire
+    - - 0
+      - advancing_shot
+    - - 1
+      - sniper_reload
+    - - 1
+      - ante#explosiveshell
+    - - 0
+      - ante#earth
+    - - 1
+      - sniper_movement
+    - - 1
+      - '0'
+    - - 1
+      - '6'
+    - - 1
+      - gunner_strike
+    - - 0
+      - focused_palmstrike
+    - - 1
+      - ante#longshot
+    - - 0
+      - ante#wind
+    - - 1
+      - extra_range#pass
+    - - 1
+      - '5'
+    - - 1
+      - pointblank_burst
+    - - 0
+      - trance_dash
+    - - 0
+      - ante#fire
+    - - 1
+      - ante#impact
+    - - 0
+      - '5'
+    - - 0
+      - recover#earth
+    - - 0
+      - geomantic_burst
+    - - 1
+      - sniper_dash
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 0
+      - burst_retreat
+    - - 0
+      - '3'
+    - - 0
+      - ante#pass
+    - - 1
+      - dash_move
+    - - 1
+      - '2'
+    - - 1
+      - '0'
+    - - 0
+      - advancing_palmstrike
+    - - 1
+      - trick_drive
+    - - 1
+      - ante#explosiveshell
+    - - 0
+      - ante#fire
+    - - 0
+      - palmstrike_advance
+    - - 0
+      - recover#water
+    - - 1
+      - '3'
+    - - 0
+      - trance_dash
+    - - 1
+      - pointblank_grasp
+    - - 0
+      - ante#earth
+    - - 1
+      - ante#swiftshell
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 0
+      - '4'
+    - - 0
+      - recover#fire
+    - - 1
+      - sniper_reload
+    - - 0
+      - geomantic_shot
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#flashshell
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#fire
+    - - 1
+      - reload_teleport
+    - - 1
+      - '3'
+    - - 1
+      - '2'
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
+  - - - 0
+      - khadath
+    - - 1
+      - zaamassal
+    - - 0
+      - hunters_burst
+    - - 0
+      - lure_snare
+    - - 0
+      - dimensionalexile
+    - - 1
+      - sturdy_burst
+    - - 1
+      - urgent_grasp
+    - - 1
+      - openthegate
+    - - 1
+      - malicious_paradigmshift
+    - - 0
+      - blight_shot
+    - - 0
+      - drive
+    - - 1
+      - dash
+    - - 0
+      - '4'
+    - - 1
+      - dash_move
+    - - 1
+      - '6'
+    - - 1
+      - assume_paradigm#pain
+    - - 0
+      - '3'
+    - - 0
+      - teleport_burst
+    - - 1
+      - warped_drive
+    - - 0
+      - '1'
+    - - 1
+      - '4'
+    - - 1
+      - assume_paradigm#distortion
+    - - 0
+      - '6'
+    - - 0
+      - '3'
+    - - 0
+      - hunters_shot
+    - - 1
+      - sinuous_burst
+    - - 1
+      - assume_paradigm#fluidity
+    - - 1
+      - fluidity_movement
+    - - 1
+      - '2'
+    - - 1
+      - '1'
+    - - 1
+      - urgent_paradigmshift
+    - - 0
+      - lure_dash
+    - - 0
+      - '4'
+    - - 1
+      - paradigmshift_select_paradigm
+    - - 1
+      - assume_paradigm#pain
+    - - 1
+      - '1'
+    - - 1
+      - assume_paradigm#pass
+    - - 0
+      - blight_drive
+    - - 1
+      - sturdy_drive
+    - - 1
+      - shot
+    - - 0
+      - burst
+    - - 0
+      - blight_place_trap
+    - - 0
+      - '2'
+    - - 0
+      - '6'
+    - - 1
+      - assume_paradigm#resilience
+    - - 1
+      - warped_drive
+    - - 0
+      - hunters_snare
+    - - 0
+      - shot
+    - - 1
+      - grasp
+    - - 1
+      - burst
+    - - 0
+      - drive
+    - - 1
+      - warped_retreat
+    - - 1
+      - resilience_gain_soak
+    - - 0
+      - '5'
+    - - 1
+      - warped_assume_distortion
+    - - 1
+      - assume_paradigm#distortion
+    - - 0
+      - evacuation_shot
+    - - 1
+      - urgent_dash
+    - - 0
+      - ante#pass
+    - - 1
+      - '1'
+    - - 1
+      - dash_move
+    - - 1
+      - '3'
+    - - 1
+      - assume_paradigm#pass
+    - - 0
+      - lure_dash
+    - - 1
+      - malicious_grasp
+    - - 0
+      - ante#pass
+    - - 0
+      - '2'
+    - - 1
+      - assume_paradigm#pass
+    - - 1
+      - warped_burst
+    - - 0
+      - blight_grasp
+    - - 0
+      - ante#pass
+    - - 0
+      - '5'
+    - - 1
+      - burst_retreat
+    - - 1
+      - '5'
+    - - 1
+      - assume_paradigm#distortion
+    - - 0
+      - specialaction_drive
+    - - 1
+      - specialaction_shot
+    - - 0
+      - ante#pass
+    - - 0
+      - teleport_burst
+    - - 1
+      - sturdy_paradigmshift
+    - - 0
+      - '0'
+    - - 1
+      - assume_paradigm#resilience
+    - - 1
+      - sturdy_assume_resilience
+    - - 1
+      - assume_paradigm#resilience
+    - - 0
+      - '3'
+    - - 0
+      - '5'
+    - - 0
+      - evacuation_shot
+    - - 1
+      - urgent_dash
+    - - 1
+      - '5'
+    - - 1
+      - dash_move
+    - - 1
+      - '6'
+    - - 1
+      - resilience_lose_soak
+    - - 1
+      - assume_paradigm#pass
+    - - 0
+      - blight_drive
+    - - 1
+      - sinuous_shot
+    - - 0
+      - '5'
+    - - 0
+      - '3'
+    - - 1
+      - '2'
+    - - 0
+      - teleport_dash
+    - - 1
+      - warped_burst
+    - - 1
+      - warped_retreat
+    - - 0
+      - '6'
+    - - 1
+      - assume_paradigm#distortion
+    - - 0
+      - '2'
+    - - 0
+      - '1'
+    - - 0
+      - evacuation_burst
+    - - 1
+      - urgent_drive
+    - - 0
+      - burst_retreat
+    - - 0
+      - '4'
+    - - 1
+      - urgent_advance
+    - - 1
+      - '1'
+    - - 1
+      - '2'
+    - - 1
+      - assume_paradigm#pass
+    - - 0
+      - blight_grasp
+    - - 1
+      - sinuous_grasp
+    - - 0
+      - '3'
+    - - 1
+      - '6'
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
+  - - - 0
+      - khadath
+    - - 1
+      - hikaru
+    - - 1
+      - focused_strike
+    - - 1
+      - trance_palmstrike
+    - - 1
+      - fourwinds
+    - - 0
+      - teleport_snare
+    - - 0
+      - hunters_dash
+    - - 0
+      - dimensionalexile
+    - - 0
+      - blight_strike
+    - - 1
+      - advancing_shot
+    - - 1
+      - ante#wind
+    - - 0
+      - '3'
+    - - 0
+      - lure_burst
+    - - 1
+      - focused_drive
+    - - 1
+      - ante#water
+    - - 0
+      - '2'
+    - - 0
+      - specialaction_shot
+    - - 1
+      - geomantic_palmstrike
+    - - 1
+      - ante#pass
+    - - 0
+      - hunters_drive
+    - - 1
+      - geomantic_ante_extra_token
+    - - 1
+      - ante#earth
+    - - 0
+      - '2'
+    - - 1
+      - trance_burst
+    - - 0
+      - blight_dash
+    - - 1
+      - ante#fire
+    - - 0
+      - '5'
+    - - 1
+      - recover#earth
+    - - 1
+      - focused_strike
+    - - 0
+      - teleport_shot
+    - - 1
+      - ante#earth
+    - - 0
+      - '4'
+    - - 0
+      - '2'
+    - - 0
+      - lure_burst
+    - - 1
+      - advancing_palmstrike
+    - - 1
+      - ante#pass
+    - - 1
+      - advancing_advance
+    - - 0
+      - '6'
+    - - 0
+      - '2'
+    - - 0
+      - blight_snare
+    - - 1
+      - trance_shot
+    - - 1
+      - ante#fire
+    - - 1
+      - recover#earth
+    - - 1
+      - geomantic_drive
+    - - 0
+      - teleport_drive
+    - - 1
+      - ante#pass
+    - - 1
+      - ante#earth
+    - - 1
+      - '3'
+    - - 0
+      - '5'
+    - - 0
+      - '2'
+    - - 0
+      - '4'
+    - - 1
+      - advancing_dash
+    - - 0
+      - evacuation_burst
+    - - 1
+      - ante#pass
+    - - 0
+      - evacuation_place_trap_and_retrat
+    - - 0
+      - '4'
+    - - 1
+      - '0'
+    - - 1
+      - focused_shot
+    - - 0
+      - blight_shot
+    - - 1
+      - ante#fire
+    - - 1
+      - ante#pass
+    - - 1
+      - burst
+    - - 0
+      - strike
+    - - 0
+      - '2'
+    - - 1
+      - trance_shot
+    - - 0
+      - lure_dash
+    - - 1
+      - ante#pass
+    - - 0
+      - '6'
+    - - 1
+      - recover#water
+    - - 1
+      - concede
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 0
+    :ban_mirror_matches: false
+  - - - 0
+      - hikaru
+    - - 1
+      - rukyuk
+    - - 0
+      - trance_burst
+    - - 1
+      - pointblank_reload
+    - - 0
+      - sweeping_dash
+    - - 0
+      - wrathofelements
+    - - 1
+      - trick_dash
+    - - 1
+      - fullyautomatic
+    - - 0
+      - advancing_shot
+    - - 1
+      - sniper_shot
+    - - 0
+      - ante#earth
+    - - 1
+      - ante#swiftshell
+    - - 1
+      - '6'
+    - - 0
+      - focused_drive
+    - - 1
+      - gunner_grasp
+    - - 1
+      - ante#longshot
+    - - 0
+      - ante#water
+    - - 1
+      - extra_range#pass
+    - - 1
+      - '1'
+    - - 1
+      - '5'
+    - - 0
+      - '3'
+    - - 0
+      - sweeping_dash
+    - - 1
+      - trick_burst
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 0
+      - '2'
+    - - 0
+      - geomantic_shot
+    - - 1
+      - pointblank_shot
+    - - 0
+      - ante#wind
+    - - 1
+      - ante#explosiveshell
+    - - 0
+      - ante#fire
+    - - 0
+      - advancing_drive
+    - - 1
+      - gunner_grasp
+    - - 0
+      - ante#earth
+    - - 1
+      - ante#apshell
+    - - 1
+      - ante#pass
+    - - 0
+      - palmstrike
+    - - 1
+      - strike
+    - - 0
+      - advancing_advance
+    - - 1
+      - extra_range#pass
+    - - 1
+      - '3'
+    - - 0
+      - trance_dash
+    - - 1
+      - sniper_reload
+    - - 1
+      - ante#pass
+    - - 0
+      - '1'
+    - - 1
+      - reload_teleport
+    - - 1
+      - '5'
+    - - 1
+      - '6'
+    - - 0
+      - recover#fire
+    - - 0
+      - geomantic_drive
+    - - 1
+      - crossfire_drive
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#swiftshell
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 0
+      - grasp
+    - - 1
+      - shot
+    - - 0
+      - ante#pass
+    - - 1
+      - extra_power#longshot
+    - - 0
+      - advancing_drive
+    - - 1
+      - gunner_strike
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#impact
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 0
+      - '4'
+    - - 1
+      - extra_range#flashshell
+    - - 1
+      - '5'
+    - - 0
+      - trance_palmstrike
+    - - 1
+      - pointblank_burst
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#explosiveshell
+    - - 0
+      - ante#fire
+    - - 1
+      - ante#pass
+    - - 1
+      - '1'
+    - - 0
+      - recover#water
+    - - 0
+      - geomantic_shot
+    - - 1
+      - sniper_grasp
+    - - 0
+      - ante#water
+    - - 1
+      - ante#apshell
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 1
+      - '0'
+    - - 1
+      - '5'
+    - - 0
+      - sweeping_dash
+    - - 1
+      - trick_reload
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 0
+      - '3'
+    - - 1
+      - '0'
+    - - 0
+      - advancing_palmstrike
+    - - 1
+      - gunner_dash
+    - - 0
+      - ante#fire
+    - - 1
+      - ante#longshot
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 0
+      - palmstrike_advance
+    - - 1
+      - extra_range#pass
+    - - 1
+      - dash_move
+    - - 1
+      - '4'
+    - - 1
+      - '6'
+    - - 0
+      - specialaction_burst
+    - - 1
+      - sniper_grasp
+    - - 1
+      - ante#finisher
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#explosiveshell
+    - - 0
+      - ante#pass
+    - - 0
+      - '1'
+    - - 0
+      - trance_drive
+    - - 1
+      - sniper_grasp
+    - - 1
+      - ante#swiftshell
+    - - 1
+      - '0'
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
+  - - - 0
+      - hepzibah
+    - - 1
+      - heketch
+    - - 1
+      - rasping_strike
+    - - 1
+      - merciless_drive
+    - - 1
+      - millionknives
+    - - 0
+      - anathema_burst
+    - - 0
+      - pactbond_strike
+    - - 0
+      - altazziar
+    - - 0
+      - accursed_shot
+    - - 1
+      - psycho_dash
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#inevitable
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#immortality
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#almighty
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 1
+      - '0'
+    - - 1
+      - spend_token_to_repeat#no
+    - - 1
+      - critical_grasp
+    - - 0
+      - necrotizing_grasp
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#endless
+    - - 1
+      - ante#dark_force
+    - - 1
+      - '2'
+    - - 0
+      - ante#immortality
+    - - 0
+      - ante#inevitable
+    - - 0
+      - ante#pass
+    - - 1
+      - grasp_move_opponent
+    - - 1
+      - '0'
+    - - 0
+      - grasp_move_opponent
+    - - 0
+      - '1'
+    - - 0
+      - necrotizing_power#0
+    - - 0
+      - anathema_bloodlight
+    - - 1
+      - specialaction_burst
+    - - 0
+      - ante#corruption
+    - - 0
+      - ante#almighty
+    - - 0
+      - ante#endless
+    - - 0
+      - ante#pass
+    - - 1
+      - '6'
+    - - 0
+      - accursed_shot
+    - - 1
+      - merciless_strike
+    - - 0
+      - ante#inevitable
+    - - 0
+      - ante#almighty
+    - - 0
+      - ante#pass
+    - - 0
+      - pactbond_dash
+    - - 1
+      - assassin_knives
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#immortality
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#endless
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 0
+      - '3'
+    - - 0
+      - free_token#immortality
+    - - 0
+      - necrotizing_burst
+    - - 1
+      - psycho_dash
+    - - 0
+      - ante#immortality
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 0
+      - '2'
+    - - 1
+      - '3'
+    - - 1
+      - spend_token_to_repeat#no
+    - - 1
+      - merciless_grasp
+    - - 0
+      - anathema_drive
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#almighty
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#endless
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#corruption
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 0
+      - '4'
+    - - 0
+      - pactbond_dash
+    - - 1
+      - rasping_knives
+    - - 0
+      - ante#immortality
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#endless
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 0
+      - '0'
+    - - 0
+      - free_token#immortality
+    - - 0
+      - darkheart_bloodlight
+    - - 1
+      - assassin_dash
+    - - 0
+      - ante#endless
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#immortality
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#almighty
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 0
+      - concede
+    - - 0
+      - concede
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
+  - - - 1
+      - zaamassal
+    - - 0
+      - khadath
+    - - 0
+      - hunters_snare
+    - - 0
+      - teleport_dash
+    - - 0
+      - dimensionalexile
+    - - 1
+      - sinuous_dash
+    - - 1
+      - warped_grasp
+    - - 1
+      - openthegate
+    - - 1
+      - urgent_shot
+    - - 0
+      - blight_drive
+    - - 0
+      - shot
+    - - 1
+      - paradigmshift
+    - - 0
+      - '4'
+    - - 1
+      - urgent_advance
+    - - 1
+      - '4'
+    - - 1
+      - assume_paradigm#distortion
+    - - 1
+      - assume_paradigm#pass
+    - - 1
+      - malicious_burst
+    - - 0
+      - lure_drive
+    - - 1
+      - '6'
+    - - 0
+      - '3'
+    - - 1
+      - assume_paradigm#pain
+    - - 1
+      - sinuous_drive
+    - - 0
+      - teleport_burst
+    - - 0
+      - '1'
+    - - 1
+      - '5'
+    - - 1
+      - assume_paradigm#fluidity
+    - - 1
+      - '3'
+    - - 0
+      - '2'
+    - - 0
+      - '4'
+    - - 0
+      - specialaction_shot
+    - - 1
+      - urgent_grasp
+    - - 0
+      - hunters_grasp
+    - - 0
+      - '4'
+    - - 0
+      - blight_snare
+    - - 1
+      - warped_shot
+    - - 1
+      - sturdy_paradigmshift
+    - - 0
+      - lure_burst
+    - - 0
+      - '0'
+    - - 1
+      - assume_paradigm#distortion
+    - - 1
+      - assume_paradigm#pass
+    - - 1
+      - urgent_grasp
+    - - 0
+      - teleport_dash
+- - :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+    :ban_mirror_matches: false
+  - - - 1
+      - heketch
+    - - 0
+      - khadath
+    - - 0
+      - hunters_strike
+    - - 0
+      - lure_snare
+    - - 0
+      - dimensionalexile
+    - - 1
+      - critical_dash
+    - - 1
+      - merciless_grasp
+    - - 1
+      - livingnightmare
+    - - 1
+      - rasping_shot
+    - - 0
+      - evacuation_shot
+    - - 1
+      - ante#pass
+    - - 1
+      - critical_strike
+    - - 0
+      - hunters_drive
+    - - 1
+      - ante#dark_force
+    - - 0
+      - '2'
+    - - 0
+      - teleport_dash
+    - - 1
+      - psycho_drive
+    - - 0
+      - '0'
+    - - 0
+      - '0'
+    - - 0
+      - '2'
+    - - 0
+      - blight_snare
+    - - 1
+      - rasping_knives
+    - - 0
+      - lure_strike
+    - - 1
+      - critical_grasp
+    - - 1
+      - critical_extra_power
+    - - 0
+      - hunters_drive
+    - - 1
+      - merciless_shot
+    - - 0
+      - blight_grasp
+    - - 1
+      - assassin_burst
+    - - 1
+      - ante#pass
+    - - 0
+      - '2'
+    - - 0
+      - '1'
+    - - 0
+      - evacuation_snare
+    - - 1
+      - specialaction_dash
+    - - 1
+      - ante#pass
+    - - 1
+      - '2'
+    - - 0
+      - specialaction_strike
+    - - 1
+      - psycho_dash
+    - - 0
+      - teleport_shot
+- - :ban_mirror_matches: '1'
+    :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+  - - - 1
+      - zaamassal
+    - - 0
+      - zaamassal
+    - - 0
+      - vanaah
+    - - 1
+      - cadenza
+    - - 0
+      - reaping_strike
+    - - 0
+      - vengeance_drive
+    - - 0
+      - handofdivinity
+    - - 1
+      - hydraulic_dash
+    - - 1
+      - clockwork_burst
+    - - 1
+      - feedbackfield
+    - - 1
+      - battery_shot
+    - - 0
+      - paladin_shot
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 1
+      - iron_body#pass
+    - - 0
+      - '4'
+    - - 0
+      - judgment_burst
+    - - 1
+      - hydraulic_strike
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#pass
+    - - 0
+      - '2'
+    - - 0
+      - reaping_scythe
+    - - 1
+      - clockwork_press
+    - - 1
+      - ante#ironbody
+    - - 0
+      - ante#divinerush
+    - - 0
+      - reaping_discard_token
+    - - 0
+      - '4'
+    - - 0
+      - paladin_dash
+    - - 1
+      - battery_dash
+    - - 1
+      - ante#pass
+    - - 1
+      - '1'
+    - - 0
+      - '2'
+    - - 0
+      - '2'
+    - - 0
+      - vengeance_strike
+    - - 1
+      - mechanical_drive
+    - - 1
+      - ante#pass
+    - - 1
+      - '4'
+    - - 1
+      - '3'
+    - - 0
+      - reaping_drive
+    - - 1
+      - hydraulic_strike
+    - - 1
+      - ante#pass
+    - - 0
+      - ante#divinerush
+    - - 1
+      - ante#pass
+    - - 0
+      - '5'
+    - - 0
+      - glorious_dash
+    - - 1
+      - clockwork_press
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 0
+      - '3'
+    - - 0
+      - '0'
+    - - 1
+      - specialaction_dash
+    - - 0
+      - specialaction_shot
+    - - 0
+      - ante#pass
+    - - 1
+      - ante#pass
+    - - 0
+      - vengeance_grasp
+    - - 1
+      - '6'
+    - - 1
+      - battery_shot
+    - - 0
+      - paladin_shot
+    - - 0
+      - ante#pass
+    - - 1
+      - hydraulic_drive
+    - - 0
+      - reaping_drive
+    - - 0
+      - ante#divinerush
+    - - 1
+      - grasp
+    - - 0
+      - strike
+    - - 1
+      - '3'
+- - :ban_mirror_matches: '1'
+    :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 1
+  - - - 1
+      - vanaah
+    - - 0
+      - heketch
+    - - 0
+      - merciless_burst
+    - - 0
+      - rasping_dash
+    - - 0
+      - millionknives
+    - - 1
+      - paladin_dash
+    - - 1
+      - glorious_grasp
+    - - 1
+      - deathwalks
+    - - 1
+      - reaping_shot
+    - - 0
+      - psycho_strike
+    - - 1
+      - ante#divinerush
+    - - 0
+      - ante#pass
+    - - 0
+      - assassin_grasp
+    - - 1
+      - judgment_strike
+    - - 0
+      - assassin_retreat
+    - - 0
+      - '6'
+    - - 1
+      - glorious_dash
+    - - 0
+      - critical_knives
+    - - 1
+      - '5'
+    - - 1
+      - '3'
+    - - 0
+      - rasping_burst
+    - - 1
+      - paladin_scythe
+    - - 1
+      - ante#divinerush
+    - - 0
+      - '6'
+    - - 1
+      - '6'
+    - - 1
+      - judgment_strike
+    - - 0
+      - specialaction_dash
+    - - 0
+      - ante#pass
+    - - 0
+      - '0'
+    - - 1
+      - glorious_dash
+    - - 0
+      - merciless_shot
+    - - 1
+      - '1'
+    - - 1
+      - '4'
+    - - 1
+      - vengeance_burst
+    - - 0
+      - psycho_dash
+    - - 1
+      - ante#pass
+    - - 1
+      - '3'
+    - - 0
+      - '1'
+    - - 1
+      - reaping_drive
+    - - 0
+      - rasping_grasp
+    - - 1
+      - ante#divinerush
+    - - 1
+      - '2'
+- - :ban_mirror_matches: '1'
+    :real_time: false
+    :use_finishers: true
+    :use_special_actions: true
+    :starting_player: 0
+  - - - 1
+      - heketch
+    - - 0
+      - heketch
+    - - 0
+      - kehrolyn
+    - - 1
+      - kehrolyn
+    - - 0
+      - zaamassal
+    - - 1
+      - zaamassal
+    - - 1
+      - khadath
+    - - 0
+      - cadenza
+    - - 0
+      - clockwork_shot
+    - - 0
+      - battery_dash
+    - - 0
+      - rocketpress
+    - - 1
+      - hunters_dash
+    - - 1
+      - teleport_snare
+    - - 1
+      - dimensionalexile
+    - - 1
+      - blight_shot
+    - - 0
+      - grapnel_grasp
+    - - 0
+      - ante#pass
+    - - 1
+      - '2'
+    - - 0
+      - grasp_move_opponent
+    - - 0
+      - '4'
+    - - 0
+      - '2'
+    - - 0
+      - iron_body#pass
+    - - 0
+      - clockwork_shot
+    - - 1
+      - evacuation_strike
+    - - 0
+      - ante#pass
+    - - 0
+      - hydraulic_press
+    - - 1
+      - hunters_burst
+    - - 0
+      - ante#pass
+    - - 1
+      - '5'
+    - - 0
+      - grapnel_burst
+    - - 1
+      - teleport_grasp
+    - - 0
+      - ante#pass
+    - - 0
+      - '1'
+    - - 1
+      - '4'
+    - - 1
+      - '2'
+    - - 1
+      - lure_snare
+    - - 0
+      - clockwork_shot
+    - - 0
+      - ante#pass
+    - - 1
+      - '1'
