@@ -84,10 +84,24 @@ end
 
 class Crescendo < Token
   def initialize amt
-    super("tokenpoolbonus", 0, amt * 2, 0)
+    super("Crescendo Power Bonus", 0, amt * 2, 0)
   end
   def effect
     "Ante for +2 power per token."
+  end
+end
+
+class OnHitLoseToken < Token
+  def intialize
+    super
+  end
+  def oh_hit!
+    {
+      'lose_crescendo' => ->(me,inputs) {me.lose_crescendo}
+    }
+  end
+  def effect 
+    "On Hit; reduce the number of Crescendo Tokens Demitras currently owns by 1"
   end
 end
 
@@ -116,9 +130,8 @@ class Demitras < Character
 	  ]
     # of Available Tokens
     @number_of_tokens_in_pool = 2
-
+    @num_anted_tokens = 0
   end
-
 
   def self.character_name
   	'demitras'
@@ -131,7 +144,7 @@ class Demitras < Character
 
   def recycle!
     super
-    @number_of_tokens_in_pool = 2  
+    @num_anted_tokens = 0
   end
 
 
@@ -159,4 +172,8 @@ class Demitras < Character
     sources << PrioBonusFromTokenPool.new(@number_of_tokens_in_pool)
     sources
   end
+
+  def opponent_effect_sources
+    return @number_of_tokens_in_pool > 0 ? [OnHitLoseToken.new] : []
+  end  
 end
