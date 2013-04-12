@@ -201,6 +201,7 @@ class TsunamisCollide < Finisher
       end
     }
   end
+  # This attack cannot hit opponents adjacent to Juto
   flag :tsunamis_collide_range_mod
 end
 
@@ -264,7 +265,7 @@ class Tatsumi < Character
   end
 
   def in_range?
-    return range && range.include?((@juto.position-@opponent.position).abs) && !@opponent.dodges? if base_flag?(:fearless)
+    return @juto.life > 0 && range && range.include?((@juto.position-@opponent.position).abs) && !@opponent.dodges? if base_flag?(:fearless)
     return false if base_flag?(:tsunamis_collide_range_mod) && ((@juto.position - 1)..(@juto.position + 1)).include?(@opponent.position)
     return true if super
   end
