@@ -133,7 +133,7 @@ class Seth < Character
   end
 
   def ante? option
-    return if super
+    return true if super
     @opponent.bases(player_id).map(&:name).include?(option)
   end
 
@@ -143,6 +143,10 @@ class Seth < Character
 
   def beyond_eyes!
     @correct_guess = (@opponent.base.name == @guess)
+  end
+
+  def correct_guess?
+    @correct_guess
   end
 
   def character_specific_effect_sources
@@ -173,18 +177,19 @@ class Seth < Character
   end
 
   def select_new_base? choice
-    @hand.map(&:name).include?(choice) || choice == "pass"
+    bases.map(&:name).include?(choice) || choice == "pass"
   end
   def select_new_base! choice
-    return if 'pass'
-    base = @hand.find{|x| x.name == choice}
+    return if choice == 'pass'
+    base = bases.find{|x| x.name == choice}
     @old_base, @base = @base, base
     @hand.delete(base)
   end
 
   def select_new_base_if_correct_guess!
     if correct_guess?
-      select_from_methods(select_new_base: @hand.map(&:name) + ['pass']).call(me, @input_manager)
+      puts "bases is #{bases.inspect}"
+      select_from_methods(select_new_base: bases.map(&:name) + ['pass']).call(me, @input_manager)
     end
   end
 
