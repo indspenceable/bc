@@ -430,7 +430,7 @@ class Character
   def advance?(n_s, triggered_by_opponent=false)
     return false if (triggered_by_opponent && flag?(:ignore_movement))
     n = Integer(n_s)
-    jump = n_s < distance ? 0 : 1
+    jump = (n_s < distance || opponent.flag?(:mimic_movement)) ? 0 : 1
     if position > @opponent.position
       traversed_spaces = position.downto(position - n_s - jump).to_a
     else
@@ -478,14 +478,19 @@ class Character
     opponent.position = Integer(n)
   end
 
-  def advance!(n_s,log_event=true)
+  def advance!(n_s,log_event=true,triggered_by_mimics=false)
     n = Integer(n_s)
+    if opponent.flag?(:mimic_movement) && !triggered_by_mimics
+      (n..0).each do |n2|
+        break opponent.retreat!(n2, false, true) if opponent.retreat?(n2)
+      end
+    end
     if position > @opponent.position
-      if n >= distance
+      if n < distance || opponent.flag?(:mimic_movement)
+        @position -= n
+      else
         @position -= n+1
         opponent.pass_by!
-      else
-        @position -= n
       end
     else
       if n >= distance
@@ -498,14 +503,16 @@ class Character
     log_me!("advances #{n_s} to space #{@position}") if log_event
   end
 
-  def retreat!(n_s,log_event=true)
+  def retreat!(n_s,log_event=true,triggered_by_mimics=false)
     n = Integer(n_s)
     if position < @opponent.position
       @position -= n
     else
       @position += n
     end
-    #TODO - this looks like a bug.
+    if opponent.flag?(:mimic_movement) && !triggered_by_mimics
+      opponent.advance!(n, false, true)
+    end
     log_me!("retreats #{n_s} to space #{@position}") if log_event
   end
 
