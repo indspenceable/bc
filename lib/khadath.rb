@@ -216,7 +216,7 @@ class Khadath < Character
   end
 
   def blocked_spaces(direct_movement)
-    if !direct_movement && @trap
+    if !direct_movement && @trap && @trap != position
       if @trap < @opponent.position
         return [@trap-1] + super
       elsif @trap > @opponent.position
