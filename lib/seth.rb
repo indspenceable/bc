@@ -34,7 +34,7 @@ class Compelling < Style
       "move_foe" => select_from_methods(pull: [0,1], push: [1])
     }
   end
-  alias :after_activating! :before_activating
+  alias :after_activating! :before_activating!
 end
 class Mimics < Style
   def initialize
@@ -66,12 +66,33 @@ class Omen < Base
   end
 end
 
-class FoolsRangePenalty
-  def initailize
+class FoolsRangePenalty < Token
+  def initialize
     super('foolspenalty', -1, 0, 0)
   end
   def effect
     "-1 Range"
+  end
+end
+
+class BeyondEyes < Token
+  def initialize
+    super("beyondeyesactivation", 0,0,0)
+  end
+  def reveal!(me)
+    me.beyond_eyes!
+  end
+  def descriptor?
+    false
+  end
+end
+
+class BeyondEyesBonus < Token
+  def initialize
+    super('beyondeyes', 0, 2, 2)
+  end
+  def effect
+    "+2 Power, +2 Priority"
   end
 end
 
@@ -94,15 +115,42 @@ class Seth < Character
   end
 
   def finishers
-    []
+    [Omen.new]
   end
 
   def character_specific_effect_sources
     []
   end
 
+
+  def ante_options
+    opts = []
+    unless @guess
+      opts += @opponent.bases(player_id).map(&:name)
+    end
+    opts += super
+    opts
+  end
+
+  def ante? option
+    return if super
+    @opponent.bases(player_id).map(&:name).include?(option)
+  end
+
+  def ante! option
+    @guess = option
+  end
+
+  def beyond_eyes!
+    @correct_guess = (@opponent.base.name == @guess)
+  end
+
+  def character_specific_effect_sources
+    Array(correct_guess?? BeyondEyes.new : nil)
+  end
+
   def dodges?
-    super || (flag?(:dodge_range_four_and_up) && range >= 4)
+    super || (flag?(:dodge_range_four_and_up) && distance >= 4)
   end
 
   def recycle!
@@ -111,6 +159,8 @@ class Seth < Character
     @old_base = nil
     @bonuses = []
     @opponent_bonuses = []
+    @correct_guess = nil
+    @guess = nil
   end
 
   # effect sources provided by your opponent, like trap penalty
