@@ -150,17 +150,18 @@ var init = function(player_id, game_id, chimeEnabled) {
     divinerush: makeCard(0, 2, 2, {"Token": undefined}),
 
     deathwalks: makeCard("1~2", 5, 6, {"On Hit": "Stuns the opponent. The opponent has -4 priority next beat."}),
-    handofdivinity: makeCard(5, 7, 3, {"On Hit": "Advance any number of spaces.", "Soak": 3})
+    handofdivinity: makeCard(5, 7, 3, {"On Hit": "Advance any number of spaces.", "Soak": 3}),
 
     // Tatsumi
     siren: makeCard(0, -1, 1, {"On Hit": "The opponent is stunned.", "End of Beat": "Move Juto 0-2 spaces"}),
     riptide: makeCard("0~2", 0, -1, {"Start of Beat": "Zone 2: Attacks at range 3+ do not hit you.", "End of Beat": "Pull Juto any amount toward you (including past you)."}),
-    empathic: makeCard(0, -2, 1, {"After Activating": "You may swap locations with Juto.", "End of Beat": "Opponent loses life equal to half the damage you received (rounded up)"}),
-    fearless: makeCard("-1~0", -1, 1, {"End of Beat": "If Juto is disabled, revive him in your space.", "Range is calculated from Juto. If Juto is disabled, this attack misses.": undefined}),
+    empathic: makeCard(0, 0, -2, {"After Activating": "You may swap locations with Juto.", "End of Beat": "Opponent loses life equal the damage received by Juto.", "Stun Guard", 4}),
+    fearless: makeCard("-1~0", 0, 1, {"End of Beat": "If Juto is disabled, revive him in your space.", "Range is calculated from Juto. If Juto is disabled, this attack misses.": undefined}),
     wave: makeCard("2~4", -1, 0, {"On Hit": "Push the opponent 0-2 spaces.", "After Activating": "Advance Juto any distance."}),
     whirlpool: makeCard("1~2", 3, 3, {"Start of Beat": "Move opponent one space towards Juto.", "After Activating": "You and Juto move 0-2 spaces each."}),
 
-    tsunamiscollide: makeCard("2~4", 0, 0, {"Reveal": "Zone 3: +3 power, +2 priority per space between you and Juto.", "This attack does not hit opponents adjacent to Juto.": undefined})
+    tsunamiscollide: makeCard("2~4", 0, 0, {"Reveal": "Zone 3: +3 power, +2 priority per space between you and Juto.", "This attack does not hit opponents adjacent to Juto.": undefined}),
+    beararms: makeCard("X", 6, 5, {"On Hit": "Opponent is stunned. Move Juto any number of spaces.", "The range of this attack is Juto's space and any adjacent spaces.": undefined})
   }
 
   var loadCard = function(cardName, $card, overrideCardName) {
@@ -389,6 +390,17 @@ var init = function(player_id, game_id, chimeEnabled) {
         meta = meta[0]
       }
       meta.append($("<span/>").addClass("label label-" + color).html($('<i/>').addClass('icon-asterisk')))
+    }
+    else if (data.juto !== undefined) {
+      var color = (pn == 0 ? 'info' : 'important')
+      var space = $('.board').find('.s' + data.juto[0])
+      var meta = space.find('.meta')
+      if (meta.length == 0) {
+        meta = $('<div/>').addClass('meta').prependTo(space)
+      } else {
+        meta = meta[0]
+      }
+      meta.append($("<span/>").addClass("label label-" + color).html($('<i/>').addClass('icon-juto')))
     }
   }
 

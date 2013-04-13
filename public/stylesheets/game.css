@@ -44,6 +44,11 @@
   text-align: center;
 }
 
+.icon-juto {
+  background-image: url("public/images/character_icons/juto.png");
+  background-size: 20, 22
+}
+
 .header .character-desc {
   display: none;
   /*position: absolute;

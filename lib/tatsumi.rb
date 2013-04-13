@@ -7,13 +7,13 @@ class Siren < Style
   end
   def on_hit!
     {
-      #Opponent is stunned
+      # Opponent is stunned
       "stuns" => ->(me, inputs) {me.opponent.stunned!}
     }
   end
   def end_of_beat!
     {
-      #Move Juto 0-2 spaces
+      # Move Juto 0-2 spaces
       "move_juto" => ->(me, inputs) {
         select_from_methods(move_juto: ((me.juto.position-2)..(me.juto.position+2)).to_a).call(me, inputs)
       }
@@ -27,7 +27,7 @@ class Riptide < Style
   end
   def start_of_beat!
     {
-      #juto between (zone 2), attacks at range 3+ do not hit tatsumi
+      # Juto between (zone 2), attacks at range 3+ do not hit tatsumi
       "range_block" => (me, inputs) {
         if me.character_specific_effect_sources[0] == me.zones[2]
           me.riptide_range_mod = true
@@ -37,7 +37,7 @@ class Riptide < Style
   end
   def end_of_beat!
     {
-      #Move juto any amount toward you - including past you!
+      # Move juto any amount toward you - including past you!
       "pull_juto" => (me, inputs) {
         if me.position < me.juto.position
           select_from_methods(move_juto: (0..(me.juto.position)).to_a).call(me, inputs)
@@ -51,29 +51,32 @@ end
 
 class Empathic < Style
   def initialize
-    super("empathic", 0, -2, 1)
+    super("empathic", 0, 0, -2)
   end
   def after_activating!
     {
-      #You may swap with Juto
+      # You may swap with Juto
       select_from_methods("Swap locations with Juto?", swap_juto: ["yes", "no"])
     }
   end
   def end_of_beat!
     {
-      #Opponent loses life equal to half the damage you received - rounding up
+      # Opponent loses life equal to the amount received by Juto
       "opponent_lose_life" => ->(me, inputs) {
-        damage = me.damage_taken_this_beat/2 + me.damage_taken_this_beat%2
+        damage = me.juto.damage_taken_this_beat
         me.opponent.lose_life!(damage)
       }
     }
+  end
+  def stun_guard
+    4
   end
 end
 
 class Fearless < Style
   # Range must be calculated from Juto; can't hit if he's disabled
   def initialize
-    super("fearless", -1..0, -1, 1)
+    super("fearless", -1..0, 0, 1)
   end
   def end_of_beat
     #if Juto is disabled, revive him in your space
@@ -205,11 +208,38 @@ class TsunamisCollide < Finisher
   flag :tsunamis_collide_range_mod
 end
 
+class BearArms < Finisher
+  # Range is Juto's space and adjacent spaces
+  def initialize
+    super("beararms", nil, 6, 5)
+  end
+  def on_hit!
+    {
+      # Opponent is stunned
+      "stuns" => ->(me, inputs) {me.opponent.stunned!}
+      # Move Juto any number of spaces
+      "move_juto" => select_from_methods("Move Juto to any space", move_juto: (0..6).to_a)
+    }
+  end
+  flag :bear_arms_range_mod
+end
+
 class Juto
-  attr_accessor :life, :position
+  attr_accessor :life, :position, :damage_taken_this_beat
   def initialize(position)
     @position = position
     @life = 4
+    @damage_taken_this_beat = 0
+  end
+
+  def take_hit!(damage)
+    @life -= damage
+    @damage_taken_this_beat += damage
+    @position = nil if @life < 1
+  end
+
+  def recycle!
+    @damage_taken_this_beat = 0
   end
 end
 
@@ -242,7 +272,7 @@ class Tatsumi < Character
   end
 
   def finishers
-    [TsunamisCollide.new, TsunamisCollide.new]
+    [TsunamisCollide.new, BearArms.new]
   end
 
   def character_specific_effect_sources
@@ -308,12 +338,17 @@ class Tatsumi < Character
   def take_hit!(damage)
     # If juto soaks, make him take damage
     unless opponent.ignore_soak?? && character_specific_effect_sources[0].soak
-      @juto.life -= [character_specific_effect_sources[0].soak, damage].min
+      @juto.take_hit!([character_specific_effect_sources[0].soak, damage].min)
     end
   end
 
   def recycle!
     super
     @riptide_range_mod = false
-    @juto.position = nil if @juto.life < 1
+    @juto.recycle!
   end
+
+  def extra_data
+    {
+      :juto => [@juto.location, @juto.life]
+    }
