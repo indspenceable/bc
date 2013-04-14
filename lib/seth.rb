@@ -66,6 +66,24 @@ class Omen < Base
   end
 end
 
+class SethFinisher1 < Finisher
+  def initialize
+    super("sethfinisher1", 1..3, 0, 6)
+  end
+  def on_hit!
+    {
+      "foresight" => ->(me, inputs) { me.foresight! }
+    }
+  end
+end
+
+class Foresight < Token
+  def initialize
+    super('foresight', 0, 0, 0)
+  end
+  flag :foresight
+end
+
 class FoolsRangePenalty < Token
   def initialize
     super('foolspenalty', -1, 0, 0)
@@ -112,6 +130,7 @@ class Seth < Character
     ]
     @bonuses = []
     @opponent_bonuses = []
+    @foresight_bonus = nil
   end
 
   def finishers
@@ -150,7 +169,8 @@ class Seth < Character
   end
 
   def character_specific_effect_sources
-    Array(correct_guess?? BeyondEyes.new : nil)
+    Array(correct_guess?? BeyondEyes.new : nil) +
+    Array(@foresight_bonuse)
   end
 
   def dodges?
@@ -196,4 +216,9 @@ class Seth < Character
   def stun_if_correct_guess!
     opponent.stunned! if correct_guess?
   end
+
+  def foresight!
+    @foresight_bonus = Foresight.new
+  end
+
 end
