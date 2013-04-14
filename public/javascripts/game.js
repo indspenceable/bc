@@ -70,7 +70,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     feedbackfield: makeCard("1~2", 1, 0, {"Soak": 5, "On Hit": "This attack has +2 power for each point of damage Cadenza soaked this beat."}),
 
     // Khadath
-    hunters: makeCard(0, 0, 1, {"reveal": "+2 Power +2 Priority if opponent is on or next to your trap."}),
+    hunters: makeCard(0, 0, 0, {"reveal": "+2 Power +2 Priority if opponent is on or next to your trap."}),
     teleport: makeCard("0~2", 1, -4, {"Ranged attacks don't hit you if your trap is between you and your opponnent.": undefined, "End of Beat": "Move to any unoccupied space. Move your trap to any unoccupied space."}),
     blight: makeCard("0~2", 0, 0, {"Start of Beat": "Place your trap anywhere in your range."}),
     evacuation: makeCard("0~1", 0, 0, {"Start of Beat": "Place your trap in your current location, then retreat 1 space."}),
