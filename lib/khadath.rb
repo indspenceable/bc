@@ -3,7 +3,7 @@ require "bases"
 
 class Hunters < Style
   def initialize
-    super("hunters", 0, 1, 0)
+    super("hunters", 0, 0, 0)
   end
   def reveal!(me)
     me.hunters_bonus_if_on_or_adacent_to_trap!
