@@ -50,7 +50,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     // Hikaru
     palmstrike: makeCard(1, 2, 5, {"Start of Beat": "Advance 1 space.", "On Damage": "Recover an elemental token of your choice."}),
     geomantic: makeCard(0, 1, 0, {"Start of Beat": "You may ante another token for this beat."}),
-    focused: makeCard(0, 1, 0, {"On Hit": "Recover an elemental token of your choice."}),
+    focused: makeCard(0, 1, 0, {"On Hit": "Recover an elemental token of your choice.", "Stun Gaurd": 2}),
     trance: makeCard("0~1", 0, 0, {"Start of Beat": "Return all anted tokens to your pool. You don't get their effects this turn.", "End of Beat": "Recover an elemental token of your choice."}),
     sweeping: makeCard(0, -1, 3, {"If hikaru gets hit this turn, he takes 2 additional damage.": undefined}),
     advancing: makeCard(0, 1, 1, {"Start of beat": "Advance 1 space. If this causes you to switch sides with an opponent, you get +1 power this beat."}),
