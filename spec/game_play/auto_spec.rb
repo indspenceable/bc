@@ -37,10 +37,11 @@ end
 
 CHARACTER = ENV['CHARACTER']
 COUNT = ENV['COUNT'].to_i > 0 ? ENV['COUNT'].to_i : 30
+VS = ENV['VS']
 
 describe GamePlay do
   (CHARACTER ? [CHARACTER] : GamePlay.character_names).each do |c1|
-    GamePlay.character_names.each do |c2|
+    (VS ? [VS] : GamePlay.character_names).each do |c2|
       it "doesn't raise errors when you give valid input in a #{c1} #{c2} game." do
         COUNT.times do |i|
           configs = {
