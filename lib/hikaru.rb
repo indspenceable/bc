@@ -18,7 +18,7 @@ class Geomantic < Style
 end
 class Focused < Style
   def initialize
-    super("focused", 0, 1, 0)
+    super("focused", 0, 0, 1)
   end
   def stun_guard
     2

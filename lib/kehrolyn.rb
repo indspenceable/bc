@@ -44,6 +44,12 @@ class Mutating < Style
   def priority
     @target ? @target.priority : super
   end
+  def soak
+    @target ? @target.soak : 0
+  end
+  def stun_guard
+    @target ? @target.stun_guard : 0
+  end
 
   def reveal!(me)
     @target = me.mutating_target(self)

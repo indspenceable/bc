@@ -55,7 +55,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     // Hikaru
     palmstrike: makeCard(1, 2, 5, {"Start of Beat": "Advance 1 space.", "On Damage": "Recover an elemental token of your choice."}),
     geomantic: makeCard(0, 1, 0, {"Start of Beat": "You may ante another token for this beat."}),
-    focused: makeCard(0, 1, 0, {"On Hit": "Recover an elemental token of your choice."}),
+    focused: makeCard(0, 0, 1, {"On Hit": "Recover an elemental token of your choice.", "Stun Gaurd": 2}),
     trance: makeCard("0~1", 0, 0, {"Start of Beat": "Return all anted tokens to your pool. You don't get their effects this turn.", "End of Beat": "Recover an elemental token of your choice."}),
     sweeping: makeCard(0, -1, 3, {"If hikaru gets hit this turn, he takes 2 additional damage.": undefined}),
     advancing: makeCard(0, 1, 1, {"Start of beat": "Advance 1 space. If this causes you to switch sides with an opponent, you get +1 power this beat."}),
@@ -75,7 +75,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     feedbackfield: makeCard("1~2", 1, 0, {"Soak": 5, "On Hit": "This attack has +2 power for each point of damage Cadenza soaked this beat."}),
 
     // Khadath
-    hunters: makeCard(0, 1, 0, {"reveal": "+2 Power +2 Priority if opponent is on or next to your trap."}),
+    hunters: makeCard(0, 0, 0, {"reveal": "+2 Power +2 Priority if opponent is on or next to your trap."}),
     teleport: makeCard("0~2", 1, -4, {"Ranged attacks don't hit you if your trap is between you and your opponnent.": undefined, "End of Beat": "Move to any unoccupied space. Move your trap to any unoccupied space."}),
     blight: makeCard("0~2", 0, 0, {"Start of Beat": "Place your trap anywhere in your range."}),
     evacuation: makeCard("0~1", 0, 0, {"Start of Beat": "Place your trap in your current location, then retreat 1 space."}),

@@ -3,7 +3,7 @@ require "bases"
 
 class Hunters < Style
   def initialize
-    super("hunters", 0, 1, 0)
+    super("hunters", 0, 0, 0)
   end
   def reveal!(me)
     me.hunters_bonus_if_on_or_adacent_to_trap!
@@ -216,7 +216,7 @@ class Khadath < Character
   end
 
   def blocked_spaces(direct_movement)
-    if !direct_movement && @trap
+    if !direct_movement && @trap && @trap != position
       if @trap < @opponent.position
         return [@trap-1] + super
       elsif @trap > @opponent.position
