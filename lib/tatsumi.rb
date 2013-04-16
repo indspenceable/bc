@@ -1,5 +1,5 @@
 require "character"
-require "base"
+# require "bases"
 
 class Siren < Style
   def initialize
@@ -28,7 +28,7 @@ class Riptide < Style
   def start_of_beat!
     {
       # Juto between (zone 2), attacks at range 3+ do not hit tatsumi
-      "range_block" => (me, inputs) {
+      "range_block" => ->(me, inputs) {
         if me.character_specific_effect_sources[0] == me.zones[2]
           me.riptide_range_mod = true
         end
@@ -38,7 +38,7 @@ class Riptide < Style
   def end_of_beat!
     {
       # Move juto any amount toward you - including past you!
-      "pull_juto" => (me, inputs) {
+      "pull_juto" => ->(me, inputs) {
         if me.position < me.juto.position
           select_from_methods(move_juto: (0..(me.juto.position)).to_a).call(me, inputs)
         elsif me.position > me.juto.position
@@ -56,7 +56,7 @@ class Empathic < Style
   def after_activating!
     {
       # You may swap with Juto
-      select_from_methods("Swap locations with Juto?", swap_juto: ["yes", "no"])
+      "swap_with_juto" => select_from_methods("Swap locations with Juto?", swap_juto: ["yes", "no"])
     }
   end
   def end_of_beat!
@@ -197,11 +197,13 @@ class TsunamisCollide < Finisher
   def reveal!(me)
     {
       # zone 3: +3 power, +2 priority per space between Tatsumi & Juto
-      if me.character_specific_effect_sources[0] == me.zones[3]
-        distance = (me.position-me.juto.position).abs - 1
-        @power = 3 * distance
-        @priority = 2 * distance
-      end
+      "pow_pri_bonus" => ->(me, inputs) {
+        if me.character_specific_effect_sources[0] == me.zones[3]
+          distance = (me.position-me.juto.position).abs - 1
+          @power = 3 * distance
+          @priority = 2 * distance
+        end
+      }
     }
   end
   # This attack cannot hit opponents adjacent to Juto
@@ -216,7 +218,7 @@ class BearArms < Finisher
   def on_hit!
     {
       # Opponent is stunned
-      "stuns" => ->(me, inputs) {me.opponent.stunned!}
+      "stuns" => ->(me, inputs) {me.opponent.stunned!},
       # Move Juto any number of spaces
       "move_juto" => select_from_methods("Move Juto to any space", move_juto: (0..6).to_a)
     }
@@ -305,7 +307,6 @@ class Tatsumi < Character
     return (distance >= 3) if @riptide_range_mod
   end
 
-  end
   def move_juto? n_s
     n = Integer(n_s)
     return true if (n>=0 && n<=6)
@@ -337,7 +338,7 @@ class Tatsumi < Character
 
   def take_hit!(damage)
     # If juto soaks, make him take damage
-    unless opponent.ignore_soak?? && character_specific_effect_sources[0].soak
+    unless (opponent.ignore_soak? && character_specific_effect_sources[0].soak)
       @juto.take_hit!([character_specific_effect_sources[0].soak, damage].min)
     end
   end
@@ -350,5 +351,7 @@ class Tatsumi < Character
 
   def extra_data
     {
-      :juto => [@juto.location, @juto.life]
+      :juto => [@juto.position, @juto.life]
     }
+  end
+end

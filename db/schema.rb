@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130402081925) do
+ActiveRecord::Schema.define(:version => 20130413073556) do
 
   create_table "challenges", :force => true do |t|
     t.integer  "from_id"
@@ -27,24 +27,24 @@ ActiveRecord::Schema.define(:version => 20130402081925) do
   add_index "challenges", ["to_id"], :name => "index_challenges_on_to_id"
 
   create_table "games", :force => true do |t|
-    t.text      "inputs"
-    t.timestamp "created_at",                   :null => false
-    t.timestamp "updated_at",                   :null => false
-    t.boolean   "active"
-    t.integer   "p0_id"
-    t.integer   "p1_id"
-    t.text      "configs"
-    t.boolean   "valid_play", :default => true
+    t.text     "inputs"
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+    t.boolean  "active"
+    t.integer  "p0_id"
+    t.integer  "p1_id"
+    t.text     "configs"
+    t.boolean  "valid_play", :default => true
   end
 
   add_index "games", ["active", "p0_id", "p1_id"], :name => "index_games_on_active_and_p0_id_and_p1_id"
 
   create_table "users", :force => true do |t|
-    t.string    "email"
-    t.timestamp "created_at", :null => false
-    t.timestamp "updated_at", :null => false
-    t.text      "metadata"
-    t.string    "name"
+    t.string   "email"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.text     "metadata"
+    t.string   "name"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
