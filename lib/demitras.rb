@@ -84,16 +84,17 @@ end
 
 class Crescendo < Token
   def initialize amt
-    super("Crescendo Power Bonus", 0, amt * 2, 0)
+    @amount = amt
+    super("Crescendo", 0, 2, 0)
   end
   def effect
-    "Ante for +2 power per token."
+    "Ante for +2 power per token. Demitras Currently has #{@amount} Crescendo Tokens"
   end
 end
 
 class OnHitLoseToken < Token
-  def intialize
-    super
+  def initialize
+    super("lose_crescendo_on_hit", 0, 0, 0)
   end
   def oh_hit!
     {
@@ -102,6 +103,20 @@ class OnHitLoseToken < Token
   end
   def effect 
     "On Hit; reduce the number of Crescendo Tokens Demitras currently owns by 1"
+  end
+end
+
+class OnHitGainToken < Token
+  def initialize
+    super("Gain Crescendo On Hit", 0, 0, 0)
+  end
+  def oh_hit!
+    {
+      'gain_crescendo' => ->(me,inputs) {me.gain_crescendo}
+    }
+  end
+  def effect 
+    "On Hit; increase the number of Crescendo Tokens Demitras currently owns by 1"
   end
 end
 
@@ -130,12 +145,18 @@ class Demitras < Character
 	  ]
     # of Available Tokens
     @number_of_tokens_in_pool = 2
+    @token_pool = [Crescendo.new(@number_of_tokens_in_pool)]
     @num_anted_tokens = 0
   end
 
   def self.character_name
   	'demitras'
   end
+
+  def token_pool_descriptors
+    @token_pool.map(&:descriptor)
+  end 
+
 
   def dodges?
     return true if super
@@ -163,13 +184,29 @@ class Demitras < Character
     end
   end
 
+  def recycle
+  end
+
   def stun_slow_opponent
-     opponent.stunned! if opponent.priority <= 3
+    opponent.stunned! if opponent.priority <= 3
+  end
+
+  def lose_crescendo
+    if @number_of_tokens_in_pool > 0
+      @number_of_tokens_in_pool -= 1
+    end
+  end
+
+  def gain_crescendo
+    if @number_of_tokens_in_pool < 5
+      @number_of_tokens_in_pool += 1
+    end
   end
 
   def character_specific_effect_sources
     sources = []
     sources << PrioBonusFromTokenPool.new(@number_of_tokens_in_pool)
+    sources << OnHitGainToken.new
     sources
   end
 

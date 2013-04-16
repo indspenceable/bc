@@ -145,7 +145,7 @@ var init = function(player_id, game_id, chimeEnabled) {
     deathblow:makeCard(1, 0 , 8 , {"On Hit" : "You may spend any number of Crescendo Tokens. For each token you spend, this attack has +2 power.", "After Activating" : "You gain an additional Crescendo Token if you hit with this attack."}),
 
     symphonyofdemise:makeCard(1,0,9,{"Before Activating" : "Move forward up to 4 spaces.", "On Hit" : "Gain Crescendo Tokens until you have 5."}),
-    accelerando:makeCard(2, 2, 4, {"Ignores stun guard": undefined, "Before Activating": "Advance any number of spaces.", "On Hit": "Discard any number of tokens for +2 power each."})
+    accelerando:makeCard(2, 2, 4, {"Ignores stun guard": undefined, "Before Activating": "Advance any number of spaces.", "On Hit": "Discard any number of tokens for +2 power each."}),
 
     // Vanaah
     reaping: makeCard("0~1", 0, 1, {"On Hit": "Opponent discards a token. If he cannot, then regain Divine Rush."}),

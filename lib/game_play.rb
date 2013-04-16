@@ -502,7 +502,7 @@ class GamePlay
   end
 
   def self.character_list
-    [Hikaru, Cadenza, Khadath, Rukyuk, Heketch, Zaamassal, Hepzibah, Kehrolyn, Vanaah, Demitras]
+    [Hikaru, Cadenza, Khadath, Rukyuk, Heketch, Zaamassal, Hepzibah, Kehrolyn, Demitras, Vanaah]
   end
 
   def self.character_names
