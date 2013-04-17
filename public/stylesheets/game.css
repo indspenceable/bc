@@ -50,6 +50,12 @@
   background-position: 0px 0px;
 }
 
+.juto-popover {
+  color: #333;
+  font-size: 14px;
+  font-weight: normal;
+}
+
 .header .character-desc {
   display: none;
   /*position: absolute;

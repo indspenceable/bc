@@ -35,10 +35,10 @@ var init = function(player_id, game_id, chimeEnabled) {
     kehrolyn: "Each beat, Kehrolyn applies the style in her discard1 to her current attackpair.",
     vanaah: "Vanaah has a Divine Rush token that she can ante to gain +2 power and +2 priority. After using the token, the token is discarded with the attack pair and is returned with the attack pair after two beats.",
     tatsumi: "Tatsumi fights with her companion panda, Juto. Juto has 4 life points, and begins duel in same space as Tatsumi. If Juto's life is reduced to zero or less, he is romoved from the board. Juto's position grants passive bonuses:\
-    zone 0 (behind Tatsumi): +0~2 range, +1 power\
-    zone 1 (same space as Tatsumi): soak 3; Juto loses life equal to the amount soaked\
-    zone 2 (between Tatsumi and opponent) : soak 1, stun guard 2. Juto loses life equal to the amount soaked\
-    zone 3 (with or behind opponent): + 1 priority"
+    \nzone 0 (behind Tatsumi): +0~2 range, +1 power\
+    \nzone 1 (same space as Tatsumi): soak 3; Juto loses life equal to the amount soaked\
+    \nzone 2 (between Tatsumi and opponent) : soak 1, stun guard 2. Juto loses life equal to the amount soaked\
+    \nzone 3 (with or behind opponent): + 1 priority"
   }
 
   var cardDefinitions = {
@@ -389,7 +389,7 @@ var init = function(player_id, game_id, chimeEnabled) {
       } else {
         meta = meta[0]
       }
-      meta.append($("<span/>").addClass("label label-" + color).html($('<i/>').addClass('icon-asterisk')))
+      meta.append($("<span/>").addClass("body label-" + color + " label").html($('<i/>').addClass('icon-asterisk')))
     }
     else if (data.juto !== undefined) {
       var color = (pn == 0 ? 'info' : 'important')
@@ -400,7 +400,13 @@ var init = function(player_id, game_id, chimeEnabled) {
       } else {
         meta = meta[0]
       }
-      meta.append($("<span/>").addClass("label label-" + color).html($('<i/>').addClass('icon-juto')))
+      meta.append($("<span/>").addClass("label label-" + color + " juto-popover").html($('<i/>').addClass('icon-juto').popover({
+        html: true,
+        title: 'Juto',
+        trigger: 'hover',
+        placement: 'top',
+        content: "<b>Life: </b>" + data.juto[1]
+      })))
     }
   }
 
