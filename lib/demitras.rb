@@ -83,12 +83,11 @@ class PrioBonusFromTokenPool < Token
 end
 
 class Crescendo < Token
-  def initialize amt
-    @amount = amt
+  def initialize
     super("Crescendo", 0, 2, 0)
   end
   def effect
-    "Ante for +2 power per token. Demitras Currently has #{@amount} Crescendo Tokens"
+    "Ante for +2 power per token. Passively give +1 priority while in token pool"
   end
 end
 
@@ -145,7 +144,7 @@ class Demitras < Character
 	  ]
     # of Available Tokens
     @number_of_tokens_in_pool = 2
-    @token_pool = [Crescendo.new(@number_of_tokens_in_pool)]
+    @token_pool = [Crescendo.new, Crescendo.new]
     @num_anted_tokens = 0
   end
 
@@ -168,10 +167,14 @@ class Demitras < Character
     @num_anted_tokens = 0
   end
 
+  def ante_options?
+    ((@number_of_tokens_in_pool < 1) ? [] : ["crescendo"]) + super
+  end
 
-  def ante?(choice)
-    return true if choice == "pass"
+  def ante?(action)
+    return true if action == "pass"
     return true if super
+    return next_available_crescendo && lose_crescendo
   end
 
   def finishers
@@ -184,8 +187,6 @@ class Demitras < Character
     end
   end
 
-  def recycle
-  end
 
   def stun_slow_opponent
     opponent.stunned! if opponent.priority <= 3
@@ -194,13 +195,21 @@ class Demitras < Character
   def lose_crescendo
     if @number_of_tokens_in_pool > 0
       @number_of_tokens_in_pool -= 1
+      log_me!(@number_of_tokens_in_pool)
+      Crescendo.amount = @number_of_tokens_in_pool
     end
   end
 
   def gain_crescendo
     if @number_of_tokens_in_pool < 5
       @number_of_tokens_in_pool += 1
+      log_me!(@number_of_tokens_in_pool)
+      Crescendo.amount = @number_of_tokens_in_pool
     end
+  end
+
+  def next_available_crescendo
+    @token_pool.find{|n| n.is_a? Crescendo}
   end
 
   def character_specific_effect_sources
