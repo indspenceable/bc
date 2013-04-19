@@ -17,7 +17,7 @@ require 'tatsumi'
 #     ones.
 MOVEMENT_METHODS = [
   :advance, :retreat, :pull, :push, :teleport_to, :teleport_opponent_to,
-  :set_trap_in_range, :set_trap
+  :set_trap_in_range, :set_trap, :move_juto
 ]
 def select_from_methods(pretty_string=nil, options)
   return select_from_movement_methods(pretty_string, options) if options.keys.all?{|k| MOVEMENT_METHODS.include?(k)}

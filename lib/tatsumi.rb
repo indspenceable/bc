@@ -1,5 +1,5 @@
 require "character"
-# require "bases"
+require "bases"
 
 class Siren < Style
   def initialize
@@ -15,7 +15,8 @@ class Siren < Style
     {
       # Move Juto 0-2 spaces
       "move_juto" => ->(me, inputs) {
-        select_from_methods(move_juto: ((me.juto.position-2)..(me.juto.position+2)).to_a).call(me, inputs)
+        pos = Integer(me.juto.position)
+        select_from_methods("Move Juto 0-2 spaces", move_juto: ((pos-2)..(pos+2)).to_a).call(me, inputs)
       }
     }
   end
@@ -40,9 +41,9 @@ class Riptide < Style
       # Move juto any amount toward you - including past you!
       "pull_juto" => ->(me, inputs) {
         if me.position < me.juto.position
-          select_from_methods(move_juto: (0..(me.juto.position)).to_a).call(me, inputs)
+          select_from_methods("Pull Juto any amount", move_juto: (0..(me.juto.position)).to_a).call(me, inputs)
         elsif me.position > me.juto.position
-          select_from_methods(move_juto: ((me.juto.position)..6).to_a).call(me, inputs)
+          select_from_methods("Pull Juto any amount", move_juto: ((me.juto.position)..6).to_a).call(me, inputs)
         end
       }
     }
@@ -103,8 +104,8 @@ class Wave < Style
     {
       # advance juto any distance
       "advance_juto" => ->(me, inputs) {
-        select_from_methods(move_juto: (0..(me.juto.position)).to_a).call(me, inputs) if me.opponent.position < me.juto.position
-        select_from_methods(move_juto: ((me.juto.position)..6).to_a).call(me, inputs) if me.opponent.position > me.juto.position
+        select_from_methods("Advance Juto any distance", move_juto: (0..(me.juto.position)).to_a).call(me, inputs) if me.opponent.position < me.juto.position
+        select_from_methods("Advance Juto any distance", move_juto: ((me.juto.position)..6).to_a).call(me, inputs) if me.opponent.position > me.juto.position
       }
     }
   end
@@ -134,7 +135,7 @@ class Whirlpool < Base
       "move_juto" => ->(me, inputs) {
         select_from_methods("Move Juto 0-2 spaces", move_juto: ((me.juto.position-2)..(me.juto.position+2)).to_a).call(me, inputs)
       },
-      "move_tatsumi" => select_from_methods("Move Tatsumi 0-2 spaces", advance: [0, 1, 2], retreat: [1, 2])
+      "move_tatsumi" => select_from_movement_methods("Move Tatsumi 0-2 spaces", advance: [0, 1, 2], retreat: [1, 2])
     }
   end
 end
@@ -299,25 +300,26 @@ class Tatsumi < Character
   def in_range?
     return @juto.life > 0 && range && range.include?((@juto.position-@opponent.position).abs) && !@opponent.dodges? if base_flag?(:fearless)
     return false if base_flag?(:tsunamis_collide_range_mod) && ((@juto.position - 1)..(@juto.position + 1)).include?(@opponent.position)
-    return true if super
+    super
   end
 
   def dodges?
-    return true if super
     return (distance >= 3) if @riptide_range_mod
+    super
   end
 
-  def move_juto? n_s
-    n = Integer(n_s)
-    return true if (n>=0 && n<=6)
+  def move_juto? space
+    n = Integer(space)
+    return n if (n>=0 && n<=6)
+    return false
   end
 
-  def move_juto! n_s
-    @juto.position = Integer(n_s)
+  def move_juto! space
+    @juto.position = Integer(space)
   end
 
   def swap_juto? response_s
-    return true if @juto.life > 0
+    return (@juto.life > 0 && @juto.position!=@opponent.position)
   end
 
   def swap_juto! response_s
@@ -338,9 +340,10 @@ class Tatsumi < Character
 
   def take_hit!(damage)
     # If juto soaks, make him take damage
-    unless (opponent.ignore_soak? && character_specific_effect_sources[0].soak)
+    unless (opponent.ignore_soak? && !character_specific_effect_sources[0].soak)
       @juto.take_hit!([character_specific_effect_sources[0].soak, damage].min)
     end
+    super
   end
 
   def recycle!
