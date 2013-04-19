@@ -15,8 +15,8 @@ class Siren < Style
     {
       # Move Juto 0-2 spaces
       "move_juto" => ->(me, inputs) {
-        pos = Integer(me.juto.position)
-        select_from_methods("Move Juto 0-2 spaces", move_juto: ((pos-2)..(pos+2)).to_a).call(me, inputs)
+          pos = Integer(me.juto.position)
+          select_from_methods("Move Juto 0-2 spaces", move_juto: ((pos-2)..(pos+2)).to_a).call(me, inputs)
       }
     }
   end
@@ -30,7 +30,7 @@ class Riptide < Style
     {
       # Juto between (zone 2), attacks at range 3+ do not hit tatsumi
       "range_block" => ->(me, inputs) {
-        if me.character_specific_effect_sources[0] == me.zones[2]
+        if me.current_zone == me.zones[2]
           me.riptide_range_mod = true
         end
       }
@@ -65,7 +65,7 @@ class Empathic < Style
       # Opponent loses life equal to the amount received by Juto
       "opponent_lose_life" => ->(me, inputs) {
         damage = me.juto.damage_taken_this_beat
-        me.opponent.lose_life!(damage)
+        me.opponent.lose_life!(damage) if damage > 0
       }
     }
   end
@@ -97,15 +97,18 @@ class Wave < Style
   def on_hit!
     {
       #Push opponent 0-2 spaces
-      "push" => select_from_methods(push: (0..2).to_a)
+      "push" => select_from_methods("Push opponent 0-2 spaces", push: (0..2).to_a)
     }
   end
   def after_activating!
     {
       # advance juto any distance
       "advance_juto" => ->(me, inputs) {
-        select_from_methods("Advance Juto any distance", move_juto: (0..(me.juto.position)).to_a).call(me, inputs) if me.opponent.position < me.juto.position
-        select_from_methods("Advance Juto any distance", move_juto: ((me.juto.position)..6).to_a).call(me, inputs) if me.opponent.position > me.juto.position
+        if me.opponent.position < me.juto.position
+          select_from_methods("Advance Juto any distance", move_juto: (0..(me.juto.position)).to_a).call(me, inputs)
+        elsif  me.opponent.position > me.juto.position
+          select_from_methods("Advance Juto any distance", move_juto: ((me.juto.position)..6).to_a).call(me, inputs)
+        end
       }
     }
   end
@@ -120,7 +123,7 @@ class Whirlpool < Base
       # Move foe one space towards Juto 
       "move_opponent" => ->(me, inputs) {
         if me.opponent.position != me.juto.position
-          if me.character_specific_effect_sources[0] == me.zones[3]
+          if me.current_zone == me.zones[3]
             select_from_methods(retreat: [1]).call(me.opponent, inputs)
           else
             select_from_methods(advance: [1]).call(me.opponent, inputs)
@@ -191,24 +194,24 @@ class Zone3 < Token
 end
 
 class TsunamisCollide < Finisher
-  # attack does not hit if opponent is adjacent to juto
   def initialize
     super("tsunamiscollide", 2..4, 0, 0)
   end
   def reveal!(me)
-    {
       # zone 3: +3 power, +2 priority per space between Tatsumi & Juto
-      "pow_pri_bonus" => ->(me, inputs) {
-        if me.character_specific_effect_sources[0] == me.zones[3]
-          distance = (me.position-me.juto.position).abs - 1
-          @power = 3 * distance
-          @priority = 2 * distance
-        end
-      }
-    }
+      me.tsunamis_collide!
   end
   # This attack cannot hit opponents adjacent to Juto
   flag :tsunamis_collide_range_mod
+end
+
+class TsunamisCollideBonus < Token
+  def initialize distance
+    super("Tsunamis Collide", 0, 3*distance, 2*distance)
+  end
+  def effect
+    "+#{@power} power, +#{@priority} priority"
+  end
 end
 
 class BearArms < Finisher
@@ -238,11 +241,15 @@ class Juto
   def take_hit!(damage)
     @life -= damage
     @damage_taken_this_beat += damage
-    @position = nil if @life < 1
+    @position = -1 if @life < 1
   end
 
   def recycle!
     @damage_taken_this_beat = 0
+  end
+
+  def alive?
+    return @life > 0
   end
 end
 
@@ -279,26 +286,39 @@ class Tatsumi < Character
   end
 
   def character_specific_effect_sources
-    return [] if @juto.life < 1
+    ret = []
+    ret << current_zone if current_zone
+    ret << @tsunamis_collide_bonus if @tsunamis_collide_bonus
+    ret
+  end
+
+  def tsunamis_collide!
+    distance = (@position-@juto.position).abs - 1
+    @tsunamis_collide_bonus = TsunamisCollideBonus.new(distance)
+  end
+
+  def current_zone
+    return nil unless @juto.alive?
     # zone 1 if juto.position == tatsumi
-    return [zones[1]] if @juto.position == @position
+    return zones[1] if @juto.position == @position
     if @position < @opponent.position
       # zone 0 if juto behind tatsumi
-      return [zones[0]] if @juto.position < @position
+      return zones[0] if @juto.position < @position
       # zone 2 if juto between tatsumi and opponent
-      return [zones[2]] if @juto.position < @opponent.position
+      return zones[2] if @juto.position < @opponent.position
     else
       # zone 0 if juto behind tatsumi
-      return [zones[0]] if @juto.position > @position
+      return zones[0] if @juto.position > @position
       # zone 2 if juto between tatsumi and opponent
-      return [zones[2]] if @juto.position > @opponent.position
+      return zones[2] if @juto.position > @opponent.position
     end
     # zone 3 if juto on same location or behind opponent
-    return [zones[3]]
+    return zones[3]
   end
 
   def in_range?
-    return @juto.life > 0 && range && range.include?((@juto.position-@opponent.position).abs) && !@opponent.dodges? if base_flag?(:fearless)
+    return @juto.alive? && range && range.include?((@juto.position-@opponent.position).abs) && !@opponent.dodges? if base_flag?(:fearless)
+    return @juto.alive? && ((@juto.position - 1)..(@juto.position + 1)).include?(@opponent.position) if base_flag?(:bear_arms_range_mod)
     return false if base_flag?(:tsunamis_collide_range_mod) && ((@juto.position - 1)..(@juto.position + 1)).include?(@opponent.position)
     super
   end
@@ -309,6 +329,7 @@ class Tatsumi < Character
   end
 
   def move_juto? space
+    return false unless @juto.alive?
     n = Integer(space)
     return n if (n>=0 && n<=6)
     return false
@@ -331,7 +352,7 @@ class Tatsumi < Character
   end
 
   def revive_juto!
-    if (@juto.life < 1)
+    unless juto.alive?
       log_me!("revives Juto.")
       @juto.life = 4
       @juto.position = @position
@@ -340,8 +361,8 @@ class Tatsumi < Character
 
   def take_hit!(damage)
     # If juto soaks, make him take damage
-    unless (opponent.ignore_soak? && !character_specific_effect_sources[0].soak)
-      @juto.take_hit!([character_specific_effect_sources[0].soak, damage].min)
+    unless (!juto.alive? || (opponent.ignore_soak? && !current_zone.soak))
+      @juto.take_hit!([current_zone.soak, damage].min)
     end
     super
   end
@@ -350,6 +371,7 @@ class Tatsumi < Character
     super
     @riptide_range_mod = false
     @juto.recycle!
+    @tsunamis_collide_bonus = nil
   end
 
   def extra_data
