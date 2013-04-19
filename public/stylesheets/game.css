@@ -44,6 +44,18 @@
   text-align: center;
 }
 
+.icon-juto {
+  background-image: url("/images/character_icons/juto_icon.png");
+  background-size: contain;
+  background-position: 0px 0px;
+}
+
+.juto-popover {
+  color: #333;
+  font-size: 14px;
+  font-weight: normal;
+}
+
 .header .character-desc {
   display: none;
   /*position: absolute;

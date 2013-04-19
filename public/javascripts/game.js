@@ -33,7 +33,12 @@ var init = function(player_id, game_id, chimeEnabled) {
     zaamassal: "Zaamassal has 5 paradigms he can assume, according to his styles and unique base. Each paradigm has it's own benefits. Every time he assumes a paradigm, he loses his current paradigm. If Zaamassal gets stunned, he loses his current paradigm.",
     hepzibah: "Hepzibah can ante her 5 Dark Force tokens each round to gain bonuses, but she loses one life per token anted.",
     kehrolyn: "Each beat, Kehrolyn applies the style in her discard1 to her current attackpair.",
-    vanaah: "Vanaah has a Divine Rush token that she can ante to gain +2 power and +2 priority. After using the token, the token is discarded with the attack pair and is returned with the attack pair after two beats."
+    vanaah: "Vanaah has a Divine Rush token that she can ante to gain +2 power and +2 priority. After using the token, the token is discarded with the attack pair and is returned with the attack pair after two beats.",
+    tatsumi: "Tatsumi fights with her companion panda, Juto. Juto has 4 life points, and begins duel in same space as Tatsumi. If Juto's life is reduced to zero or less, he is romoved from the board. Juto's position grants passive bonuses:\
+    \nzone 0 (behind Tatsumi): +0~2 range, +1 power\
+    \nzone 1 (same space as Tatsumi): soak 3; Juto loses life equal to the amount soaked\
+    \nzone 2 (between Tatsumi and opponent) : soak 1, stun guard 2. Juto loses life equal to the amount soaked\
+    \nzone 3 (with or behind opponent): + 1 priority"
   }
 
   var cardDefinitions = {
@@ -145,7 +150,18 @@ var init = function(player_id, game_id, chimeEnabled) {
     divinerush: makeCard(0, 2, 2, {"Token": undefined}),
 
     deathwalks: makeCard("1~2", 5, 6, {"On Hit": "Stuns the opponent. The opponent has -4 priority next beat."}),
-    handofdivinity: makeCard(5, 7, 3, {"On Hit": "Advance any number of spaces.", "Soak": 3})
+    handofdivinity: makeCard(5, 7, 3, {"On Hit": "Advance any number of spaces.", "Soak": 3}),
+
+    // Tatsumi
+    siren: makeCard(0, -1, 1, {"On Hit": "The opponent is stunned.", "End of Beat": "Move Juto 0-2 spaces"}),
+    riptide: makeCard("0~2", 0, -1, {"Start of Beat": "Zone 2: Attacks at range 3+ do not hit you.", "End of Beat": "Pull Juto any amount toward you (including past you)."}),
+    empathic: makeCard(0, 0, -2, {"After Activating": "You may swap locations with Juto.", "End of Beat": "Opponent loses life equal the damage received by Juto.", "Stun Guard": 4}),
+    fearless: makeCard("-1~0", 0, 1, {"End of Beat": "If Juto is disabled, revive him in your space.", "Range is calculated from Juto. If Juto is disabled, this attack misses.": undefined}),
+    wave: makeCard("2~4", -1, 0, {"On Hit": "Push the opponent 0-2 spaces.", "After Activating": "Advance Juto any distance."}),
+    whirlpool: makeCard("1~2", 3, 3, {"Start of Beat": "Move opponent one space towards Juto.", "After Activating": "You and Juto move 0-2 spaces each."}),
+
+    tsunamiscollide: makeCard("2~4", 0, 0, {"Reveal": "Zone 3: +3 power, +2 priority per space between you and Juto.", "This attack does not hit opponents adjacent to Juto.": undefined}),
+    beararms: makeCard("X", 6, 5, {"On Hit": "Opponent is stunned. Move Juto any number of spaces.", "The range of this attack is Juto's space and any adjacent spaces.": undefined})
   }
 
   var loadCard = function(cardName, $card, overrideCardName) {
@@ -373,7 +389,24 @@ var init = function(player_id, game_id, chimeEnabled) {
       } else {
         meta = meta[0]
       }
-      meta.append($("<span/>").addClass("label label-" + color).html($('<i/>').addClass('icon-asterisk')))
+      meta.append($("<span/>").addClass("body label-" + color + " label").html($('<i/>').addClass('icon-asterisk')))
+    }
+    else if (data.juto !== undefined) {
+      var color = (pn == 0 ? 'info' : 'important')
+      var space = $('.board').find('.s' + data.juto[0])
+      var meta = space.find('.meta')
+      if (meta.length == 0) {
+        meta = $('<div/>').addClass('meta').prependTo(space)
+      } else {
+        meta = meta[0]
+      }
+      meta.append($("<span/>").addClass("label label-" + color + " juto-popover").html($('<i/>').addClass('icon-juto').popover({
+        html: true,
+        title: 'Juto',
+        trigger: 'hover',
+        placement: 'top',
+        content: "<b>Life: </b>" + data.juto[1]
+      })))
     }
   }
 

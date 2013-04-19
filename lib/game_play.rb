@@ -7,6 +7,7 @@ require 'heketch'
 require 'zaamassal'
 require 'kehrolyn'
 require 'vanaah'
+require 'tatsumi'
 
 # given a hash from methods to possible aruments prompt the user to select a
 # valid combination.
@@ -16,7 +17,7 @@ require 'vanaah'
 #     ones.
 MOVEMENT_METHODS = [
   :advance, :retreat, :pull, :push, :teleport_to, :teleport_opponent_to,
-  :set_trap_in_range, :set_trap
+  :set_trap_in_range, :set_trap, :move_juto
 ]
 def select_from_methods(pretty_string=nil, options)
   return select_from_movement_methods(pretty_string, options) if options.keys.all?{|k| MOVEMENT_METHODS.include?(k)}
@@ -501,7 +502,7 @@ class GamePlay
   end
 
   def self.character_list
-    [Hikaru, Cadenza, Khadath, Rukyuk, Heketch, Zaamassal, Hepzibah, Kehrolyn, Vanaah]
+    [Hikaru, Cadenza, Khadath, Rukyuk, Heketch, Zaamassal, Hepzibah, Kehrolyn, Vanaah, Tatsumi]
   end
 
   def self.character_names
