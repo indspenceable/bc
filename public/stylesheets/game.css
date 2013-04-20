@@ -44,6 +44,12 @@
   text-align: center;
 }
 
+.icon-khadath-trap {
+  background-image: url("/images/khadath_trap.png");
+  background-size: contain;
+  background-position: 0px 0px;
+}
+
 .header .character-desc {
   display: none;
   /*position: absolute;

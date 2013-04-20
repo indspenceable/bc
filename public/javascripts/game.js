@@ -373,7 +373,7 @@ var init = function(player_id, game_id, chimeEnabled) {
       } else {
         meta = meta[0]
       }
-      meta.append($("<span/>").addClass("label label-" + color).html($('<i/>').addClass('icon-asterisk')))
+      meta.append($("<span/>").addClass("label label-" + color).html($('<i/>').addClass('icon-khadath-trap')))
     }
   }
 
