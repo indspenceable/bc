@@ -11,7 +11,7 @@
   /             = link_to user.name, challenge_path(opponent_id: user.id)
   %tr
     %th Active Games
-  -Game.active.order("created_at").each do |game|
+  -Game.active.order("created_at").reject(&:check_timeout!).each do |game|
     %tr
       %td
         - begin

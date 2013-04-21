@@ -162,8 +162,8 @@ class GamePlay
 
   def resolve_game!(cause, winner)
     @active = false
-    @winner = @players[winner].player_name
-    @loser = @players[(winner+1)%2].player_name
+    @winner = @player_names[winner]
+    @loser = @player_names[(winner+1)%2]
     @events.log! "#{@loser} concedes the game." if cause == :concede
     @events.log! "#{@winner} wins!"
     return

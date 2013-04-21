@@ -35,13 +35,16 @@ class GamesController < LoggedInController
   def game_state_hash
     {
       'gameState' => current_game.play.game_state(current_game.player_id(current_user)),
-      'requiredInput' => current_game.play.all_required_input(current_game.player_id(current_user))
+      'requiredInput' => current_game.play.all_required_input(current_game.player_id(current_user)),
+      'timeLeft' => current_game.time_left
     }
   end
 
   helper_method :current_game
   def current_game
     @game ||= Game.find_by_id(params[:id])
+    @game.check_timeout!
+    @game
   end
 
   def ensure_game

@@ -10,6 +10,7 @@ var init = function(player_id, game_id, chimeEnabled) {
   var need;
   var needAlert = false;
   var faviconTimeout = 100;
+  timeLeft = undefined
 
   var $root = function(pn) {
     //return (pn == player_id ? $(".js-mine") : $('.js-theirs'))
@@ -439,6 +440,10 @@ var init = function(player_id, game_id, chimeEnabled) {
     }
     needAlert = requiredInput
 
+    if (data.timeLeft) {
+      timeLeft = parseInt(data.timeLeft)
+    }
+
     // Updates related to the gamestate
     var gameState = data['gameState']
     if (!gameState.players) { return }
@@ -616,6 +621,14 @@ var init = function(player_id, game_id, chimeEnabled) {
 
     $(window).focus(function() {windowActive=true})
     $(window).blur(function() {windowActive=false})
+
+    setInterval(
+      function() {
+        if (timeLeft) {
+          timeLeft -= 1
+          $('.js-timer').text(timeLeft)
+        }
+    }, 1000)
 
     ping()
   })
